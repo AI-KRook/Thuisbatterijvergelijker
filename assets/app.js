@@ -183,6 +183,9 @@
       </div>
       <button class="details-toggle" data-id="${escapeHtml(b.id)}">Meer details</button>
       <div class="kaart-details" data-details="${escapeHtml(b.id)}" hidden>
+        <dt>Homey</dt><dd>${escapeHtml(driewaardig(b.homey).tekst)}</dd>
+        <dt>Home Assistant</dt><dd>${escapeHtml(driewaardig(b.home_assistant).tekst)}</dd>
+        <dt>Dynamisch contract</dt><dd>${escapeHtml(driewaardig(b.dynamisch_contract).tekst)}</dd>
         ${b.opmerkingen ? `<dt>Goed om te weten</dt><dd>${escapeHtml(b.opmerkingen)}</dd>` : ""}
         ${b.cycli ? `<dt>Laadcycli (garantie)</dt><dd>${escapeHtml(String(b.cycli))}</dd>` : ""}
         ${b.fase ? `<dt>Aansluiting</dt><dd>${escapeHtml(b.fase)}</dd>` : ""}
@@ -358,6 +361,18 @@
 
     // Gedelegeerde events voor dynamische content
     el("resultaten").addEventListener("click", (e) => {
+      // Tik op een info-badge (zoals "~ Home Assistant") opent de details met uitleg
+      const badge = e.target.closest(".kaart-badges .badge");
+      if (badge) {
+        const kaart = badge.closest(".batterij-kaart");
+        const details = kaart && kaart.querySelector(".kaart-details");
+        const knop = kaart && kaart.querySelector(".details-toggle");
+        if (details && details.hidden) {
+          details.hidden = false;
+          if (knop) knop.textContent = "Verberg details";
+        }
+        return;
+      }
       const toggle = e.target.closest(".details-toggle");
       if (toggle) {
         const details = document.querySelector(`[data-details="${toggle.dataset.id}"]`);
