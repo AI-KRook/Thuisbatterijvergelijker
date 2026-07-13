@@ -196,6 +196,7 @@
       </div>
       <div class="kaart-acties">
         ${beste && beste.url ? `<a class="knop" href="${escapeHtml(beste.url)}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : (b.product_url ? `<a class="knop" href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener">Naar aanbieder →</a>` : "")}
+        <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}" title="Bereken de terugverdientijd van deze batterij voor jouw situatie">Terugverdientijd</a>
       </div>
     </article>`;
   }
