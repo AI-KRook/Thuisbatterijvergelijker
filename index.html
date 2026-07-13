@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thuisbatterij Vergelijker | Vergelijk thuisbatterijen in Nederland</title>
+  <meta name="description" content="Vergelijk thuisbatterijen voor Nederlandse huishoudens: prijzen, actuele aanbiedingen, koppeling met zonnepanelen, Homey en Home Assistant. Dagelijks bijgewerkt.">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔋</text></svg>">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html">
+      <span class="logo-icoon">🔋</span>
+      <span>Thuisbatterij<b>Vergelijker</b></span>
+    </a>
+    <nav class="hoofdnav">
+      <a href="index.html" class="actief">Vergelijken</a>
+      <a href="regelgeving.html">Regels &amp; subsidies</a>
+      <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Vind de thuisbatterij die past bij jouw huis en zonnepanelen</h1>
+    <p>Vergelijk capaciteit, prijzen en actuele aanbiedingen van de populairste thuisbatterijen in Nederland. Zie direct of een batterij koppelbaar is met jouw zonnepanelen, Homey of Home Assistant.</p>
+    <span class="update-info">🔄 Prijzen laatst bijgewerkt: <b id="updateDatum">…</b></span>
+  </div>
+</section>
+
+<main class="container">
+
+  <div class="regel-banner">
+    <span class="icoon">⚠️</span>
+    <p><b>Salderingsregeling stopt per 1 januari 2027.</b> Teruggeleverde zonnestroom wegstrepen tegen je verbruik kan dan niet meer. Een thuisbatterij wordt daardoor voor veel huishoudens met zonnepanelen interessanter. <a href="regelgeving.html">Lees wat de regels betekenen voor jouw situatie →</a></p>
+  </div>
+
+  <div class="filterbalk">
+    <div class="filter-rij">
+      <div class="filter-groep">
+        <label for="filterType">Type systeem</label>
+        <select id="filterType">
+          <option value="alle">Alle typen</option>
+          <option value="plug-in">Plug-in (stopcontact)</option>
+          <option value="ac-gekoppeld">AC-gekoppeld</option>
+          <option value="hybride">Hybride omvormer</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="filterCapaciteit">Capaciteit</label>
+        <select id="filterCapaciteit">
+          <option value="alle">Alle capaciteiten</option>
+          <option value="klein">Klein (tot 4 kWh)</option>
+          <option value="middel">Gemiddeld (4 tot 10 kWh)</option>
+          <option value="groot">Groot (meer dan 10 kWh)</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="filterInstallatie">Installatie</label>
+        <select id="filterInstallatie">
+          <option value="alle">Maakt niet uit</option>
+          <option value="zelf">Zelf aan te sluiten</option>
+          <option value="installateur">Door installateur</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="filterMerk">Merk</label>
+        <select id="filterMerk">
+          <option value="alle">Alle merken</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="sorteer">Sorteren op</label>
+        <select id="sorteer">
+          <option value="prijs-oplopend">Prijs (laag naar hoog)</option>
+          <option value="prijs-aflopend">Prijs (hoog naar laag)</option>
+          <option value="prijs-per-kwh">Prijs per kWh opslag</option>
+          <option value="capaciteit">Capaciteit (grootste eerst)</option>
+          <option value="koppelgemak">Makkelijkst te koppelen</option>
+        </select>
+      </div>
+    </div>
+    <div class="filter-rij" style="margin-top:14px;">
+      <div class="filter-groep">
+        <span class="filter-label">Moet werken met</span>
+        <div class="checkbox-groep">
+          <label><input type="checkbox" id="checkHomey"> Homey</label>
+          <label><input type="checkbox" id="checkHA"> Home Assistant</label>
+          <label><input type="checkbox" id="checkDynamisch"> Dynamisch energiecontract</label>
+          <label><input type="checkbox" id="checkAanbieding"> 🔥 Alleen aanbiedingen</label>
+        </div>
+      </div>
+      <button class="filter-reset" id="resetFilters">Alle filters wissen</button>
+    </div>
+  </div>
+
+  <div class="resultaten-balk">
+    <span class="resultaten-telling" id="resultatenTelling">Laden…</span>
+    <div class="weergave-knoppen">
+      <button id="knopKaarten" class="actief">▦ Kaarten</button>
+      <button id="knopTabel">☰ Tabel</button>
+    </div>
+  </div>
+
+  <div id="resultaten">
+    <div class="laad-melding">Batterijen laden…</div>
+  </div>
+
+  <section id="veelgestelde-vragen" style="margin: 30px 0 50px;">
+    <h2>Veelgestelde vragen</h2>
+
+    <details class="faq-item">
+      <summary>Kan ik een thuisbatterij koppelen aan mijn bestaande zonnepanelen?</summary>
+      <p>Bijna altijd. <b>Plug-in batterijen</b> en <b>AC-gekoppelde batterijen</b> werken onafhankelijk van je omvormer: ze meten via de slimme meter (P1-poort) wat je huis verbruikt of teruglevert en laden of ontladen op basis daarvan. Ze werken dus met elk merk zonnepanelen. <b>Hybride systemen</b> vervangen of vullen je omvormer aan en zijn vooral interessant bij nieuwe installaties of als je omvormer toch aan vervanging toe is. In de vergelijker zie je per batterij een sterrenscore voor het koppelgemak.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Wat betekent de sterrenscore voor koppeling?</summary>
+      <p>Vijf sterren betekent plug &amp; play: batterij in het stopcontact, P1-dongle op de slimme meter en klaar. Minder sterren betekent dat er een installateur nodig is, dat het systeem alleen met bepaalde omvormers werkt, of dat je omvormer vervangen moet worden.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Werkt een thuisbatterij met Homey of Home Assistant?</summary>
+      <p>Dat verschilt per merk. Bij elke batterij tonen we of er een officiële Homey-app of Home Assistant-integratie bestaat, of dat koppeling via een omweg mogelijk is (bijvoorbeeld via Modbus of een community-integratie). Beweeg over de badge voor details.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Is een thuisbatterij nu al rendabel?</summary>
+      <p>Dat hangt af van je situatie. Zolang de salderingsregeling geldt (tot 1 januari 2027) is het financiële voordeel van opslaan beperkt: je mag teruggeleverde stroom immers nog wegstrepen. Na 2027 verandert dat. Met een dynamisch energiecontract kan een slim aangestuurde batterij bovendien geld verdienen door goedkoop te laden en duur te ontladen. Lees meer op onze pagina <a href="regelgeving.html">Regels &amp; subsidies</a>.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Hoe actueel zijn de prijzen?</summary>
+      <p>De prijzen en aanbiedingen worden dagelijks automatisch gecontroleerd. Bovenaan de pagina zie je de datum van de laatste update. Klik altijd door naar de winkel voor de definitieve prijs: die is leidend.</p>
+    </details>
+  </section>
+
+</main>
+
+<div class="vergelijk-balk" id="vergelijkBalk">
+  <span id="vergelijkBalkTekst"></span>
+  <button class="knop" id="openVergelijk">Vergelijk nu</button>
+  <button class="knop knop-secundair" id="wisVergelijk" style="background:transparent;color:#fff;border-color:#fff;">Wissen</button>
+</div>
+
+<div class="modal-achtergrond" id="vergelijkModal">
+  <div class="modal">
+    <button class="sluit" id="sluitModal" aria-label="Sluiten">×</button>
+    <div id="vergelijkModalInhoud"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <b>🔋 ThuisbatterijVergelijker</b>
+    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
+    <p><a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a></p>
+    <p class="disclaimer">Disclaimer: wij doen ons best om prijzen, specificaties en regelgeving actueel en juist weer te geven, maar er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend. Controleer voor aankoop zelf de actuele specificaties en de geschiktheid voor jouw situatie.</p>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

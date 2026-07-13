@@ -1,0 +1,37 @@
+name: Dagelijkse prijsupdate
+
+on:
+  schedule:
+    # Elke dag om 05:30 UTC (07:30 Nederlandse zomertijd)
+    - cron: "30 5 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-prijzen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+
+      - name: Node.js instellen
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Prijzen bijwerken
+        run: node scripts/update-prices.mjs
+
+      - name: Wijzigingen committen en pushen
+        run: |
+          git config user.name "prijsupdate-bot"
+          git config user.email "actions@github.com"
+          if git diff --quiet -- data/batterijen.json; then
+            echo "Geen prijswijzigingen vandaag."
+          else
+            git add data/batterijen.json
+            git commit -m "Dagelijkse prijsupdate $(date -u +%F)"
+            git push
+          fi
