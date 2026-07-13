@@ -26,6 +26,7 @@
   const kwhFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 });
 
   let batterijen = [];
+  let gestart = false; // pas advies tonen nadat de bezoeker er zelf om vraagt
 
   /* ------------------------------------------------------------------ */
 
@@ -166,8 +167,16 @@
   }
 
   function render() {
-    const maat = berekenMaat();
     const doel = el("adviesResultaat");
+
+    if (!gestart) {
+      doel.innerHTML = `
+        <p class="datum-stempel">Nog geen advies: dat komt er pas als jij erom vraagt.</p>
+        <p>Vul je gegevens in en klik op <b>"Geef mij advies"</b>. De vooringevulde getallen zijn gemiddelden om je op weg te helpen; pas ze gerust aan naar je eigen situatie (je jaarnota is de beste bron).</p>`;
+      return;
+    }
+
+    const maat = berekenMaat();
     const heeftPv = el("advPv").value === "ja";
 
     if (maat.basis === "geen") {
@@ -259,6 +268,15 @@
     document.querySelectorAll("#adviesFormulier input, #adviesFormulier select").forEach((inp) => {
       inp.addEventListener("input", render);
       inp.addEventListener("change", render);
+    });
+
+    el("advStart").addEventListener("click", () => {
+      gestart = true;
+      render();
+      // Op smalle schermen staat het resultaat onder het formulier: scroll ernaartoe
+      if (window.innerWidth < 900) {
+        el("adviesResultaat").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
     render();
   }
