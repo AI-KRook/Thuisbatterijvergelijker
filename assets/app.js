@@ -160,7 +160,7 @@
       <div class="kaart-kop">
         <div>
           <div class="merk">${escapeHtml(b.merk)}</div>
-          <h3>${escapeHtml(b.model)}</h3>
+          <h3><a href="batterij/${encodeURIComponent(b.id)}.html" style="color:inherit;text-decoration:none;" title="Alle details van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">${escapeHtml(b.model)}</a></h3>
           <span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml(typeLabel)}</span>
         </div>
         ${korting ? '<span class="aanbieding-vlag">Aanbieding</span>' : ""}
@@ -252,7 +252,7 @@
           const beste = bestePrijs(b);
           const perKwh = prijsPerKwh(b);
           return `<tr>
-            <td><b>${escapeHtml(b.merk)}</b><br>${escapeHtml(b.model)}</td>
+            <td><b>${escapeHtml(b.merk)}</b><br><a href="batterij/${encodeURIComponent(b.id)}.html">${escapeHtml(b.model)}</a></td>
             <td>${b.capaciteit_kwh ? String(b.capaciteit_kwh).replace(".", ",") : "?"}</td>
             <td>${b.vermogen_kw ? String(b.vermogen_kw).replace(".", ",") : "?"}</td>
             <td>${escapeHtml(b.type)}</td>

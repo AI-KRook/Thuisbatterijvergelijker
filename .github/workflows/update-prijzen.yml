@@ -24,14 +24,17 @@ jobs:
       - name: Prijzen bijwerken
         run: node scripts/update-prices.mjs
 
+      - name: Batterijpagina's en sitemap herbouwen
+        run: node scripts/genereer-batterijpaginas.mjs
+
       - name: Wijzigingen committen en pushen
         run: |
           git config user.name "prijsupdate-bot"
           git config user.email "actions@github.com"
-          if git diff --quiet -- data/batterijen.json sitemap.xml; then
+          git add data/batterijen.json sitemap.xml batterij/
+          if git diff --cached --quiet; then
             echo "Geen prijswijzigingen vandaag."
           else
-            git add data/batterijen.json sitemap.xml
             git commit -m "Dagelijkse prijsupdate $(date -u +%F)"
             git push
           fi
