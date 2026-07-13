@@ -138,6 +138,7 @@ ${productLd(b)}
     </a>
     <nav class="hoofdnav">
       <a href="/index.html">Vergelijken</a>
+      <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
       <a href="/regelgeving.html">Regels &amp; subsidies</a>
@@ -209,7 +210,7 @@ ${productLd(b)}
   <div class="container">
     <b>\u{1F50B} Batterijmaatje</b>
     <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
-    <p><a href="/index.html">Vergelijken</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/over-ons.html">Over ons</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/over-ons.html">Over ons</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>
@@ -234,6 +235,7 @@ console.log(`${data.batterijen.length} batterijpagina's gegenereerd in /batterij
 
 const vast = [
   { loc: `${SITE}/`, freq: "daily", prio: "1.0" },
+  { loc: `${SITE}/uitleg.html`, freq: "monthly", prio: "0.8" },
   { loc: `${SITE}/advies.html`, freq: "weekly", prio: "0.9" },
   { loc: `${SITE}/rekenmodule.html`, freq: "weekly", prio: "0.8" },
   { loc: `${SITE}/regelgeving.html`, freq: "monthly", prio: "0.8" },
