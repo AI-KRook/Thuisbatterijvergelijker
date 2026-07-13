@@ -10,6 +10,7 @@ Een gebruiksvriendelijke, statische vergelijkingssite voor thuisbatterijen op de
 - **Kaart- en tabelweergave**, plus zij-aan-zij vergelijken van maximaal 3 batterijen.
 - **Directe links** naar de winkel of aanbieder met de beste prijs ("Bekijk aanbieding").
 - **Rekenmodule terugverdientijd** (`rekenmodule.html`): berekent per batterij en per situatie (met of zonder zonnepanelen, vast of dynamisch contract, slim laden en ontladen op uurprijzen) de jaarlijkse opbrengst en terugverdientijd, met instelbare en gedocumenteerde aannames.
+- **Keuzehulp** (`advies.html`): adviseert op basis van verbruik, zonnepanelen, contract en wensen de juiste accugrootte (bandbreedte in kWh) en de drie best passende batterijen uit de vergelijker.
 - **Uitlegpagina** over de actuele overheidsregels: einde salderingsregeling per 2027, terugleverkosten, btw en subsidies, met bronvermelding.
 
 ## Structuur

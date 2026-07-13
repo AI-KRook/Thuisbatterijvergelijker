@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keuzehulp: welke thuisbatterij past bij mij? | Thuisbatterij Vergelijker</title>
+  <meta name="description" content="Beantwoord een paar vragen en krijg advies over de juiste accugrootte (kWh) en de thuisbatterijen die het beste bij jouw situatie passen.">
+  <link rel="stylesheet" href="assets/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔋</text></svg>">
+  <style>
+    .advies-indeling { display: grid; grid-template-columns: 400px 1fr; gap: 24px; align-items: start; margin: 26px 0 40px; }
+    @media (max-width: 900px) { .advies-indeling { grid-template-columns: 1fr; } }
+    .advies-paneel { background: var(--kleur-wit); border: 1px solid var(--kleur-rand); border-radius: var(--radius); box-shadow: var(--schaduw); padding: 22px; }
+    .advies-paneel h2 { margin: 0 0 4px; font-size: 1.1rem; color: var(--kleur-primair-donker); }
+    .advies-paneel h2:not(:first-child) { margin-top: 22px; }
+    .veld { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
+    .veld label { font-size: 0.85rem; font-weight: 700; color: var(--kleur-tekst-licht); }
+    .veld input, .veld select { padding: 9px 12px; border: 1px solid var(--kleur-rand); border-radius: 8px; font-size: 0.95rem; }
+    .veld .hint { font-size: 0.8rem; color: var(--kleur-tekst-licht); }
+    .veld-rij { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .veld-rij { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html">
+      <span class="logo-icoon">🔋</span>
+      <span>Thuisbatterij<b>Vergelijker</b></span>
+    </a>
+    <nav class="hoofdnav">
+      <a href="index.html">Vergelijken</a>
+      <a href="advies.html" class="actief">Keuzehulp</a>
+      <a href="rekenmodule.html">Terugverdientijd</a>
+      <a href="regelgeving.html">Regels &amp; subsidies</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Welke thuisbatterij past bij jou?</h1>
+    <p>Beantwoord een paar vragen over je verbruik, zonnepanelen en wensen. Je krijgt direct een advies over de juiste accugrootte en de batterijen die daar het beste bij passen.</p>
+  </div>
+</section>
+
+<main class="container">
+
+  <div class="advies-indeling">
+
+    <form id="adviesFormulier" class="advies-paneel" onsubmit="return false;">
+
+      <h2>1. Je stroomverbruik</h2>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="advPersonen">Huishouden</label>
+          <select id="advPersonen">
+            <option value="">Kies…</option>
+            <option value="1">1 persoon</option>
+            <option value="2">2 personen</option>
+            <option value="3">3 personen</option>
+            <option value="4">4 personen</option>
+            <option value="5">5 of meer</option>
+          </select>
+          <span class="hint">Vult een gemiddelde in; pas het getal hiernaast aan naar je jaarnota</span>
+        </div>
+        <div class="veld">
+          <label for="advVerbruik">Jaarverbruik (kWh)</label>
+          <input type="number" id="advVerbruik" value="2900" min="0" step="100">
+        </div>
+      </div>
+
+      <h2>2. Zonnepanelen</h2>
+      <div class="veld">
+        <label for="advPv">Heb je zonnepanelen (of komen ze er)?</label>
+        <select id="advPv">
+          <option value="ja">Ja</option>
+          <option value="nee">Nee</option>
+        </select>
+      </div>
+      <div id="pvVragen">
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="advPanelen">Aantal panelen</label>
+            <input type="number" id="advPanelen" placeholder="bijv. 10" min="0" step="1">
+            <span class="hint">Vuistregel: ca. 350 kWh per paneel per jaar</span>
+          </div>
+          <div class="veld">
+            <label for="advOpwek">Opwek per jaar (kWh)</label>
+            <input type="number" id="advOpwek" value="3500" min="0" step="100">
+          </div>
+        </div>
+      </div>
+
+      <h2>3. Contract en aansluiting</h2>
+      <div class="veld-rij">
+        <div class="veld">
+          <label for="advContract">Energiecontract</label>
+          <select id="advContract">
+            <option value="dynamisch">Dynamisch (of bereid over te stappen)</option>
+            <option value="vast">Vast of variabel tarief</option>
+          </select>
+        </div>
+        <div class="veld">
+          <label for="advFase">Aansluiting</label>
+          <select id="advFase">
+            <option value="weet-niet">Weet ik niet</option>
+            <option value="1">1-fase (meest voorkomend)</option>
+            <option value="3">3-fase</option>
+          </select>
+          <span class="hint">Staat op je meterkast of jaarnota</span>
+        </div>
+      </div>
+
+      <h2>4. Je wensen</h2>
+      <div class="veld">
+        <label for="advInstallatie">Installatie</label>
+        <select id="advInstallatie">
+          <option value="beide">Maakt niet uit</option>
+          <option value="zelf">Ik wil het zelf aansluiten (plug-in)</option>
+          <option value="installateur">Liever door een installateur</option>
+        </select>
+      </div>
+      <div class="veld">
+        <span style="font-size:0.85rem;font-weight:700;color:var(--kleur-tekst-licht);">Moet werken met</span>
+        <div class="checkbox-groep" style="margin-top:4px;">
+          <label><input type="checkbox" id="advHomey"> Homey</label>
+          <label><input type="checkbox" id="advHA"> Home Assistant</label>
+        </div>
+      </div>
+      <div class="veld">
+        <label for="advBudget">Maximaal budget (€, optioneel)</label>
+        <input type="number" id="advBudget" placeholder="bijv. 3000" min="0" step="250">
+        <span class="hint">Leeg laten = geen limiet. Let op: sommige prijzen zijn excl. installatie</span>
+      </div>
+
+    </form>
+
+    <div class="advies-paneel">
+      <h2>Jouw advies</h2>
+      <div id="adviesResultaat"><p class="datum-stempel">Laden…</p></div>
+    </div>
+
+  </div>
+
+  <section style="max-width:820px;margin:0 auto 50px;">
+    <h2>Hoe komt dit advies tot stand?</h2>
+    <p>De geadviseerde accugrootte is een vuistregel, geen exacte wetenschap:</p>
+    <ul>
+      <li><b>Met zonnepanelen</b> kijken we naar je gemiddelde zomerse stroomoverschot (het deel van de opwek dat je niet direct gebruikt) én naar je verbruik in de avond en nacht. De batterij hoeft niet groter dan het kleinste van die twee: meer opslaan dan je 's avonds gebruikt heeft geen zin.</li>
+      <li><b>Zonder zonnepanelen</b> maar met een dynamisch contract kijken we naar het deel van je dagverbruik dat je naar goedkope uren kunt verschuiven (aangenomen: circa 60%).</li>
+      <li>We tonen bewust een <b>bandbreedte</b> van plus en min 25%: je werkelijke verbruikspatroon bepaalt de precieze maat. Twijfel je tussen twee maten, kies dan een modulair systeem dat je later kunt uitbreiden.</li>
+    </ul>
+    <p>De aanbevolen batterijen komen uit onze <a href="index.html">vergelijker</a> en worden gerangschikt op capaciteitspassing (50%), prijs per kWh opslag (30%) en het gemak waarmee ze aan bestaande zonnepanelen koppelen (20%). Controleer bij elke batterij wat de prijs dekt; sommige prijzen zijn exclusief btw of installatie. Reken het resultaat altijd door met de <a href="rekenmodule.html">terugverdientijd-module</a>.</p>
+    <div class="waarschuwing-kader">Dit is een hulpmiddel, geen persoonlijk (financieel) advies. Laat je bij twijfel adviseren door een erkend installateur, zeker bij 3-fase systemen of een vol stroomnet in je regio (zie <a href="regelgeving.html">Regels &amp; subsidies</a> over de registratieplicht en wachtlijsten).</div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <b>🔋 ThuisbatterijVergelijker</b>
+    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
+    <p><a href="index.html">Vergelijken</a> · <a href="rekenmodule.html">Terugverdientijd</a> · <a href="regelgeving.html">Regels &amp; subsidies</a></p>
+    <p class="disclaimer">Disclaimer: de keuzehulp geeft een indicatief advies op basis van vuistregels en de door jou ingevulde gegevens. De genoemde gemiddelden voor jaarverbruik zijn indicatief; je eigen jaarnota is leidend.</p>
+  </div>
+</footer>
+
+<script src="assets/advies.js"></script>
+</body>
+</html>

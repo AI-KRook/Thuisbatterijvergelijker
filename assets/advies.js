@@ -1,0 +1,257 @@
+/* ==========================================================================
+   Keuzehulp: adviseert een accugrootte (kWh) en de best passende batterijen.
+
+   Maatadvies (vuistregels, bewust als bandbreedte gepresenteerd):
+   - Met zonnepanelen: je slaat het dagelijkse zomeroverschot op, maar meer
+     opslaan dan je 's avonds en 's nachts verbruikt is zinloos.
+       dagoverschot_zomer  = (opwek x (1 - direct eigen verbruik)) / 365 x 1,5
+       avondnachtverbruik  = jaarverbruik / 365 x 0,6
+       advies              = min(dagoverschot_zomer, avondnachtverbruik), bandbreedte +/- 25%
+   - Zonder zonnepanelen, met dynamisch contract: je verschuift het deel van
+     je dagverbruik dat flexibel is naar goedkope uren.
+       advies = jaarverbruik / 365 x 0,6, bandbreedte +/- 25%
+   - Zonder zonnepanelen en zonder dynamisch contract: een batterij kan dan
+     vrijwel niets verdienen; dat zeggen we eerlijk.
+
+   Matching: filtert data/batterijen.json op fase, installatievoorkeur,
+   smart home-eisen, dynamisch contract en budget, en rangschikt op
+   (1) hoe goed de capaciteit past, (2) prijs per kWh, (3) koppelgemak.
+   ========================================================================== */
+
+(function () {
+  "use strict";
+
+  const el = (id) => document.getElementById(id);
+  const eurFmt = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+  const kwhFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 });
+
+  let batterijen = [];
+
+  /* ------------------------------------------------------------------ */
+
+  function bestePrijs(b) {
+    const a = (b.aanbiedingen || []).filter((x) => x && x.prijs_eur);
+    if (a.length) return a.reduce((m, x) => (x.prijs_eur < m.prijs_eur ? x : m));
+    if (b.richtprijs_eur) return { winkel: b.prijs_bron || "richtprijs", prijs_eur: b.richtprijs_eur, url: b.product_url };
+    return null;
+  }
+
+  function driewaardig(v) {
+    if (v === true) return "ja";
+    if (typeof v === "string" && v.trim()) return "deels";
+    return "nee";
+  }
+
+  function getal(id, fallback) {
+    const v = parseFloat(String(el(id).value).replace(",", "."));
+    return Number.isFinite(v) ? v : fallback;
+  }
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str)
+      .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+  }
+
+  /* ------------------------------------------------------------------
+     Maatadvies
+     ------------------------------------------------------------------ */
+
+  function berekenMaat() {
+    const jaarverbruik = getal("advVerbruik", 2900);
+    const heeftPv = el("advPv").value === "ja";
+    const opwek = heeftPv ? getal("advOpwek", 3500) : 0;
+    const dynamisch = el("advContract").value === "dynamisch";
+
+    const avondNacht = (jaarverbruik / 365) * 0.6;
+
+    if (heeftPv) {
+      const dagOverschotZomer = ((opwek * 0.7) / 365) * 1.5;
+      const kern = Math.min(dagOverschotZomer, Math.max(avondNacht, 1));
+      return { laag: kern * 0.75, hoog: kern * 1.25, kern, basis: "pv", dynamisch, avondNacht, dagOverschotZomer };
+    }
+    if (dynamisch) {
+      return { laag: avondNacht * 0.75, hoog: avondNacht * 1.25, kern: avondNacht, basis: "dynamisch", dynamisch, avondNacht };
+    }
+    return { laag: 0, hoog: 0, kern: 0, basis: "geen", dynamisch, avondNacht };
+  }
+
+  /* ------------------------------------------------------------------
+     Batterijen matchen
+     ------------------------------------------------------------------ */
+
+  function match(maat) {
+    const fase = el("advFase").value;           // "1" | "3" | "weet-niet"
+    const installatie = el("advInstallatie").value; // "zelf" | "installateur" | "beide"
+    const homey = el("advHomey").checked;
+    const ha = el("advHA").checked;
+    const budget = getal("advBudget", 0);
+
+    const redenenAfgevallen = [];
+
+    const kandidaten = batterijen.filter((b) => {
+      const prijs = bestePrijs(b);
+      if (!b.capaciteit_kwh) return false;
+
+      // Fase: bij een 1-fase aansluiting vallen 3-fase-only systemen af
+      if (fase === "1" && b.fase === "3-fase") return false;
+
+      // Installatievoorkeur
+      if (installatie === "zelf" && b.installatie !== "zelf") return false;
+      if (installatie === "installateur" && b.installatie !== "installateur") return false;
+
+      // Smart home-eisen
+      if (homey && driewaardig(b.homey) === "nee") return false;
+      if (ha && driewaardig(b.home_assistant) === "nee") return false;
+
+      // Dynamisch contract als dat het (enige) verdienmodel is
+      if (maat.basis === "dynamisch" && driewaardig(b.dynamisch_contract) === "nee") return false;
+
+      // Budget (alleen als ingevuld)
+      if (budget > 0 && prijs && prijs.prijs_eur > budget) return false;
+
+      // Capaciteit: past binnen ruime marge rond het advies,
+      // of is modulair uitbreidbaar tot binnen de bandbreedte
+      const past = b.capaciteit_kwh >= maat.laag * 0.6 && b.capaciteit_kwh <= maat.hoog * 1.8;
+      const uitbreidbaar = b.uitbreidbaar_tot_kwh && b.capaciteit_kwh <= maat.hoog && b.uitbreidbaar_tot_kwh >= maat.laag;
+      if (!past && !uitbreidbaar) return false;
+
+      return true;
+    });
+
+    // Score: capaciteitspassing (belangrijkst), dan prijs per kWh, dan koppelgemak
+    const scored = kandidaten.map((b) => {
+      const prijs = bestePrijs(b);
+      const perKwh = prijs ? prijs.prijs_eur / b.capaciteit_kwh : 9999;
+      const afwijking = Math.abs(b.capaciteit_kwh - maat.kern) / Math.max(maat.kern, 1);
+      const capScore = Math.max(0, 1 - afwijking);                    // 0..1
+      const prijsScore = Math.max(0, 1 - (perKwh - 150) / 850);       // ~150 euro/kWh = top
+      const koppelScore = (b.koppeling_gemak || 0) / 5;
+      const score = capScore * 0.5 + prijsScore * 0.3 + koppelScore * 0.2;
+      return { b, prijs, perKwh, score };
+    });
+
+    scored.sort((a, z) => z.score - a.score);
+    return { top: scored.slice(0, 3), totaal: kandidaten.length, redenenAfgevallen };
+  }
+
+  /* ------------------------------------------------------------------
+     Rendering
+     ------------------------------------------------------------------ */
+
+  function waaromTekst(b, maat) {
+    const redenen = [];
+    if (Math.abs(b.capaciteit_kwh - maat.kern) / Math.max(maat.kern, 1) <= 0.3) {
+      redenen.push("de capaciteit sluit goed aan op je geadviseerde maat");
+    } else if (b.uitbreidbaar_tot_kwh && b.capaciteit_kwh < maat.laag) {
+      redenen.push("modulair uitbreidbaar tot je geadviseerde maat");
+    } else if (b.capaciteit_kwh > maat.hoog) {
+      redenen.push("ruimer dan geadviseerd, handig als je verbruik groeit");
+    } else {
+      redenen.push("de capaciteit valt binnen je bandbreedte");
+    }
+    if (b.installatie === "zelf") redenen.push("zelf aan te sluiten zonder installateur");
+    if ((b.koppeling_gemak || 0) >= 4) redenen.push("koppelt makkelijk aan bestaande zonnepanelen");
+    if (driewaardig(b.dynamisch_contract) !== "nee" && maat.dynamisch) redenen.push("geschikt voor je dynamische contract");
+    return redenen.slice(0, 3).join(", ");
+  }
+
+  function render() {
+    const maat = berekenMaat();
+    const doel = el("adviesResultaat");
+    const heeftPv = el("advPv").value === "ja";
+
+    if (maat.basis === "geen") {
+      doel.innerHTML = `
+        <div class="waarschuwing-kader"><b>Eerlijk advies: wacht nog even met een batterij.</b>
+        Zonder zonnepanelen en zonder dynamisch energiecontract valt er niets op te slaan en geen prijsverschil te benutten; een thuisbatterij verdient zich dan vrijwel zeker niet terug.
+        Overweeg eerst een dynamisch contract of zonnepanelen, en kom daarna terug. Lees ook <a href="regelgeving.html">wat de regels betekenen</a>.</div>`;
+      return;
+    }
+
+    const { top, totaal } = match(maat);
+
+    const maatUitleg = maat.basis === "pv"
+      ? `Gebaseerd op je zomerse zonnestroom-overschot (ca. ${kwhFmt.format(maat.dagOverschotZomer)} kWh per dag) en je avond- en nachtverbruik (ca. ${kwhFmt.format(maat.avondNacht)} kWh per dag): meer opslaan dan je 's avonds gebruikt heeft geen zin.`
+      : `Gebaseerd op het deel van je dagverbruik dat je naar goedkope uren kunt verschuiven (ca. ${kwhFmt.format(maat.avondNacht)} kWh per dag).`;
+
+    let kaarten = "";
+    if (!top.length) {
+      kaarten = '<div class="leeg-melding">Geen batterijen gevonden die aan al je eisen voldoen. Verruim je budget of laat een smart home-eis los; of bekijk <a href="index.html">de volledige vergelijker</a>.</div>';
+    } else {
+      kaarten = `<div class="kaarten-grid" style="margin-top:18px;">` + top.map(({ b, prijs, perKwh }, i) => `
+        <article class="batterij-kaart">
+          <div class="kaart-kop">
+            <div>
+              <div class="merk">${i === 0 ? "🏆 Beste match · " : ""}${escapeHtml(b.merk)}</div>
+              <h3>${escapeHtml(b.model)}</h3>
+              <span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml(b.type)}</span>
+            </div>
+          </div>
+          <div class="kaart-specs">
+            <div class="spec"><span class="spec-label">Capaciteit</span><span class="spec-waarde">${String(b.capaciteit_kwh).replace(".", ",")} kWh${b.uitbreidbaar_tot_kwh ? ` <small>(tot ${String(b.uitbreidbaar_tot_kwh).replace(".", ",")})</small>` : ""}</span></div>
+            <div class="spec"><span class="spec-label">Prijs</span><span class="spec-waarde">${prijs ? eurFmt.format(prijs.prijs_eur) : "op aanvraag"}</span></div>
+            <div class="spec"><span class="spec-label">Per kWh</span><span class="spec-waarde">${prijs ? eurFmt.format(perKwh) : "n.b."}</span></div>
+            <div class="spec"><span class="spec-label">Installatie</span><span class="spec-waarde">${b.installatie === "zelf" ? "Zelf" : "Installateur"}</span></div>
+          </div>
+          <div class="koppelgemak"><span class="uitleg"><b>Waarom deze past:</b> ${escapeHtml(waaromTekst(b, maat))}.</span></div>
+          ${b.prijs_omvat ? `<div class="koppelgemak"><span class="uitleg">Prijs dekt: ${escapeHtml(b.prijs_omvat)}</span></div>` : ""}
+          <div class="kaart-acties" style="margin-top:auto;">
+            ${prijs && prijs.url ? `<a class="knop" href="${escapeHtml(prijs.url)}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : ""}
+            <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}">Terugverdientijd</a>
+          </div>
+        </article>`).join("") + "</div>";
+    }
+
+    doel.innerHTML = `
+      <div class="info-kader" style="text-align:center;">
+        <span style="font-size:0.85rem;font-weight:700;text-transform:uppercase;color:var(--kleur-tekst-licht);">Geadviseerde accugrootte</span>
+        <div style="font-size:2rem;font-weight:800;color:var(--kleur-primair-donker);">${kwhFmt.format(maat.laag)} tot ${kwhFmt.format(maat.hoog)} kWh</div>
+        <div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">${maatUitleg}</div>
+      </div>
+      ${heeftPv ? '<div class="waarschuwing-kader">Let op: tot en met 31 december 2026 geldt de salderingsregeling nog, waardoor opslaan van eigen zonnestroom financieel weinig oplevert. Dit advies kijkt naar de situatie vanaf 2027.</div>' : ""}
+      <h2 style="margin-top:26px;">Beste matches (${top.length} van ${totaal} passende batterijen)</h2>
+      ${kaarten}
+      <p style="margin-top:14px;"><a href="index.html">Bekijk alle batterijen in de vergelijker →</a></p>
+    `;
+  }
+
+  /* ------------------------------------------------------------------
+     Events en init
+     ------------------------------------------------------------------ */
+
+  function koppelPresets() {
+    el("advPersonen").addEventListener("change", (e) => {
+      const presets = { "1": 1800, "2": 2700, "3": 3300, "4": 3900, "5": 4400 };
+      if (presets[e.target.value]) { el("advVerbruik").value = presets[e.target.value]; }
+      render();
+    });
+    el("advPanelen").addEventListener("input", (e) => {
+      const n = parseInt(e.target.value, 10);
+      if (Number.isFinite(n) && n > 0) { el("advOpwek").value = n * 350; }
+      render();
+    });
+    el("advPv").addEventListener("change", () => {
+      el("pvVragen").style.display = el("advPv").value === "ja" ? "" : "none";
+      render();
+    });
+  }
+
+  async function init() {
+    try {
+      const res = await fetch("data/batterijen.json", { cache: "no-cache" });
+      const data = await res.json();
+      batterijen = data.batterijen || [];
+    } catch (err) {
+      console.error("Batterijen konden niet geladen worden:", err);
+    }
+    koppelPresets();
+    document.querySelectorAll("#adviesFormulier input, #adviesFormulier select").forEach((inp) => {
+      inp.addEventListener("input", render);
+      inp.addEventListener("change", render);
+    });
+    render();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
