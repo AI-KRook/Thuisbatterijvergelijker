@@ -104,6 +104,61 @@
   }
 
   /* ------------------------------------------------------------------
+     Terugverdiengrafiek (zelfstandige SVG, geen libraries)
+     Kleuren gevalideerd op contrast en kleurenblind-veiligheid:
+     teal #0d9488 (opbrengst), amber #d97706 (investering)
+     ------------------------------------------------------------------ */
+
+  function terugverdienGrafiek(investering, jaarOpbrengst, terugverdientijd) {
+    const H = Math.min(30, Math.max(15, Math.ceil(terugverdientijd) + 3)); // horizon in jaren
+    const W = 640, HGT = 300, mL = 78, mR = 24, mT = 18, mB = 40;
+    const pw = W - mL - mR, ph = HGT - mT - mB;
+    const yMax = Math.max(investering, jaarOpbrengst * H) * 1.06;
+    const x = (jaar) => mL + (jaar / H) * pw;
+    const y = (eur) => mT + ph - (eur / yMax) * ph;
+
+    // Rasterlijnen en y-labels (terughoudend: 4 stappen)
+    let raster = "";
+    for (let i = 0; i <= 4; i++) {
+      const val = (yMax / 4) * i;
+      raster += `<line x1="${mL}" x2="${W - mR}" y1="${y(val)}" y2="${y(val)}" stroke="#e5e7eb" stroke-width="1"/>` +
+        `<text x="${mL - 8}" y="${y(val) + 4}" text-anchor="end" font-size="11" fill="#6b7280">${Math.round(val / 100) / 10}k</text>`;
+    }
+    // X-labels per 5 jaar
+    let xlabels = "";
+    for (let j = 0; j <= H; j += 5) {
+      xlabels += `<text x="${x(j)}" y="${HGT - 14}" text-anchor="middle" font-size="11" fill="#6b7280">${j}</text>`;
+    }
+
+    // Opbrengstlijn met hoverpunten per jaar
+    let pad = `M ${x(0)} ${y(0)}`;
+    let punten = "";
+    for (let j = 1; j <= H; j++) {
+      pad += ` L ${x(j)} ${y(jaarOpbrengst * j)}`;
+      punten += `<circle cx="${x(j)}" cy="${y(jaarOpbrengst * j)}" r="9" fill="transparent"><title>Na ${j} jaar: ${eurFmt.format(jaarOpbrengst * j)} bespaard (saldo ${eurFmt.format(jaarOpbrengst * j - investering)})</title></circle>`;
+    }
+
+    // Terugverdienpunt
+    const bx = x(terugverdientijd), by = y(investering);
+    const labelLinks = terugverdientijd > H * 0.55;
+
+    return `
+    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:0.85rem;color:var(--kleur-tekst-licht);margin:16px 0 4px;">
+      <span><span style="display:inline-block;width:14px;height:3px;background:#0d9488;border-radius:2px;vertical-align:middle;"></span> Opgetelde besparing</span>
+      <span><span style="display:inline-block;width:14px;height:0;border-top:3px dashed #d97706;vertical-align:middle;"></span> Investering</span>
+    </div>
+    <svg viewBox="0 0 ${W} ${HGT}" style="width:100%;height:auto;" role="img" aria-label="Grafiek: de opgetelde besparing groeit elk jaar en kruist na ${jaarFmt.format(terugverdientijd)} jaar de investering van ${eurFmt.format(investering)}. De cijfers staan ook in de tabel hieronder.">
+      ${raster}${xlabels}
+      <text x="${W - mR}" y="${HGT - 2}" text-anchor="end" font-size="11" fill="#6b7280">jaren</text>
+      <line x1="${mL}" x2="${W - mR}" y1="${y(investering)}" y2="${y(investering)}" stroke="#d97706" stroke-width="2" stroke-dasharray="6 5"/>
+      <path d="${pad}" fill="none" stroke="#0d9488" stroke-width="2"/>
+      <circle cx="${bx}" cy="${by}" r="6" fill="#0d9488" stroke="#ffffff" stroke-width="2"/>
+      <text x="${bx + (labelLinks ? -10 : 10)}" y="${by - 12}" text-anchor="${labelLinks ? "end" : "start"}" font-size="12" font-weight="700" fill="#1f2937">terugverdiend na ${jaarFmt.format(terugverdientijd)} jaar</text>
+      ${punten}
+    </svg>`;
+  }
+
+  /* ------------------------------------------------------------------
      Resultaat tonen
      ------------------------------------------------------------------ */
 
@@ -153,18 +208,34 @@
     waarschuwingen.push("Tot en met 31 december 2026 geldt de salderingsregeling nog; het voordeel van het opslaan van eigen zonnestroom is tot die datum vrijwel nihil. Deze berekening gaat uit van de situatie vanaf 2027.");
     waarschuwingen.push("Het model rekent niet met batterijdegradatie, rente of stijgende/dalende energieprijzen. Zie de toelichting onderaan voor alle aannames.");
 
+    const grafiek = r.terugverdientijd != null && r.terugverdientijd <= 27
+      ? terugverdienGrafiek(r.investering, r.totaal, r.terugverdientijd)
+      : "";
+
+    const saldoRij = (jaar) =>
+      `<tr><td>Na ${jaar} jaar</td><td style="text-align:right;">${eurFmt.format(r.totaal * jaar)}</td><td style="text-align:right;font-weight:700;color:${r.totaal * jaar - r.investering >= 0 ? "var(--kleur-groen)" : "var(--kleur-rood)"};">${eurFmt.format(r.totaal * jaar - r.investering)}</td></tr>`;
+
     doel.innerHTML = `
       <div style="text-align:center;padding:10px 0 18px;">${oordeel}</div>
+      ${grafiek}
       <div style="overflow-x:auto;">
       <table class="vergelijk-tabel" style="min-width:0;">
         <thead><tr><th>Opbrengst per jaar</th><th style="text-align:right;">Bedrag</th></tr></thead>
         <tbody>
           ${regels.join("") || '<tr><td colspan="2">Geen opbrengsten met deze invoer.</td></tr>'}
           <tr><td style="font-weight:800;">Totaal per jaar</td><td style="font-weight:800;text-align:right;">${eurFmt.format(r.totaal)}</td></tr>
-          <tr><td>Saldo na 10 jaar (opbrengst minus investering)</td><td style="text-align:right;font-weight:700;">${eurFmt.format(r.totaal * 10 - r.investering)}</td></tr>
         </tbody>
       </table>
       </div>
+      ${r.terugverdientijd != null ? `
+      <div style="overflow-x:auto;margin-top:12px;">
+      <table class="vergelijk-tabel" style="min-width:0;">
+        <thead><tr><th>Verloop</th><th style="text-align:right;">Bespaard</th><th style="text-align:right;">Saldo t.o.v. investering</th></tr></thead>
+        <tbody>
+          ${saldoRij(5)}${saldoRij(10)}${saldoRij(15)}
+        </tbody>
+      </table>
+      </div>` : ""}
       ${waarschuwingen.map((w) => `<div class="waarschuwing-kader" style="margin:12px 0;">${w}</div>`).join("")}
     `;
   }
