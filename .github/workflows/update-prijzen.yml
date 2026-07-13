@@ -28,10 +28,10 @@ jobs:
         run: |
           git config user.name "prijsupdate-bot"
           git config user.email "actions@github.com"
-          if git diff --quiet -- data/batterijen.json; then
+          if git diff --quiet -- data/batterijen.json sitemap.xml; then
             echo "Geen prijswijzigingen vandaag."
           else
-            git add data/batterijen.json
+            git add data/batterijen.json sitemap.xml
             git commit -m "Dagelijkse prijsupdate $(date -u +%F)"
             git push
           fi

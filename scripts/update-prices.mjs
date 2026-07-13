@@ -164,6 +164,21 @@ async function main() {
 
   data.laatst_bijgewerkt = VANDAAG;
   writeFileSync(DATA_PAD, JSON.stringify(data, null, 2) + "\n", "utf8");
+
+  // Sitemap: lastmod van de homepage bijwerken, zodat zoekmachines de
+  // dagelijkse prijsverversing zien
+  const SITEMAP_PAD = resolve(__dirname, "../sitemap.xml");
+  try {
+    const sitemap = readFileSync(SITEMAP_PAD, "utf8");
+    const bijgewerkt = sitemap.replace(
+      /(<loc>https:\/\/batterijmaatje\.nl\/<\/loc>\s*<lastmod>)[^<]+(<\/lastmod>)/,
+      `$1${VANDAAG}$2`
+    );
+    if (bijgewerkt !== sitemap) writeFileSync(SITEMAP_PAD, bijgewerkt, "utf8");
+  } catch (err) {
+    console.log("Sitemap niet bijgewerkt:", err.message);
+  }
+
   console.log(`\nKlaar. ${wijzigingen} prijswijziging(en). laatst_bijgewerkt = ${VANDAAG}`);
 }
 
