@@ -96,8 +96,9 @@
     <h1>Thuisbatterij vergelijken: vind de accu die past bij jouw huis en zonnepanelen</h1>
     <p>Vergelijk capaciteit, prijzen en actuele aanbiedingen van de populairste thuisbatterijen in Nederland. Zie direct of een batterij koppelbaar is met jouw zonnepanelen, Homey of Home Assistant.</p>
     <span class="update-info">🔄 Prijzen laatst bijgewerkt: <b id="updateDatum">…</b></span>
-    <div style="margin-top:18px;">
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
       <a class="knop" href="advies.html" style="background:var(--kleur-accent);color:#422006;">🧭 Hulp bij kiezen? Doe de keuzehulp</a>
+      <a class="knop" href="uitleg.html" style="background:rgba(255,255,255,0.14);border:1.5px solid rgba(255,255,255,0.55);">📖 Nieuw? Zo werkt een thuisbatterij</a>
     </div>
   </div>
 </section>
@@ -109,7 +110,9 @@
     <p><b>Salderingsregeling stopt per 1 januari 2027.</b> Teruggeleverde zonnestroom wegstrepen tegen je verbruik kan dan niet meer. Een thuisbatterij wordt daardoor voor veel huishoudens met zonnepanelen interessanter. <a href="regelgeving.html">Lees wat de regels betekenen voor jouw situatie →</a></p>
   </div>
 
-  <div class="filterbalk">
+  <button class="filter-toggle" id="filterToggle">🔍 Filteren en sorteren ▾</button>
+
+  <div class="filterbalk ingeklapt" id="filterbalk">
     <div class="filter-rij">
       <div class="filter-groep">
         <label for="filterType">Type systeem</label>
@@ -146,10 +149,10 @@
       <div class="filter-groep">
         <label for="sorteer">Sorteren op</label>
         <select id="sorteer">
+          <option value="prijs-per-kwh" selected>Beste prijs per kWh opslag</option>
           <option value="prijs-oplopend">Winkelprijs (laag naar hoog)</option>
           <option value="totaalprijs">Totaalprijs gebruiksklaar (indicatie)</option>
           <option value="prijs-aflopend">Winkelprijs (hoog naar laag)</option>
-          <option value="prijs-per-kwh">Prijs per kWh opslag</option>
           <option value="capaciteit">Capaciteit (grootste eerst)</option>
           <option value="koppelgemak">Makkelijkst te koppelen</option>
         </select>

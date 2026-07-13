@@ -154,6 +154,29 @@ a { color: var(--kleur-primair); }
    Filters
    -------------------------------------------------------------------------- */
 
+/* Op mobiel zijn de filters standaard ingeklapt zodat de batterijen snel in beeld komen */
+.filter-toggle {
+  display: none;
+  width: 100%;
+  margin: 20px 0 0;
+  padding: 13px 16px;
+  background: var(--kleur-wit);
+  border: 1px solid var(--kleur-rand);
+  border-radius: var(--radius);
+  box-shadow: var(--schaduw);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--kleur-tekst);
+  cursor: pointer;
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .filter-toggle { display: block; }
+  .filterbalk.ingeklapt { display: none; }
+  .filterbalk { margin-top: 10px; }
+}
+
 .filterbalk {
   background: var(--kleur-wit);
   border: 1px solid var(--kleur-rand);

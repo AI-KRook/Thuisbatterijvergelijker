@@ -10,7 +10,7 @@
     batterijen: [],
     meta: {},
     weergave: "kaarten", // of "tabel"
-    sortering: "prijs-oplopend",
+    sortering: "prijs-per-kwh",
     tabelSortKolom: null,
     tabelSortRichting: 1,
     vergelijkSelectie: [],
@@ -218,7 +218,9 @@
           ${beste && beste.winkel ? `<div class="prijs-winkel">bij ${escapeHtml(beste.winkel)}</div>` : ""}
           ${b.prijs_omvat ? `<div class="prijs-winkel">${escapeHtml(b.prijs_omvat)}</div>` : ""}
           <div class="prijs-winkel" style="margin-top:6px;border-top:1px dashed var(--kleur-rand);padding-top:6px;" title="${escapeHtml(b.totaalprijs_toelichting || "")}">
-            Compleet gebruiksklaar (indicatie): <b>${totaalprijsTekst(b) || "op aanvraag"}</b>
+            ${beste && b.totaalprijs_van_eur === beste.prijs_eur && !b.totaalprijs_tot_eur
+              ? "✓ Dit is de complete prijs, gebruiksklaar"
+              : `Compleet gebruiksklaar (indicatie): <b>${totaalprijsTekst(b) || "op aanvraag"}</b>`}
           </div>
         </div>
       </div>
@@ -363,6 +365,16 @@
     });
 
     el("sorteer").addEventListener("change", (e) => { state.sortering = e.target.value; render(); });
+
+    // Mobiel: filters in- en uitklappen
+    const filterToggle = el("filterToggle");
+    if (filterToggle) {
+      filterToggle.addEventListener("click", () => {
+        const balk = el("filterbalk");
+        const ingeklapt = balk.classList.toggle("ingeklapt");
+        filterToggle.textContent = ingeklapt ? "🔍 Filteren en sorteren ▾" : "🔍 Filteren en sorteren ▴";
+      });
+    }
 
     el("resetFilters").addEventListener("click", () => {
       state.filters = { type: "alle", capaciteit: "alle", installatie: "alle", merk: "alle", homey: false, homeAssistant: false, dynamisch: false, noodstroom: false, aanbieding: false };
