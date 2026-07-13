@@ -9,15 +9,18 @@ Een gebruiksvriendelijke, statische vergelijkingssite voor thuisbatterijen op de
 - **Koppelgemak-score** (1 tot 5 sterren) die laat zien hoe makkelijk een batterij aan een bestaand zonnepanelensysteem te koppelen is.
 - **Kaart- en tabelweergave**, plus zij-aan-zij vergelijken van maximaal 3 batterijen.
 - **Directe links** naar de winkel of aanbieder met de beste prijs ("Bekijk aanbieding").
+- **Rekenmodule terugverdientijd** (`rekenmodule.html`): berekent per batterij en per situatie (met of zonder zonnepanelen, vast of dynamisch contract, slim laden en ontladen op uurprijzen) de jaarlijkse opbrengst en terugverdientijd, met instelbare en gedocumenteerde aannames.
 - **Uitlegpagina** over de actuele overheidsregels: einde salderingsregeling per 2027, terugleverkosten, btw en subsidies, met bronvermelding.
 
 ## Structuur
 
 ```
 index.html                      De vergelijker
+rekenmodule.html                Rekenmodule terugverdientijd
 regelgeving.html                Uitleg regels en subsidies
 assets/style.css                Vormgeving
 assets/app.js                   Filter-, sorteer- en renderlogica
+assets/rekenmodule.js           Rekenlogica terugverdientijd
 data/batterijen.json            Alle batterijgegevens, prijzen en aanbiedingen
 scripts/update-prices.mjs       Dagelijks prijsupdate-script (Node.js)
 .github/workflows/

@@ -191,10 +191,12 @@
           <div class="prijs">${beste ? eurFmt.format(beste.prijs_eur) : "Prijs op aanvraag"}</div>
           ${perKwh ? `<div class="prijs-per-kwh">${eurFmt.format(perKwh)} per kWh opslag</div>` : ""}
           ${beste && beste.winkel ? `<div class="prijs-winkel">bij ${escapeHtml(beste.winkel)}</div>` : ""}
+          ${b.prijs_omvat ? `<div class="prijs-winkel">${escapeHtml(b.prijs_omvat)}</div>` : ""}
         </div>
       </div>
       <div class="kaart-acties">
         ${beste && beste.url ? `<a class="knop" href="${escapeHtml(beste.url)}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : (b.product_url ? `<a class="knop" href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener">Naar aanbieder →</a>` : "")}
+        <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}" title="Bereken de terugverdientijd van deze batterij voor jouw situatie">Terugverdientijd</a>
       </div>
     </article>`;
   }
@@ -273,6 +275,7 @@
         ${rij("Vermogen", (b) => (b.vermogen_kw ? String(b.vermogen_kw).replace(".", ",") + " kW" : "?"))}
         ${rij("Beste prijs", (b) => { const p = bestePrijs(b); return p ? `<b>${eurFmt.format(p.prijs_eur)}</b> bij ${escapeHtml(p.winkel || "")}` : "n.b."; })}
         ${rij("Prijs per kWh", (b) => { const p = prijsPerKwh(b); return p ? eurFmt.format(p) : "n.b."; })}
+        ${rij("Prijs dekt", (b) => `<small>${escapeHtml(b.prijs_omvat || "")}</small>`)}
         ${rij("Installatie", (b) => (b.installatie === "zelf" ? "Zelf (stopcontact)" : "Installateur vereist"))}
         ${rij("Koppeling zonnepanelen", (b) => `<span class="sterren" style="color:var(--kleur-accent)">${sterren(b.koppeling_gemak)}</span><br><small>${escapeHtml(b.zonnepanelen_koppeling || "")}</small>`)}
         ${rij("Homey", (b) => d3(b.homey))}
