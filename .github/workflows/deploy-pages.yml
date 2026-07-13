@@ -14,7 +14,9 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  # Niet annuleren: een mislukkende run vanaf de verkeerde branch mag een
+  # goede publicatie niet verdringen
+  cancel-in-progress: false
 
 jobs:
   deploy:
