@@ -41,6 +41,11 @@ function driewaardig(v) {
   return { status: "nee", tekst: "Nee" };
 }
 
+function vierwaardig(v) {
+  if (v === undefined || v === null) return { status: "onbekend", tekst: "Onbekend; controleer dit bij de leverancier" };
+  return driewaardig(v);
+}
+
 function totaalprijsTekst(b) {
   if (!b.totaalprijs_van_eur) return null;
   return eur(b.totaalprijs_van_eur) + (b.totaalprijs_tot_eur ? " tot " + eur(b.totaalprijs_tot_eur) : "");
@@ -85,6 +90,7 @@ function pagina(b) {
   const homey = driewaardig(b.homey);
   const ha = driewaardig(b.home_assistant);
   const dyn = driewaardig(b.dynamisch_contract);
+  const nood = vierwaardig(b.noodstroom);
   const typeLabel = { "plug-in": "Plug-in (stopcontact)", "ac-gekoppeld": "AC-gekoppeld", "hybride": "Hybride omvormer" }[b.type] || b.type;
 
   const metaDesc = `${b.merk} ${b.model}: ${nl(b.capaciteit_kwh)} kWh thuisbatterij` +
@@ -174,6 +180,10 @@ ${productLd(b)}
     <li><b>Home Assistant:</b> ${esc(ha.tekst)}</li>
     <li><b>Dynamisch energiecontract:</b> ${esc(dyn.tekst)}</li>
   </ul>
+
+  <h2>Noodstroom en zelfvoorzienendheid</h2>
+  <p><b>Noodstroom bij stroomuitval:</b> ${esc(nood.tekst)}</p>
+  <p class="datum-stempel">Goed om te weten: volledig zelfvoorzienend (van het net af) is in Nederland vrijwel nooit haalbaar vanwege de lage winteropbrengst van zonnepanelen. Noodstroom betekent dat (een deel van) je huis blijft werken tijdens een storing; veel plug-in batterijen vallen dan juist uit omdat ze met het net meedraaien.</p>
 
   ${b.opmerkingen ? `<h2>Goed om te weten</h2><p>${esc(b.opmerkingen)}</p>` : ""}
 

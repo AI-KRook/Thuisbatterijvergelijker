@@ -22,6 +22,7 @@
       homey: false,
       homeAssistant: false,
       dynamisch: false,
+      noodstroom: false,
       aanbieding: false,
     },
   };
@@ -74,6 +75,12 @@
     return { status: "nee", tekst: "Nee" };
   }
 
+  // Zoals driewaardig, maar met expliciet "onbekend" voor ontbrekende data
+  function vierwaardig(v) {
+    if (v === undefined || v === null) return { status: "onbekend", tekst: "Onbekend" };
+    return driewaardig(v);
+  }
+
   /* ------------------------------------------------------------------
      Filteren en sorteren
      ------------------------------------------------------------------ */
@@ -98,6 +105,7 @@
       if (f.homey && driewaardig(b.homey).status === "nee") return false;
       if (f.homeAssistant && driewaardig(b.home_assistant).status === "nee") return false;
       if (f.dynamisch && driewaardig(b.dynamisch_contract).status === "nee") return false;
+      if (f.noodstroom && !["ja", "deels"].includes(vierwaardig(b.noodstroom).status)) return false;
       if (f.aanbieding && !heeftKorting(b)) return false;
       return true;
     });
@@ -126,6 +134,12 @@
     const icoon = d.status === "ja" ? "✓" : d.status === "deels" ? "~" : "✕";
     const titel = d.status === "deels" ? d.tekst : d.status === "ja" ? (titelJa || "Ondersteund") : "Niet ondersteund";
     return `<span class="badge ${d.status}" title="${escapeHtml(titel)}">${icoon} ${escapeHtml(label)}</span>`;
+  }
+
+  function noodstroomBadge(b) {
+    const d = vierwaardig(b.noodstroom);
+    const icoon = { ja: "✓", deels: "~", nee: "✕", onbekend: "?" }[d.status];
+    return `<span class="badge ${d.status}" title="${escapeHtml(d.tekst)}">${icoon} Noodstroom</span>`;
   }
 
   function sterren(score) {
@@ -180,12 +194,14 @@
         ${badgeHtml("Homey", b.homey)}
         ${badgeHtml("Home Assistant", b.home_assistant)}
         ${badgeHtml("Dynamisch contract", b.dynamisch_contract)}
+        ${noodstroomBadge(b)}
       </div>
       <button class="details-toggle" data-id="${escapeHtml(b.id)}">Meer details</button>
       <div class="kaart-details" data-details="${escapeHtml(b.id)}" hidden>
         <dt>Homey</dt><dd>${escapeHtml(driewaardig(b.homey).tekst)}</dd>
         <dt>Home Assistant</dt><dd>${escapeHtml(driewaardig(b.home_assistant).tekst)}</dd>
         <dt>Dynamisch contract</dt><dd>${escapeHtml(driewaardig(b.dynamisch_contract).tekst)}</dd>
+        <dt>Noodstroom bij stroomuitval</dt><dd>${escapeHtml(vierwaardig(b.noodstroom).tekst)}</dd>
         ${b.opmerkingen ? `<dt>Goed om te weten</dt><dd>${escapeHtml(b.opmerkingen)}</dd>` : ""}
         ${b.cycli ? `<dt>Laadcycli (garantie)</dt><dd>${escapeHtml(String(b.cycli))}</dd>` : ""}
         ${b.fase ? `<dt>Aansluiting</dt><dd>${escapeHtml(b.fase)}</dd>` : ""}
@@ -342,17 +358,17 @@
       });
     });
 
-    [["checkHomey", "homey"], ["checkHA", "homeAssistant"], ["checkDynamisch", "dynamisch"], ["checkAanbieding", "aanbieding"]].forEach(([id, key]) => {
+    [["checkHomey", "homey"], ["checkHA", "homeAssistant"], ["checkDynamisch", "dynamisch"], ["checkNoodstroom", "noodstroom"], ["checkAanbieding", "aanbieding"]].forEach(([id, key]) => {
       el(id).addEventListener("change", (e) => { state.filters[key] = e.target.checked; render(); });
     });
 
     el("sorteer").addEventListener("change", (e) => { state.sortering = e.target.value; render(); });
 
     el("resetFilters").addEventListener("click", () => {
-      state.filters = { type: "alle", capaciteit: "alle", installatie: "alle", merk: "alle", homey: false, homeAssistant: false, dynamisch: false, aanbieding: false };
+      state.filters = { type: "alle", capaciteit: "alle", installatie: "alle", merk: "alle", homey: false, homeAssistant: false, dynamisch: false, noodstroom: false, aanbieding: false };
       el("filterType").value = "alle"; el("filterCapaciteit").value = "alle";
       el("filterInstallatie").value = "alle"; el("filterMerk").value = "alle";
-      ["checkHomey", "checkHA", "checkDynamisch", "checkAanbieding"].forEach((id) => { el(id).checked = false; });
+      ["checkHomey", "checkHA", "checkDynamisch", "checkNoodstroom", "checkAanbieding"].forEach((id) => { el(id).checked = false; });
       render();
     });
 

@@ -42,6 +42,11 @@
     return "nee";
   }
 
+  function vierwaardig(v) {
+    if (v === undefined || v === null) return "onbekend";
+    return driewaardig(v);
+  }
+
   function getal(id, fallback) {
     const v = parseFloat(String(el(id).value).replace(",", "."));
     return Number.isFinite(v) ? v : fallback;
@@ -85,6 +90,7 @@
     const installatie = el("advInstallatie").value; // "zelf" | "installateur" | "beide"
     const homey = el("advHomey").checked;
     const ha = el("advHA").checked;
+    const noodstroom = el("advNoodstroom").checked;
     const budget = getal("advBudget", 0);
 
     const redenenAfgevallen = [];
@@ -103,6 +109,9 @@
       // Smart home-eisen
       if (homey && driewaardig(b.homey) === "nee") return false;
       if (ha && driewaardig(b.home_assistant) === "nee") return false;
+
+      // Noodstroom: alleen batterijen waarvan bevestigd is dat het kan
+      if (noodstroom && !["ja", "deels"].includes(vierwaardig(b.noodstroom))) return false;
 
       // Dynamisch contract als dat het (enige) verdienmodel is
       if (maat.basis === "dynamisch" && driewaardig(b.dynamisch_contract) === "nee") return false;
