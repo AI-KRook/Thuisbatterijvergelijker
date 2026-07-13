@@ -139,7 +139,7 @@
   function noodstroomBadge(b) {
     const d = vierwaardig(b.noodstroom);
     const icoon = { ja: "✓", deels: "~", nee: "✕", onbekend: "?" }[d.status];
-    return `<span class="badge ${d.status}" title="${escapeHtml(d.tekst)}">${icoon} Noodstroom</span>`;
+    return `<span class="badge ${d.status}" title="${escapeHtml(b.noodstroom_uitleg || d.tekst)}">${icoon} Noodstroom</span>`;
   }
 
   function sterren(score) {
@@ -201,7 +201,7 @@
         <dt>Homey</dt><dd>${escapeHtml(driewaardig(b.homey).tekst)}</dd>
         <dt>Home Assistant</dt><dd>${escapeHtml(driewaardig(b.home_assistant).tekst)}</dd>
         <dt>Dynamisch contract</dt><dd>${escapeHtml(driewaardig(b.dynamisch_contract).tekst)}</dd>
-        <dt>Noodstroom bij stroomuitval</dt><dd>${escapeHtml(vierwaardig(b.noodstroom).tekst)}</dd>
+        <dt>Noodstroom bij stroomuitval</dt><dd>${escapeHtml(b.noodstroom_uitleg || vierwaardig(b.noodstroom).tekst)}</dd>
         ${b.opmerkingen ? `<dt>Goed om te weten</dt><dd>${escapeHtml(b.opmerkingen)}</dd>` : ""}
         ${b.cycli ? `<dt>Laadcycli (garantie)</dt><dd>${escapeHtml(String(b.cycli))}</dd>` : ""}
         ${b.fase ? `<dt>Aansluiting</dt><dd>${escapeHtml(b.fase)}</dd>` : ""}

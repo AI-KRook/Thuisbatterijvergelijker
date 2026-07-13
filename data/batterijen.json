@@ -35,7 +35,9 @@
       ],
       "totaalprijs_van_eur": 1299,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw en P1-meter, zelf te installeren"
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw en P1-meter, zelf te installeren",
+      "noodstroom": true,
+      "noodstroom_uitleg": "Ingebouwd noodstroom-stopcontact op het apparaat (tot 2,5 kW): neemt bij netuitval binnen ca. 15 ms over voor direct aangesloten apparaten. Voedt niet de hele huisinstallatie."
     },
     {
       "id": "marstek-venus-c-768",
@@ -70,7 +72,9 @@
       ],
       "totaalprijs_van_eur": 1274,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw en P1-meter, zelf te installeren"
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw en P1-meter, zelf te installeren",
+      "noodstroom": "Backup-aansluiting op het apparaat (ca. 2,2 kW continu) volgens de NL-productpagina; specificaties verschillen per Venus C-variant, controleer dit bij de leverancier.",
+      "noodstroom_uitleg": "Backup-aansluiting op het apparaat (ca. 2,2 kW continu) volgens de NL-productpagina; specificaties verschillen per Venus C-variant, controleer dit bij de leverancier."
     },
     {
       "id": "sessy-5kwh",
@@ -106,7 +110,9 @@
       ],
       "totaalprijs_van_eur": 3550,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren"
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren",
+      "noodstroom": "Alleen met de optionele Sessy-noodstroommodule plus een externe Victron-omvormer: handmatig apparaten voeden, geen automatische omschakeling en geen voeding van de huisinstallatie.",
+      "noodstroom_uitleg": "Alleen met de optionele Sessy-noodstroommodule plus een externe Victron-omvormer: handmatig apparaten voeden, geen automatische omschakeling en geen voeding van de huisinstallatie."
     },
     {
       "id": "homewizard-plug-in-battery",
@@ -141,7 +147,9 @@
       ],
       "totaalprijs_van_eur": 1230,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "winkelprijs plus vereiste HomeWizard P1-meter (ca. 35 euro), zelf te installeren"
+      "totaalprijs_toelichting": "winkelprijs plus vereiste HomeWizard P1-meter (ca. 35 euro), zelf te installeren",
+      "noodstroom": false,
+      "noodstroom_uitleg": "Geen noodstroom: de batterij schakelt bij een stroomstoring automatisch uit (bevestigd door HomeWizard zelf)."
     },
     {
       "id": "ecoflow-stream-ac-pro",
@@ -176,7 +184,9 @@
       ],
       "totaalprijs_van_eur": 729,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren"
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren",
+      "noodstroom": true,
+      "noodstroom_uitleg": "Twee AC-uitgangen met UPS-functie op het apparaat: direct aangesloten apparaten (tot ca. 800 W) blijven bij netuitval doorwerken."
     },
     {
       "id": "anker-solix-solarbank-3-pro",
@@ -211,7 +221,9 @@
       ],
       "totaalprijs_van_eur": 1099,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren"
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren",
+      "noodstroom": true,
+      "noodstroom_uitleg": "Ingebouwd noodstroom-stopcontact van 1.200 W continu (1.800 W piek) voor essentiële apparaten; voedt niet de huisinstallatie."
     },
     {
       "id": "zendure-solarflow-hyper-2000",
@@ -240,7 +252,9 @@
       "aanbiedingen": [],
       "totaalprijs_van_eur": 850,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "indicatieve setprijs incl. btw, zelf te installeren"
+      "totaalprijs_toelichting": "indicatieve setprijs incl. btw, zelf te installeren",
+      "noodstroom": false,
+      "noodstroom_uitleg": "Niet praktisch beschikbaar: de Hyper 2000 stopt bij een storing en de losse Zendure Off-Grid stekkerdoos lijkt uit de verkoop. De nieuwere SolarFlow 2400 AC-lijn heeft wel een off-grid stopcontact."
     },
     {
       "id": "zonneplan-nexus",
@@ -276,7 +290,9 @@
       ],
       "totaalprijs_van_eur": 5990,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "vanaf-prijs incl. installatie door Zonneplan"
+      "totaalprijs_toelichting": "vanaf-prijs incl. installatie door Zonneplan",
+      "noodstroom": "Optioneel noodstroom-stopcontact bij installatie (ca. 200 euro meerprijs): levert bij een storing tot 3.600 W; de rest van de woning blijft spanningsloos.",
+      "noodstroom_uitleg": "Optioneel noodstroom-stopcontact bij installatie (ca. 200 euro meerprijs): levert bij een storing tot 3.600 W; de rest van de woning blijft spanningsloos."
     },
     {
       "id": "enphase-iq-battery-5p",
@@ -311,7 +327,9 @@
       ],
       "totaalprijs_van_eur": 5426,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "vanaf-prijs incl. installatie en btw (Vattenfall/Feenstra)"
+      "totaalprijs_toelichting": "vanaf-prijs incl. installatie en btw (Vattenfall/Feenstra)",
+      "noodstroom": "Alleen met de aparte IQ System Controller 3 INT (in NL verkrijgbaar): vormt bij netuitval automatisch een eilandnet voor (een deel van) de woning, ca. 3,84 kW per batterij.",
+      "noodstroom_uitleg": "Alleen met de aparte IQ System Controller 3 INT (in NL verkrijgbaar): vormt bij netuitval automatisch een eilandnet voor (een deel van) de woning, ca. 3,84 kW per batterij."
     },
     {
       "id": "victron-pylontech-3fase",
@@ -339,7 +357,9 @@
       "aanbiedingen": [],
       "totaalprijs_van_eur": null,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op",
+      "noodstroom": true,
+      "noodstroom_uitleg": "Ingebouwde UPS-functie in de MultiPlus-II: neemt bij netuitval binnen ca. 20 ms de belasting over. Hele huis of kritische groepen mogelijk, ca. 12 kW bij de 3-fase opstelling."
     },
     {
       "id": "sigenergy-sigenstor-8kwh",
@@ -374,7 +394,9 @@
       ],
       "totaalprijs_van_eur": 6500,
       "totaalprijs_tot_eur": 8000,
-      "totaalprijs_toelichting": "praktijkindicatie compleet geinstalleerd incl. btw (8 kWh)"
+      "totaalprijs_toelichting": "praktijkindicatie compleet geinstalleerd incl. btw (8 kWh)",
+      "noodstroom": "Alleen met de optionele Sigen Energy Gateway (ca. 2.000 euro): schakelt de hele woning vrijwel naadloos om naar de batterij, tot ca. 10 kW.",
+      "noodstroom_uitleg": "Alleen met de optionele Sigen Energy Gateway (ca. 2.000 euro): schakelt de hele woning vrijwel naadloos om naar de batterij, tot ca. 10 kW."
     },
     {
       "id": "tesla-powerwall-3",
@@ -415,7 +437,9 @@
       ],
       "totaalprijs_van_eur": 9500,
       "totaalprijs_tot_eur": 11500,
-      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. btw"
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. btw",
+      "noodstroom": "Alleen met de Tesla Backup Gateway 2 of Backup Switch: hele woning, tot ca. 11 kW per Powerwall. Er is Nederlandstalige installatiedocumentatie, maar hoe gangbaar dit in NL is, is beperkt gedocumenteerd.",
+      "noodstroom_uitleg": "Alleen met de Tesla Backup Gateway 2 of Backup Switch: hele woning, tot ca. 11 kW per Powerwall. Er is Nederlandstalige installatiedocumentatie, maar hoe gangbaar dit in NL is, is beperkt gedocumenteerd."
     },
     {
       "id": "alphaess-smile-g3-t10",
@@ -451,7 +475,9 @@
       ],
       "totaalprijs_van_eur": 10000,
       "totaalprijs_tot_eur": 11000,
-      "totaalprijs_toelichting": "indicatie: richtprijs (Slimster) plus 1.000 tot 2.000 euro installatie"
+      "totaalprijs_toelichting": "indicatie: richtprijs (Slimster) plus 1.000 tot 2.000 euro installatie",
+      "noodstroom": "Alleen met de optionele AlphaESS Backup Box (kritische groepen of noodstopcontact) of Backup Box Plus (hele woning); omschakeling binnen ca. 10 ms.",
+      "noodstroom_uitleg": "Alleen met de optionele AlphaESS Backup Box (kritische groepen of noodstopcontact) of Backup Box Plus (hele woning); omschakeling binnen ca. 10 ms."
     },
     {
       "id": "fox-ess-ep11",
@@ -487,7 +513,9 @@
       ],
       "totaalprijs_van_eur": null,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op",
+      "noodstroom": true,
+      "noodstroom_uitleg": "De Fox ESS H1/H3-omvormers hebben standaard een EPS-poort die een aparte noodstroomgroep voedt bij netuitval; voor een groter deel van de installatie is de optionele EPS Box nodig. De noodstroomgroep moet door de installateur worden aangesloten."
     },
     {
       "id": "growatt-apx-10",
@@ -515,7 +543,9 @@
       "aanbiedingen": [],
       "totaalprijs_van_eur": 3500,
       "totaalprijs_tot_eur": 5000,
-      "totaalprijs_toelichting": "indicatie compleet geinstalleerd (marktbronnen)"
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd (marktbronnen)",
+      "noodstroom": "Alleen met de aparte Growatt Backup Box (SYN-XH): schakelt de aangesloten groepen bij netuitval automatisch om naar batterijvoeding.",
+      "noodstroom_uitleg": "Alleen met de aparte Growatt Backup Box (SYN-XH): schakelt de aangesloten groepen bij netuitval automatisch om naar batterijvoeding."
     },
     {
       "id": "sungrow-sbr096",
@@ -551,7 +581,9 @@
       ],
       "totaalprijs_van_eur": 5500,
       "totaalprijs_tot_eur": 7000,
-      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. omvormer en btw"
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. omvormer en btw",
+      "noodstroom": true,
+      "noodstroom_uitleg": "Backup-poort standaard op de SH-omvormers: voedt een aparte noodstroomgroep (of, afhankelijk van de installatie, de woning) bij netuitval, omschakeling binnen ca. 20 ms."
     },
     {
       "id": "byd-battery-box-hvm-11",
@@ -579,7 +611,9 @@
       "aanbiedingen": [],
       "totaalprijs_van_eur": null,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op",
+      "noodstroom": "Afhankelijk van de gekozen omvormer: bijvoorbeeld Fronius GEN24 met PV Point (ca. 3 kW) of Full Backup met extra omschakelvoorziening. De batterij zelf regelt geen noodstroom.",
+      "noodstroom_uitleg": "Afhankelijk van de gekozen omvormer: bijvoorbeeld Fronius GEN24 met PV Point (ca. 3 kW) of Full Backup met extra omschakelvoorziening. De batterij zelf regelt geen noodstroom."
     },
     {
       "id": "solaredge-home-battery-48v",
@@ -615,7 +649,9 @@
       ],
       "totaalprijs_van_eur": null,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op",
+      "noodstroom": false,
+      "noodstroom_uitleg": "De SolarEdge 48V-lijn levert in Nederland geen noodstroom; SolarEdge biedt back-up alleen via de 400V-lijn met de Home Backup Interface."
     },
     {
       "id": "huawei-luna2000-10",
@@ -657,7 +693,9 @@
       ],
       "totaalprijs_van_eur": 7500,
       "totaalprijs_tot_eur": 8500,
-      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. btw"
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. btw",
+      "noodstroom": "Alleen met de aparte Huawei Backup Box (B0 voor 1-fase, B1 voor 3-fase): aparte backup-uitgang voor kritische groepen, ca. 3,3 tot 5 kW.",
+      "noodstroom_uitleg": "Alleen met de aparte Huawei Backup Box (B0 voor 1-fase, B1 voor 3-fase): aparte backup-uitgang voor kritische groepen, ca. 3,3 tot 5 kW."
     },
     {
       "id": "deye-rw-m61-set",
@@ -693,7 +731,9 @@
       ],
       "totaalprijs_van_eur": null,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op",
+      "noodstroom": true,
+      "noodstroom_uitleg": "Ingebouwde backup/load-poort met UPS-functie: aangesloten groepen blijven bij netuitval doorwerken; de omvormer kan ook volledig off-grid draaien."
     },
     {
       "id": "lg-enblock-flex-129",
@@ -729,7 +769,9 @@
       ],
       "totaalprijs_van_eur": null,
       "totaalprijs_tot_eur": null,
-      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op",
+      "noodstroom": null,
+      "noodstroom_uitleg": "Afhankelijk van de gekozen omvormer (GoodWe, SMA, Fronius, Kostal) en bijbehorende backup-voorziening; voor de Nederlandse markt is hierover weinig eenduidige informatie. Vraag je installateur."
     }
   ]
 }

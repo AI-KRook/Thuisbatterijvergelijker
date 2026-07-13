@@ -182,7 +182,7 @@ ${productLd(b)}
   </ul>
 
   <h2>Noodstroom en zelfvoorzienendheid</h2>
-  <p><b>Noodstroom bij stroomuitval:</b> ${esc(nood.tekst)}</p>
+  <p><b>Noodstroom bij stroomuitval:</b> ${nood.status === "ja" ? "Ja. " : nood.status === "nee" ? "Nee. " : nood.status === "onbekend" ? "Onbekend. " : ""}${esc(b.noodstroom_uitleg || nood.tekst)}</p>
   <p class="datum-stempel">Goed om te weten: volledig zelfvoorzienend (van het net af) is in Nederland vrijwel nooit haalbaar vanwege de lage winteropbrengst van zonnepanelen. Noodstroom betekent dat (een deel van) je huis blijft werken tijdens een storing; veel plug-in batterijen vallen dan juist uit omdat ze met het net meedraaien.</p>
 
   ${b.opmerkingen ? `<h2>Goed om te weten</h2><p>${esc(b.opmerkingen)}</p>` : ""}
