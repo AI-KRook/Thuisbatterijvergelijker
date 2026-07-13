@@ -1,4 +1,4 @@
-# 🔋 ThuisbatterijVergelijker
+# 🔋 Batterijmaatje.nl
 
 Een gebruiksvriendelijke, statische vergelijkingssite voor thuisbatterijen op de Nederlandse markt. Gebouwd voor GitHub Pages: geen build-stap, geen server nodig.
 
@@ -34,7 +34,7 @@ scripts/update-prices.mjs       Dagelijks prijsupdate-script (Node.js)
 1. Ga in de repository naar **Settings → Pages**.
 2. Kies bij **Build and deployment** de bron **GitHub Actions**.
 3. Merge deze branch naar `main` (of pas de branchnaam in `deploy-pages.yml` aan).
-4. Na de eerste run van de workflow "Publiceren naar GitHub Pages" staat de site live op `https://<gebruikersnaam>.github.io/Thuisbatterijvergelijker/`.
+4. Na de eerste run van de workflow "Publiceren naar GitHub Pages" staat de site live op `https://batterijmaatje.nl/`.
 
 ## Dagelijkse prijsupdate
 
