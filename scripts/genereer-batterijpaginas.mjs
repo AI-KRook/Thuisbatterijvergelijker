@@ -15,6 +15,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const SITE = "https://batterijmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
+// Versienummer achter css/js-links: dwingt browsers om na een wijziging
+// het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
+const ASSET_VERSIE = "20260713";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/batterijen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "batterij"), { recursive: true });
@@ -100,8 +103,9 @@ function pagina(b) {
   const specRij = (label, waarde) => waarde == null || waarde === "" ? "" :
     `<tr><th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);white-space:nowrap;width:40%;">${esc(label)}</th><td style="padding:10px 14px;">${waarde}</td></tr>`;
 
+  const badgeIcoon = { ja: "✓", deels: "~", nee: "✕", onbekend: "?" };
   const badge = (label, d) =>
-    `<span class="badge ${d.status}" title="${esc(d.status === "deels" ? d.tekst : "")}">${d.status === "nee" ? "✕" : "✓"} ${esc(label)}</span>`;
+    `<span class="badge ${d.status}" title="${esc(d.tekst || "")}">${badgeIcoon[d.status] || "?"} ${esc(label)}</span>`;
 
   return `<!DOCTYPE html>
 <html lang="nl">
@@ -124,7 +128,7 @@ function pagina(b) {
   <script type="application/ld+json">
 ${productLd(b)}
   </script>
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 </head>
