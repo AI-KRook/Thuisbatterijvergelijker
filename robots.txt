@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ai-krook.github.io/Thuisbatterijvergelijker/sitemap.xml

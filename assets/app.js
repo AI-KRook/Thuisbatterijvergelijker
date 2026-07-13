@@ -62,6 +62,11 @@
     return Math.round(beste.prijs_eur / b.capaciteit_kwh);
   }
 
+  function totaalprijsTekst(b) {
+    if (!b.totaalprijs_van_eur) return null;
+    return eurFmt.format(b.totaalprijs_van_eur) + (b.totaalprijs_tot_eur ? " tot " + eurFmt.format(b.totaalprijs_tot_eur) : "");
+  }
+
   // true / "tekst" => ondersteund (evt. met kanttekening); false/null => niet
   function driewaardig(v) {
     if (v === true) return { status: "ja", tekst: "Ja" };
@@ -103,6 +108,7 @@
     const prijsVan = (b) => { const p = bestePrijs(b); return p ? p.prijs_eur : Infinity; };
     switch (state.sortering) {
       case "prijs-oplopend": kopie.sort((a, b) => prijsVan(a) - prijsVan(b)); break;
+      case "totaalprijs": kopie.sort((a, b) => (a.totaalprijs_van_eur || Infinity) - (b.totaalprijs_van_eur || Infinity)); break;
       case "prijs-aflopend": kopie.sort((a, b) => prijsVan(b) - prijsVan(a)); break;
       case "prijs-per-kwh": kopie.sort((a, b) => (prijsPerKwh(a) || Infinity) - (prijsPerKwh(b) || Infinity)); break;
       case "capaciteit": kopie.sort((a, b) => (b.capaciteit_kwh || 0) - (a.capaciteit_kwh || 0)); break;
@@ -192,6 +198,9 @@
           ${perKwh ? `<div class="prijs-per-kwh">${eurFmt.format(perKwh)} per kWh opslag</div>` : ""}
           ${beste && beste.winkel ? `<div class="prijs-winkel">bij ${escapeHtml(beste.winkel)}</div>` : ""}
           ${b.prijs_omvat ? `<div class="prijs-winkel">${escapeHtml(b.prijs_omvat)}</div>` : ""}
+          <div class="prijs-winkel" style="margin-top:6px;border-top:1px dashed var(--kleur-rand);padding-top:6px;" title="${escapeHtml(b.totaalprijs_toelichting || "")}">
+            Compleet gebruiksklaar (indicatie): <b>${totaalprijsTekst(b) || "op aanvraag"}</b>
+          </div>
         </div>
       </div>
       <div class="kaart-acties">
@@ -210,7 +219,8 @@
     { key: "capaciteit", label: "kWh", get: (b) => b.capaciteit_kwh || 0 },
     { key: "vermogen", label: "kW", get: (b) => b.vermogen_kw || 0 },
     { key: "type", label: "Type", get: (b) => b.type },
-    { key: "prijs", label: "Beste prijs", get: (b) => { const p = bestePrijs(b); return p ? p.prijs_eur : Infinity; } },
+    { key: "prijs", label: "Winkelprijs", get: (b) => { const p = bestePrijs(b); return p ? p.prijs_eur : Infinity; } },
+    { key: "totaal", label: "Totaal (indicatie)", get: (b) => b.totaalprijs_van_eur || Infinity },
     { key: "perkwh", label: "€/kWh", get: (b) => prijsPerKwh(b) || Infinity },
     { key: "koppeling", label: "PV-koppeling", get: (b) => b.koppeling_gemak || 0 },
     { key: "homey", label: "Homey", get: (b) => driewaardig(b.homey).status },
@@ -246,7 +256,8 @@
             <td>${b.capaciteit_kwh ? String(b.capaciteit_kwh).replace(".", ",") : "?"}</td>
             <td>${b.vermogen_kw ? String(b.vermogen_kw).replace(".", ",") : "?"}</td>
             <td>${escapeHtml(b.type)}</td>
-            <td class="tabel-prijs">${beste ? eurFmt.format(beste.prijs_eur) : "n.b."}${heeftKorting(b) ? ' <span class="aanbieding-vlag">deal</span>' : ""}</td>
+            <td class="tabel-prijs" title="${escapeHtml(b.prijs_omvat || "")}">${beste ? eurFmt.format(beste.prijs_eur) : "n.b."}${heeftKorting(b) ? ' <span class="aanbieding-vlag">deal</span>' : ""}</td>
+            <td title="${escapeHtml(b.totaalprijs_toelichting || "")}">${totaalprijsTekst(b) || "op aanvraag"}</td>
             <td>${perKwh ? eurFmt.format(perKwh) : "n.b."}</td>
             <td title="${escapeHtml(b.zonnepanelen_koppeling || "")}"><span class="sterren" style="color:var(--kleur-accent)">${sterren(b.koppeling_gemak)}</span></td>
             <td>${checkCel(b.homey)}</td>
@@ -273,7 +284,8 @@
         ${rij("Type", (b) => escapeHtml(b.type))}
         ${rij("Capaciteit", (b) => (b.capaciteit_kwh ? String(b.capaciteit_kwh).replace(".", ",") + " kWh" : "?") + (b.uitbreidbaar_tot_kwh ? ` (uitbreidbaar tot ${String(b.uitbreidbaar_tot_kwh).replace(".", ",")} kWh)` : ""))}
         ${rij("Vermogen", (b) => (b.vermogen_kw ? String(b.vermogen_kw).replace(".", ",") + " kW" : "?"))}
-        ${rij("Beste prijs", (b) => { const p = bestePrijs(b); return p ? `<b>${eurFmt.format(p.prijs_eur)}</b> bij ${escapeHtml(p.winkel || "")}` : "n.b."; })}
+        ${rij("Beste winkelprijs", (b) => { const p = bestePrijs(b); return p ? `<b>${eurFmt.format(p.prijs_eur)}</b> bij ${escapeHtml(p.winkel || "")}` : "n.b."; })}
+        ${rij("Compleet gebruiksklaar (indicatie)", (b) => `${totaalprijsTekst(b) || "op aanvraag"}<br><small>${escapeHtml(b.totaalprijs_toelichting || "")}</small>`)}
         ${rij("Prijs per kWh", (b) => { const p = prijsPerKwh(b); return p ? eurFmt.format(p) : "n.b."; })}
         ${rij("Prijs dekt", (b) => `<small>${escapeHtml(b.prijs_omvat || "")}</small>`)}
         ${rij("Installatie", (b) => (b.installatie === "zelf" ? "Zelf (stopcontact)" : "Installateur vereist"))}

@@ -32,7 +32,10 @@
           "url": "https://www.marstek.nl/product/marstek-venus-e-3-0-plug-charge-thuisbatterij-5-12-kwh-incl-p1-meter/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 1299,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw en P1-meter, zelf te installeren"
     },
     {
       "id": "marstek-venus-c-768",
@@ -64,7 +67,10 @@
           "url": "https://www.marstek.nl/product/marstek-venus-c-1-0-plug-charge-thuisbatterij-7-68-kwh-incl-p1-meter/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 1274,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw en P1-meter, zelf te installeren"
     },
     {
       "id": "sessy-5kwh",
@@ -97,7 +103,10 @@
           "url": "https://www.sessy.nl/sessy-5-kwh/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 3550,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren"
     },
     {
       "id": "homewizard-plug-in-battery",
@@ -129,7 +138,10 @@
           "url": "https://www.homewizard.com/shop/plug-in-battery/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 1230,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "winkelprijs plus vereiste HomeWizard P1-meter (ca. 35 euro), zelf te installeren"
     },
     {
       "id": "ecoflow-stream-ac-pro",
@@ -161,7 +173,10 @@
           "url": "https://www.bol.com/nl/nl/p/ecoflow-stream-ac-pro-thuisbatterij/9300000232241116/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 729,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren"
     },
     {
       "id": "anker-solix-solarbank-3-pro",
@@ -193,7 +208,10 @@
           "url": "https://www.bol.com/nl/nl/p/anker-solix-solarbank-3-e2700-pro-2-688wh-thuisbatterij-voor-zonnepanelen-thuisbatterij-met-stekker-plug-and-play/9300000233342584/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 1099,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "winkelprijs is compleet: incl. btw, zelf te installeren"
     },
     {
       "id": "zendure-solarflow-hyper-2000",
@@ -219,7 +237,10 @@
       "cycli": 6000,
       "opmerkingen": "Uitbreidbaar met stapelbare AB2000-accu's tot 5,76 kWh. Regelmatig acties (sale-pagina), vaak met gratis Shelly Pro 3EM. Homey-ondersteuning niet gevonden. Geen automatische prijskoppeling: de prijs op de productpagina wisselt per samenstelling (met of zonder AB2000-accu), waardoor automatisch uitlezen misleidend zou zijn.",
       "product_url": "https://www.zendure.nl/products/solarflow-hyper-2000",
-      "aanbiedingen": []
+      "aanbiedingen": [],
+      "totaalprijs_van_eur": 850,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "indicatieve setprijs incl. btw, zelf te installeren"
     },
     {
       "id": "zonneplan-nexus",
@@ -252,7 +273,10 @@
           "url": "https://www.zonneplan.nl/thuisbatterij",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 5990,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "vanaf-prijs incl. installatie door Zonneplan"
     },
     {
       "id": "enphase-iq-battery-5p",
@@ -284,7 +308,10 @@
           "url": "https://www.vattenfall.nl/thuisbatterij/thuisbatterijen-vergelijken/enphase/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 5426,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "vanaf-prijs incl. installatie en btw (Vattenfall/Feenstra)"
     },
     {
       "id": "victron-pylontech-3fase",
@@ -309,7 +336,10 @@
       "cycli": 6000,
       "opmerkingen": "De populairste zelfbouw/installateurscombinatie van Nederland, zeer flexibel en volledig lokaal aanstuurbaar. Pylontech-accu's: 7 jaar garantie (10 na registratie). Indicatie losse Pylontech US5000 module (4,8 kWh): ca. 1.100 tot 1.450 euro. Medio 2026 liep een landelijke actie '3 MultiPlus-II voor de prijs van 2' bij diverse Victron-dealers.",
       "product_url": "https://www.victronenergy.nl/inverters-chargers/multiplus-ii",
-      "aanbiedingen": []
+      "aanbiedingen": [],
+      "totaalprijs_van_eur": null,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
     },
     {
       "id": "sigenergy-sigenstor-8kwh",
@@ -341,7 +371,10 @@
           "url": "https://www.frankenergie.nl/nl/thuisbatterij/sigenergy/8-06-kwh-sigenergy-5-in-1-thuisbatterij-met-8-kw-omvormer-3-fase",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 6500,
+      "totaalprijs_tot_eur": 8000,
+      "totaalprijs_toelichting": "praktijkindicatie compleet geinstalleerd incl. btw (8 kWh)"
     },
     {
       "id": "tesla-powerwall-3",
@@ -379,7 +412,10 @@
           "url": "https://beterduurzaam.nl/thuisbatterij/tesla",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 9500,
+      "totaalprijs_tot_eur": 11500,
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. btw"
     },
     {
       "id": "alphaess-smile-g3-t10",
@@ -412,7 +448,10 @@
           "url": "https://www.frankenergie.nl/nl/thuisbatterij/alphaess",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 10000,
+      "totaalprijs_tot_eur": 11000,
+      "totaalprijs_toelichting": "indicatie: richtprijs (Slimster) plus 1.000 tot 2.000 euro installatie"
     },
     {
       "id": "fox-ess-ep11",
@@ -445,7 +484,10 @@
           "url": "https://energiemagazijn.nl/thuisbatterijen/209-foxess-ep11.html",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": null,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
     },
     {
       "id": "growatt-apx-10",
@@ -470,7 +512,10 @@
       "cycli": null,
       "opmerkingen": "Kobaltvrij LiFePO4, IP66, modulair (2 tot 6 modules van 5 kWh per stack). Vermogen wordt bepaald door de gekoppelde XH-omvormer (tot ca. 10 kW). Betrouwbare actuele winkelprijs kon niet worden geverifieerd; vraag een offerte op.",
       "product_url": "https://nl.growatt.com/products/apx-hv-batterij",
-      "aanbiedingen": []
+      "aanbiedingen": [],
+      "totaalprijs_van_eur": 3500,
+      "totaalprijs_tot_eur": 5000,
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd (marktbronnen)"
     },
     {
       "id": "sungrow-sbr096",
@@ -503,7 +548,10 @@
           "url": "https://sunnergie.nl/merk/sungrow/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 5500,
+      "totaalprijs_tot_eur": 7000,
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. omvormer en btw"
     },
     {
       "id": "byd-battery-box-hvm-11",
@@ -528,7 +576,10 @@
       "cycli": null,
       "opmerkingen": "Beproefde LFP-toren, modulair van 8,3 tot 22,1 kWh per toren (max. 3 torens parallel, 66,2 kWh). Nederlandse winkelprijzen konden niet betrouwbaar worden geverifieerd; vraag een offerte op.",
       "product_url": "https://www.bydbatterybox.com/",
-      "aanbiedingen": []
+      "aanbiedingen": [],
+      "totaalprijs_van_eur": null,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
     },
     {
       "id": "solaredge-home-battery-48v",
@@ -561,7 +612,10 @@
           "url": "https://thuisbatterijnederland.nl/product/solaredge-home-46-kwh-48v/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": null,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
     },
     {
       "id": "huawei-luna2000-10",
@@ -600,7 +654,10 @@
           "url": "https://www.zonnepanelenkopen.com/thuisbatterij/huawei/huawei-luna2000-10-kwh",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": 7500,
+      "totaalprijs_tot_eur": 8500,
+      "totaalprijs_toelichting": "indicatie compleet geinstalleerd incl. btw"
     },
     {
       "id": "deye-rw-m61-set",
@@ -633,7 +690,10 @@
           "url": "https://www.slimmebatterijopslag.nl/batterijen/laagspanningsbatterijen-lv/deye/",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": null,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
     },
     {
       "id": "lg-enblock-flex-129",
@@ -666,7 +726,10 @@
           "url": "https://www.mg-solar-shop.com/lg-energy-solution-enblock-flex-12.9-kwh-battery-storage",
           "datum": "2026-07-13"
         }
-      ]
+      ],
+      "totaalprijs_van_eur": null,
+      "totaalprijs_tot_eur": null,
+      "totaalprijs_toelichting": "geen betrouwbare totaalprijs bekend; vraag een offerte op"
     }
   ]
 }
