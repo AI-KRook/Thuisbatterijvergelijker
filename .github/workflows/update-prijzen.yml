@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Code ophalen
         uses: actions/checkout@v4
-        with:
-          # Altijd op main werken, ook als de cron vanaf een andere standaardbranch draait
-          ref: main
 
       - name: Node.js instellen
         uses: actions/setup-node@v4

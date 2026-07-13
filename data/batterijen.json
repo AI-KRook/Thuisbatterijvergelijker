@@ -217,16 +217,9 @@
       "app": "Zendure app",
       "garantie_jaar": 10,
       "cycli": 6000,
-      "opmerkingen": "Uitbreidbaar met stapelbare AB2000-accu's tot 5,76 kWh. Regelmatig acties (sale-pagina), vaak met gratis Shelly Pro 3EM. Homey-ondersteuning niet gevonden.",
+      "opmerkingen": "Uitbreidbaar met stapelbare AB2000-accu's tot 5,76 kWh. Regelmatig acties (sale-pagina), vaak met gratis Shelly Pro 3EM. Homey-ondersteuning niet gevonden. Geen automatische prijskoppeling: de prijs op de productpagina wisselt per samenstelling (met of zonder AB2000-accu), waardoor automatisch uitlezen misleidend zou zijn.",
       "product_url": "https://www.zendure.nl/products/solarflow-hyper-2000",
-      "aanbiedingen": [
-        {
-          "winkel": "Zendure.nl",
-          "prijs_eur": 480,
-          "url": "https://www.zendure.nl/products/solarflow-hyper-2000",
-          "datum": "2026-07-13"
-        }
-      ]
+      "aanbiedingen": []
     },
     {
       "id": "zonneplan-nexus",
@@ -596,14 +589,14 @@
       "product_url": "https://solar.huawei.com/nl/",
       "aanbiedingen": [
         {
-          "winkel": "Groothandel Solar",
+          "winkel": "Groothandel Solar (prijs excl. btw)",
           "prijs_eur": 4552,
           "url": "https://www.groothandelsolar.com/accu-systemen/huawei/huawei-luna2000-10-kwh",
           "datum": "2026-07-13"
         },
         {
-          "winkel": "Zonnepanelenkopen.com",
-          "prijs_eur": 5508,
+          "winkel": "Zonnepanelenkopen.com (prijs excl. btw)",
+          "prijs_eur": 4552,
           "url": "https://www.zonnepanelenkopen.com/thuisbatterij/huawei/huawei-luna2000-10-kwh",
           "datum": "2026-07-13"
         }

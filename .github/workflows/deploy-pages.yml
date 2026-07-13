@@ -2,7 +2,9 @@ name: Publiceren naar GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # De github-pages omgeving staat alleen deployments vanaf de standaardbranch toe.
+    # Beide branches triggeren, zodat het blijft werken als de standaardbranch wijzigt.
+    branches: [main, claude/home-battery-comparison-nl-qxolhe]
   workflow_dispatch: {}
 
 permissions:
