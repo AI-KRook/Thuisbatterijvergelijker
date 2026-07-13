@@ -500,6 +500,7 @@ table.vergelijk-tabel {
 .vergelijk-tabel tr:hover td { background: #f0fdfa; }
 .vergelijk-tabel .tabel-prijs { font-weight: 700; white-space: nowrap; }
 .vergelijk-tabel .check-ja { color: var(--kleur-groen); font-weight: 700; }
+.vergelijk-tabel .check-deels { color: #92400e; font-weight: 700; cursor: help; }
 .vergelijk-tabel .check-nee { color: var(--kleur-tekst-licht); }
 
 /* --------------------------------------------------------------------------

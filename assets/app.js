@@ -262,7 +262,7 @@
     const checkCel = (v) => {
       const d = driewaardig(v);
       if (d.status === "ja") return '<span class="check-ja">✓</span>';
-      if (d.status === "deels") return `<span class="check-ja" title="${escapeHtml(d.tekst)}">✓*</span>`;
+      if (d.status === "deels") return `<span class="check-deels" title="${escapeHtml(d.tekst)}">~</span>`;
       return '<span class="check-nee">✕</span>';
     };
     return `
@@ -296,7 +296,7 @@
 
   function vergelijkModalHtml(items) {
     const rij = (label, fn) => `<tr><th style="text-align:left;padding:8px 10px;background:var(--kleur-achtergrond);white-space:nowrap;">${label}</th>${items.map((b) => `<td style="padding:8px 10px;border-bottom:1px solid var(--kleur-rand);">${fn(b)}</td>`).join("")}</tr>`;
-    const d3 = (v) => { const d = driewaardig(v); return d.status === "nee" ? "✕ Nee" : `✓ ${escapeHtml(d.tekst)}`; };
+    const d3 = (v) => { const d = driewaardig(v); return d.status === "nee" ? "✕ Nee" : d.status === "deels" ? `~ ${escapeHtml(d.tekst)}` : `✓ ${escapeHtml(d.tekst)}`; };
     return `
       <h2>Vergelijking</h2>
       <div style="overflow-x:auto;">
