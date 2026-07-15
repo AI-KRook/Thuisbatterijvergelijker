@@ -68,13 +68,18 @@
       },
       {
         "@type": "Question",
+        "name": "Kan ik mijn elektrische auto laden met een thuisbatterij?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Niet echt: een thuisbatterij van 5 tot 10 kWh is veel kleiner dan een auto-accu van 60 kWh of meer, dus zelfs een volle thuisbatterij laadt de auto maar voor een klein deel bij. Slimmer is de laadpaal te laten laden op zonnige middaguren of goedkope uren, en de thuisbatterij voor het huis te gebruiken. Sommige systemen kunnen laadpaal en batterij samen aansturen." }
+      },
+      {
+        "@type": "Question",
         "name": "Is een thuisbatterij nu al rendabel?",
         "acceptedAnswer": { "@type": "Answer", "text": "Zolang de salderingsregeling geldt (tot 1 januari 2027) is het voordeel van opslaan beperkt. Vanaf 2027 verbetert de businesscase structureel. Onafhankelijke onderzoeken komen uit op terugverdientijden van 4 tot 22 jaar, sterk afhankelijk van verbruik, contract en slimme aansturing." }
       }
     ]
   }
   </script>
-  <link rel="stylesheet" href="assets/style.css?v=20260715b">
+  <link rel="stylesheet" href="assets/style.css?v=20260715c">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 </head>
@@ -91,7 +96,15 @@
       <a href="uitleg.html">Uitleg</a>
       <a href="advies.html">Keuzehulp</a>
       <a href="rekenmodule.html">Terugverdientijd</a>
-      <a href="regelgeving.html">Regels &amp; subsidies</a>
+      <details class="nav-meer">
+        <summary>Meer ▾</summary>
+        <div class="nav-meer-paneel">
+          <a href="regelgeving.html">Regels &amp; subsidies</a>
+          <a href="beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a>
+          <a href="beste-thuisbatterij-homey.html">Beste voor Homey</a>
+          <a href="over-ons.html">Over ons</a>
+        </div>
+      </details>
     </nav>
   </div>
 </header>
@@ -205,7 +218,7 @@
       <li><b>Slim aansturen.</b> Met een dynamisch energiecontract kan een slimme batterij goedkoop laden en duur ontladen. Ook koppeling met <b>Homey of Home Assistant</b> bepaalt hoeveel je uit je batterij haalt. Als enige vergelijker vatten wij dit per model samen in de <a href="uitleg.html#slim-score">Slim-score</a> (0 tot 6 punten), met per batterij de uitleg wélke app of integratie er is. Zie ook onze overzichten <a href="beste-thuisbatterij-home-assistant.html">beste thuisbatterij voor Home Assistant</a> en <a href="beste-thuisbatterij-homey.html">beste thuisbatterij voor Homey</a>.</li>
       <li><b>Terugverdientijd.</b> Onafhankelijke onderzoeken komen uit op 4 tot 22 jaar, afhankelijk van je situatie. Reken het voor jouw huishouden door met onze gratis <a href="rekenmodule.html">terugverdientijd-berekening</a>.</li>
     </ul>
-    <p>De prijzen en aanbiedingen in onze vergelijker worden <b>dagelijks automatisch gecontroleerd</b> bij de winkels. Weet je nog niet welke maat of welk type bij je past? Begin dan met de <a href="advies.html">keuzehulp</a>: die adviseert in een paar vragen de juiste accugrootte en de best passende modellen.</p>
+    <p>De prijzen en aanbiedingen in onze vergelijker worden <b>dagelijks automatisch gecontroleerd</b> bij de winkels. Weet je nog niet welke maat of welk type bij je past? Begin dan met de <a href="advies.html">keuzehulp</a>: die adviseert in een paar vragen de juiste accugrootte en de best passende modellen. Twijfel je nog wat een batterij voor jou kan betekenen? Lees dan <a href="uitleg.html#wat-kun-je-ermee">wat je er allemaal mee kunt</a> en <a href="uitleg.html#waar-op-letten">waar je op moet letten vóór je koopt</a>.</p>
   </section>
 
   <section id="veelgestelde-vragen" style="margin: 30px 0 50px;">
@@ -257,6 +270,11 @@
     </details>
 
     <details class="faq-item">
+      <summary>Kan ik mijn elektrische auto laden met een thuisbatterij?</summary>
+      <p>Niet echt: een thuisbatterij van 5 tot 10 kWh is veel kleiner dan een auto-accu van 60 kWh of meer, dus zelfs een volle batterij laadt je auto maar voor een klein deel bij. Wat wél slim is: je laadpaal laten laden op zonnige middaguren of goedkope uren, en de thuisbatterij voor je huis gebruiken. Lees meer bij <a href="uitleg.html#wat-kun-je-ermee">wat kun je er allemaal mee</a>.</p>
+    </details>
+
+    <details class="faq-item">
       <summary>Is een thuisbatterij nu al rendabel?</summary>
       <p>Dat hangt af van je situatie. Zolang de salderingsregeling geldt (tot 1 januari 2027) is het financiële voordeel van opslaan beperkt: je mag teruggeleverde stroom immers nog wegstrepen. Na 2027 verandert dat. Met een dynamisch energiecontract kan een slim aangestuurde batterij bovendien geld verdienen door goedkoop te laden en duur te ontladen. Lees meer op onze pagina <a href="regelgeving.html">Regels &amp; subsidies</a>.</p>
     </details>
@@ -291,6 +309,6 @@
   </div>
 </footer>
 
-<script src="assets/app.js?v=20260715b"></script>
+<script src="assets/app.js?v=20260715c"></script>
 </body>
 </html>

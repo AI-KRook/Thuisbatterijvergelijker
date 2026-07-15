@@ -17,7 +17,7 @@ const SITE = "https://batterijmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260715b";
+const ASSET_VERSIE = "20260715c";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/batterijen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "batterij"), { recursive: true });
@@ -158,7 +158,15 @@ ${productLd(b)}
       <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
-      <a href="/regelgeving.html">Regels &amp; subsidies</a>
+      <details class="nav-meer">
+        <summary>Meer ▾</summary>
+        <div class="nav-meer-paneel">
+          <a href="/regelgeving.html">Regels &amp; subsidies</a>
+          <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a>
+          <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a>
+          <a href="/over-ons.html">Over ons</a>
+        </div>
+      </details>
     </nav>
   </div>
 </header>
@@ -356,7 +364,15 @@ ${itemList}
       <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
-      <a href="/regelgeving.html">Regels &amp; subsidies</a>
+      <details class="nav-meer">
+        <summary>Meer ▾</summary>
+        <div class="nav-meer-paneel">
+          <a href="/regelgeving.html">Regels &amp; subsidies</a>
+          <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a>
+          <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a>
+          <a href="/over-ons.html">Over ons</a>
+        </div>
+      </details>
     </nav>
   </div>
 </header>

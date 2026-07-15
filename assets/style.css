@@ -97,6 +97,37 @@ a { color: var(--kleur-primair); }
 .hoofdnav a:hover { background: var(--kleur-achtergrond); color: var(--kleur-tekst); }
 .hoofdnav a.actief { background: var(--kleur-primair-licht); color: var(--kleur-primair-donker); }
 
+/* Uitklapmenu "Meer" in de hoofdnavigatie (werkt zonder JavaScript, ook op touch) */
+.hoofdnav details.nav-meer { position: relative; }
+.hoofdnav details.nav-meer summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--kleur-tekst-licht);
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  user-select: none;
+}
+.hoofdnav details.nav-meer summary::-webkit-details-marker { display: none; }
+.hoofdnav details.nav-meer summary:hover { background: var(--kleur-achtergrond); color: var(--kleur-tekst); }
+.hoofdnav details.nav-meer[open] summary { background: var(--kleur-primair-licht); color: var(--kleur-primair-donker); }
+.hoofdnav details.nav-meer .nav-meer-paneel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: var(--kleur-wit);
+  border: 1px solid var(--kleur-rand);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+  z-index: 60;
+}
+.hoofdnav details.nav-meer .nav-meer-paneel a { padding: 9px 12px; }
+
 /* --------------------------------------------------------------------------
    Hero
    -------------------------------------------------------------------------- */
