@@ -4,24 +4,26 @@
 
 :root {
   --kleur-primair: #0f766e;
-  --kleur-primair-donker: #115e59;
-  --kleur-primair-licht: #ccfbf1;
+  --kleur-primair-donker: #0b4f4a;
+  --kleur-primair-licht: #d7f0ea;
+  --kleur-inkt: #0a3733; /* diepe inkt-teal voor hero en footer */
   --kleur-accent: #f59e0b;
-  --kleur-accent-licht: #fef3c7;
-  --kleur-tekst: #1f2937;
-  --kleur-tekst-licht: #6b7280;
-  --kleur-achtergrond: #f8fafc;
+  --kleur-accent-donker: #b45309;
+  --kleur-accent-licht: #fdf0d2;
+  --kleur-tekst: #24312f;
+  --kleur-tekst-licht: #5d6d6a;
+  --kleur-achtergrond: #f6f3ec; /* warm papier in plaats van koel grijs */
   --kleur-wit: #ffffff;
-  --kleur-rand: #e5e7eb;
+  --kleur-rand: #e7e1d3;
   --kleur-groen: #16a34a;
   --kleur-groen-licht: #dcfce7;
   --kleur-rood: #dc2626;
   --kleur-rood-licht: #fee2e2;
   --kleur-blauw: #2563eb;
   --kleur-blauw-licht: #dbeafe;
-  --schaduw: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
-  --schaduw-hover: 0 4px 6px rgba(0, 0, 0, 0.07), 0 10px 24px rgba(0, 0, 0, 0.1);
-  --radius: 12px;
+  --schaduw: 0 1px 2px rgba(38, 33, 20, 0.06), 0 6px 18px rgba(38, 33, 20, 0.07);
+  --schaduw-hover: 0 4px 10px rgba(38, 33, 20, 0.08), 0 16px 36px rgba(38, 33, 20, 0.14);
+  --radius: 16px;
 }
 
 * { box-sizing: border-box; }
@@ -35,6 +37,25 @@ body {
   background: var(--kleur-achtergrond);
   line-height: 1.6;
   font-size: 16px;
+}
+
+h1, h2, h3 { letter-spacing: -0.015em; }
+h1 { font-weight: 800; }
+
+/* Sectiekoppen krijgen een klein amber accentstreepje voor herkenbaarheid */
+main h2 {
+  font-weight: 800;
+  color: var(--kleur-primair-donker);
+}
+main > h2::after,
+main section > h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--kleur-accent);
+  margin-top: 6px;
 }
 
 a { color: var(--kleur-primair); }
@@ -133,15 +154,23 @@ a { color: var(--kleur-primair); }
    -------------------------------------------------------------------------- */
 
 .hero {
-  background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+  /* Diepe inkt-teal met een warme "zon" rechtsboven en zachte gloed linksonder */
+  background:
+    radial-gradient(circle 220px at 88% 8%, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.12) 55%, transparent 75%),
+    radial-gradient(circle 420px at -5% 110%, rgba(45, 212, 191, 0.22), transparent 70%),
+    linear-gradient(140deg, #0a3733 0%, #0e4f49 55%, #0f766e 100%);
   color: var(--kleur-wit);
-  padding: 48px 0 40px;
+  padding: 56px 0 46px;
+  position: relative;
+  overflow: hidden;
 }
 
 .hero h1 {
-  margin: 0 0 12px;
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  line-height: 1.25;
+  margin: 0 0 14px;
+  font-size: clamp(1.75rem, 4.6vw, 2.8rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  max-width: 800px;
 }
 
 .hero p {
@@ -333,11 +362,21 @@ a { color: var(--kleur-primair); }
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
   position: relative;
 }
 
-.batterij-kaart:hover { box-shadow: var(--schaduw-hover); transform: translateY(-2px); }
+.batterij-kaart::before {
+  /* Teal-naar-amber hairline bovenlangs geeft de kaarten een eigen gezicht */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--kleur-primair), #2dd4bf 55%, var(--kleur-accent));
+  opacity: 0.9;
+}
+
+.batterij-kaart:hover { box-shadow: var(--schaduw-hover); transform: translateY(-3px); border-color: #cfe8e2; }
 
 .kaart-kop {
   padding: 18px 20px 0;
@@ -472,8 +511,9 @@ h1 .merk-logo { height: 28px; vertical-align: -4px; }
   flex-wrap: wrap;
 }
 
+.kaart-prijs { background: linear-gradient(180deg, rgba(246, 243, 236, 0.0), rgba(246, 243, 236, 0.65)); }
 .prijs-blok .van-prijs { font-size: 0.85rem; color: var(--kleur-tekst-licht); text-decoration: line-through; }
-.prijs-blok .prijs { font-size: 1.45rem; font-weight: 800; color: var(--kleur-tekst); }
+.prijs-blok .prijs { font-size: 1.7rem; font-weight: 800; color: var(--kleur-primair-donker); letter-spacing: -0.02em; }
 .prijs-blok .prijs-per-kwh { font-size: 0.82rem; color: var(--kleur-tekst-licht); }
 .prijs-blok .prijs-winkel { font-size: 0.82rem; color: var(--kleur-tekst-licht); }
 
@@ -484,9 +524,9 @@ h1 .merk-logo { height: 28px; vertical-align: -4px; }
   gap: 6px;
   background: var(--kleur-primair);
   color: var(--kleur-wit);
-  font-weight: 700;
-  padding: 11px 18px;
-  border-radius: 9px;
+  font-weight: 800;
+  padding: 12px 22px;
+  border-radius: 999px;
   text-decoration: none;
   font-size: 0.95rem;
   border: none;
@@ -706,10 +746,12 @@ details.faq-item p { margin-top: 0; }
    -------------------------------------------------------------------------- */
 
 .site-footer {
-  background: #134e4a;
+  background:
+    radial-gradient(circle 320px at 92% 0%, rgba(245, 158, 11, 0.14), transparent 70%),
+    var(--kleur-inkt);
   color: rgba(255, 255, 255, 0.85);
-  padding: 36px 0;
-  margin-top: 40px;
+  padding: 40px 0;
+  margin-top: 48px;
   font-size: 0.9rem;
 }
 
