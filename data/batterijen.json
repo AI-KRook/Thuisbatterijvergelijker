@@ -1,5 +1,5 @@
 {
-  "laatst_bijgewerkt": "2026-07-14",
+  "laatst_bijgewerkt": "2026-07-15",
   "toelichting": "Prijzen zijn indicatief en gebaseerd op openbaar vindbare winkel- en aanbiedersprijzen op de genoemde datum. De prijs op de website van de aanbieder is altijd leidend. Let op wat een prijs dekt (prijs_omvat): sommige prijzen zijn hardware-only of exclusief btw en installatie.",
   "batterijen": [
     {
@@ -372,7 +372,7 @@
       "fase": "beide",
       "richtprijs_eur": 6499,
       "prijs_omvat": "excl. btw, incl. geïntegreerde 8 kW hybride omvormer, via Frank Energie incl. installatie",
-      "prijs_datum": "2026-07-14",
+      "prijs_datum": "2026-07-15",
       "installatie": "installateur",
       "zonnepanelen_koppeling": "5-in-1 systeem met eigen hybride omvormer waar panelen direct op kunnen. Retrofit bij bestaande zonnepanelen kan ook: via de Sigen Gateway wordt het systeem AC-gekoppeld naast je huidige omvormer, die gewoon blijft werken.",
       "koppeling_gemak": 4,
@@ -389,7 +389,7 @@
           "winkel": "Frank Energie (incl. installatie en slimme sturing)",
           "prijs_eur": 6499,
           "url": "https://www.frankenergie.nl/nl/thuisbatterij/sigenergy/8-06-kwh-sigenergy-5-in-1-thuisbatterij-met-8-kw-omvormer-3-fase",
-          "datum": "2026-07-14"
+          "datum": "2026-07-15"
         }
       ],
       "totaalprijs_van_eur": 6500,
@@ -409,7 +409,7 @@
       "fase": "1-fase",
       "richtprijs_eur": 7497,
       "prijs_omvat": "alleen hardware; compleet geïnstalleerd incl. btw ca. 9.500 tot 11.500 euro",
-      "prijs_datum": "2026-07-14",
+      "prijs_datum": "2026-07-15",
       "installatie": "installateur",
       "zonnepanelen_koppeling": "Hybride met ingebouwde omvormer: nieuwe panelen kunnen er direct (DC) op. Een bestaand systeem kan AC-zijdig naast de Powerwall blijven draaien. Installatie altijd via een Tesla Certified Installer.",
       "koppeling_gemak": 2,
@@ -426,7 +426,7 @@
           "winkel": "ThuisbatterijNederland",
           "prijs_eur": 7400,
           "url": "https://thuisbatterijnederland.nl/product/tesla-powerwall-3/",
-          "datum": "2026-07-14"
+          "datum": "2026-07-15"
         },
         {
           "winkel": "BeterDuurzaam",
@@ -664,7 +664,7 @@
       "fase": "beide",
       "richtprijs_eur": 5508,
       "prijs_omvat": "alleen batterij incl. btw (winkelprijs 4.552 euro excl. btw); excl. SUN2000-omvormer en installatie. Compleet geïnstalleerd ca. 7.500 tot 8.500 euro",
-      "prijs_datum": "2026-07-14",
+      "prijs_datum": "2026-07-15",
       "prijs_bron": "Groothandel Solar",
       "installatie": "installateur",
       "zonnepanelen_koppeling": "Werkt uitsluitend met Huawei SUN2000-omvormers (1- en 3-fase, DC-gekoppeld). Bij bestaande panelen van een ander merk is vervanging door of toevoeging van een SUN2000-omvormer nodig. 100% bruikbare capaciteit (DoD).",
@@ -682,7 +682,7 @@
           "winkel": "Groothandel Solar (prijs excl. btw)",
           "prijs_eur": 4552,
           "url": "https://www.groothandelsolar.com/accu-systemen/huawei/huawei-luna2000-10-kwh",
-          "datum": "2026-07-14"
+          "datum": "2026-07-15"
         },
         {
           "winkel": "Zonnepanelenkopen.com (prijs excl. btw)",
