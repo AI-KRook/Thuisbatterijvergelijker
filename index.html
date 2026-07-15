@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thuisbatterij vergelijken 2026: prijzen, aanbiedingen en keuzehulp | Batterijmaatje.nl</title>
-  <meta name="description" content="Vergelijk 20+ thuisbatterijen op prijs, capaciteit en koppeling met je zonnepanelen, Homey of Home Assistant. Dagelijks actuele prijzen en aanbiedingen, gratis keuzehulp en terugverdientijd-berekening.">
+  <title>Thuisbatterij vergelijken op prijs én Slim-score (Homey, Home Assistant) | Batterijmaatje.nl</title>
+  <meta name="description" content="De thuisbatterij-vergelijker voor het slimme huis: per batterij een Slim-score voor Homey, Home Assistant en dynamisch contract, de eerlijke totaalprijs gebruiksklaar en dagelijks gecontroleerde winkelprijzen.">
   <link rel="canonical" href="https://batterijmaatje.nl/">
-  <meta property="og:title" content="Thuisbatterij vergelijken 2026: prijzen, aanbiedingen en keuzehulp">
-  <meta property="og:description" content="Vergelijk 20+ thuisbatterijen op prijs, capaciteit, koppeling met zonnepanelen, Homey en Home Assistant. Dagelijks bijgewerkte prijzen en aanbiedingen.">
+  <meta property="og:title" content="Thuisbatterij vergelijken op prijs én Slim-score">
+  <meta property="og:description" content="Zie per thuisbatterij of hij werkt met Homey, Home Assistant en een dynamisch contract (Slim-score), plus de eerlijke totaalprijs gebruiksklaar. Dagelijks bijgewerkte prijzen.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://batterijmaatje.nl/">
   <meta property="og:locale" content="nl_NL">
@@ -63,13 +63,18 @@
       },
       {
         "@type": "Question",
+        "name": "Wat is de Slim-score?",
+        "acceptedAnswer": { "@type": "Answer", "text": "De Slim-score is een transparante score van 0 tot 6 punten voor hoe goed een thuisbatterij slim aan te sturen is. Drie zaken tellen mee: ondersteuning voor Homey, voor Home Assistant en voor een dynamisch energiecontract. Volledige ondersteuning telt voor 2 punten, gedeeltelijke ondersteuning (via een app, integratie of extra hardware) voor 1 punt. De score is volledig op feiten gebaseerd en niet door fabrikanten te beïnvloeden." }
+      },
+      {
+        "@type": "Question",
         "name": "Is een thuisbatterij nu al rendabel?",
         "acceptedAnswer": { "@type": "Answer", "text": "Zolang de salderingsregeling geldt (tot 1 januari 2027) is het voordeel van opslaan beperkt. Vanaf 2027 verbetert de businesscase structureel. Onafhankelijke onderzoeken komen uit op terugverdientijden van 4 tot 22 jaar, sterk afhankelijk van verbruik, contract en slimme aansturing." }
       }
     ]
   }
   </script>
-  <link rel="stylesheet" href="assets/style.css?v=20260713b">
+  <link rel="stylesheet" href="assets/style.css?v=20260715">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 </head>
@@ -93,8 +98,8 @@
 
 <section class="hero">
   <div class="container">
-    <h1>Thuisbatterij vergelijken: vind de accu die past bij jouw huis en zonnepanelen</h1>
-    <p>Vergelijk capaciteit, prijzen en actuele aanbiedingen van de populairste thuisbatterijen in Nederland. Zie direct of een batterij koppelbaar is met jouw zonnepanelen, Homey of Home Assistant.</p>
+    <h1>Thuisbatterij vergelijken op wat hem écht slim maakt</h1>
+    <p>Andere vergelijkers tonen alleen prijzen. Wij laten per batterij ook zien of hij samenwerkt met <b>Homey, Home Assistant en een dynamisch energiecontract</b> (de Slim-score), en wat hij <b>compleet gebruiksklaar</b> echt kost. Onafhankelijk, dagelijks gecontroleerd en uitgelegd in taal die iedereen begrijpt.</p>
     <span class="update-info">🔄 Prijzen laatst bijgewerkt: <b id="updateDatum">…</b></span>
     <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
       <a class="knop" href="advies.html" style="background:var(--kleur-accent);color:#422006;">🧭 Hulp bij kiezen? Doe de keuzehulp</a>
@@ -150,6 +155,7 @@
         <label for="sorteer">Sorteren op</label>
         <select id="sorteer">
           <option value="prijs-per-kwh" selected>Beste prijs per kWh opslag</option>
+          <option value="slim-score">Slim-score (slimste eerst)</option>
           <option value="prijs-oplopend">Winkelprijs (laag naar hoog)</option>
           <option value="totaalprijs">Totaalprijs gebruiksklaar (indicatie)</option>
           <option value="prijs-aflopend">Winkelprijs (hoog naar laag)</option>
@@ -174,7 +180,7 @@
   </div>
 
   <p style="font-size:0.85rem;color:var(--kleur-tekst-licht);margin:4px 0 0;">
-    Legenda: <span class="badge ja">✓</span> ondersteund &nbsp;·&nbsp; <span class="badge deels">~</span> werkt via een app, integratie of extra hardware (tik op de badge voor uitleg) &nbsp;·&nbsp; <span class="badge nee" style="text-decoration:none;">✕</span> niet ondersteund &nbsp;·&nbsp; <span class="badge onbekend">?</span> onbekend &nbsp;·&nbsp; Onbekende term? Bekijk de <a href="uitleg.html#woordenlijst">woordenlijst</a>
+    Legenda: <span class="badge slim-hoog">🏠 Slim-score</span> punten voor Homey, Home Assistant en dynamisch contract (<a href="uitleg.html#slim-score">hoe werkt dit?</a>) &nbsp;·&nbsp; <span class="badge ja">✓</span> ondersteund &nbsp;·&nbsp; <span class="badge deels">~</span> werkt via een app, integratie of extra hardware (tik op de badge voor uitleg) &nbsp;·&nbsp; <span class="badge nee" style="text-decoration:none;">✕</span> niet ondersteund &nbsp;·&nbsp; <span class="badge onbekend">?</span> onbekend &nbsp;·&nbsp; Onbekende term? Bekijk de <a href="uitleg.html#woordenlijst">woordenlijst</a>
   </p>
 
   <div class="resultaten-balk">
@@ -196,7 +202,7 @@
     <ul>
       <li><b>Type en installatie.</b> Een <b>plug-in thuisbatterij</b> (zoals Marstek, Sessy of de HomeWizard Plug-In Battery) sluit je zelf aan op het stopcontact en werkt met elk bestaand zonnepanelensysteem. Een <b>hybride of AC-gekoppeld systeem</b> (zoals Sigenergy, Tesla Powerwall of Victron) heeft meer vermogen en capaciteit, maar vraagt om een installateur.</li>
       <li><b>Prijs per kWh opslag.</b> De kale prijs zegt weinig: een batterij van 2.000 euro voor 2,7 kWh is per kWh duurder dan een batterij van 3.800 euro voor 10 kWh. Daarom tonen wij naast de winkelprijs ook de <b>prijs per kWh</b> en een indicatie van de totaalprijs compleet gebruiksklaar, inclusief btw en installatie.</li>
-      <li><b>Slim aansturen.</b> Met een dynamisch energiecontract kan een slimme batterij goedkoop laden en duur ontladen. Ook koppeling met <b>Homey of Home Assistant</b> bepaalt hoeveel je uit je batterij haalt; wij tonen per model welke integraties er zijn.</li>
+      <li><b>Slim aansturen.</b> Met een dynamisch energiecontract kan een slimme batterij goedkoop laden en duur ontladen. Ook koppeling met <b>Homey of Home Assistant</b> bepaalt hoeveel je uit je batterij haalt. Als enige vergelijker vatten wij dit per model samen in de <a href="uitleg.html#slim-score">Slim-score</a> (0 tot 6 punten), met per batterij de uitleg wélke app of integratie er is. Zie ook onze overzichten <a href="beste-thuisbatterij-home-assistant.html">beste thuisbatterij voor Home Assistant</a> en <a href="beste-thuisbatterij-homey.html">beste thuisbatterij voor Homey</a>.</li>
       <li><b>Terugverdientijd.</b> Onafhankelijke onderzoeken komen uit op 4 tot 22 jaar, afhankelijk van je situatie. Reken het voor jouw huishouden door met onze gratis <a href="rekenmodule.html">terugverdientijd-berekening</a>.</li>
     </ul>
     <p>De prijzen en aanbiedingen in onze vergelijker worden <b>dagelijks automatisch gecontroleerd</b> bij de winkels. Weet je nog niet welke maat of welk type bij je past? Begin dan met de <a href="advies.html">keuzehulp</a>: die adviseert in een paar vragen de juiste accugrootte en de best passende modellen.</p>
@@ -242,7 +248,12 @@
 
     <details class="faq-item">
       <summary>Werkt een thuisbatterij met Homey of Home Assistant?</summary>
-      <p>Dat verschilt per merk. Bij elke batterij tonen we of er een officiële Homey-app of Home Assistant-integratie bestaat, of dat koppeling via een omweg mogelijk is (bijvoorbeeld via Modbus of een community-integratie). Beweeg over de badge voor details.</p>
+      <p>Dat verschilt per merk. Bij elke batterij tonen we of er een officiële Homey-app of Home Assistant-integratie bestaat, of dat koppeling via een omweg mogelijk is (bijvoorbeeld via Modbus of een community-integratie). Beweeg over de badge voor details, of bekijk de complete overzichten: <a href="beste-thuisbatterij-home-assistant.html">beste thuisbatterij voor Home Assistant</a> en <a href="beste-thuisbatterij-homey.html">beste thuisbatterij voor Homey</a>.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Wat is de Slim-score?</summary>
+      <p>De Slim-score is onze eigen, transparante score van 0 tot 6 punten voor hoe goed een thuisbatterij slim aan te sturen is. Drie dingen tellen mee: werkt hij met <b>Homey</b>, met <b>Home Assistant</b> en met een <b>dynamisch energiecontract</b>? Volledige ondersteuning is 2 punten, gedeeltelijke (via een app, integratie of extra hardware) 1 punt, geen 0. De score is puur op feiten gebaseerd; fabrikanten kunnen hem niet kopen of beïnvloeden. <a href="uitleg.html#slim-score">Lees de volledige uitleg</a>.</p>
     </details>
 
     <details class="faq-item">
@@ -275,11 +286,11 @@
   <div class="container">
     <b>🔋 Batterijmaatje</b>
     <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
-    <p><a href="uitleg.html">Uitleg</a> · <a href="advies.html">Keuzehulp</a> · <a href="rekenmodule.html">Terugverdientijd berekenen</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="over-ons.html">Over ons</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="uitleg.html">Uitleg</a> · <a href="advies.html">Keuzehulp</a> · <a href="rekenmodule.html">Terugverdientijd berekenen</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="over-ons.html">Over ons</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: wij doen ons best om prijzen, specificaties en regelgeving actueel en juist weer te geven, maar er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend. Controleer voor aankoop zelf de actuele specificaties en de geschiktheid voor jouw situatie.</p>
   </div>
 </footer>
 
-<script src="assets/app.js?v=20260713b"></script>
+<script src="assets/app.js?v=20260715"></script>
 </body>
 </html>

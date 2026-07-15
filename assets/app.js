@@ -121,6 +121,7 @@
       case "prijs-per-kwh": kopie.sort((a, b) => (prijsPerKwh(a) || Infinity) - (prijsPerKwh(b) || Infinity)); break;
       case "capaciteit": kopie.sort((a, b) => (b.capaciteit_kwh || 0) - (a.capaciteit_kwh || 0)); break;
       case "koppelgemak": kopie.sort((a, b) => (b.koppeling_gemak || 0) - (a.koppeling_gemak || 0)); break;
+      case "slim-score": kopie.sort((a, b) => slimScore(b) - slimScore(a) || (prijsPerKwh(a) || Infinity) - (prijsPerKwh(b) || Infinity)); break;
     }
     return kopie;
   }
@@ -128,6 +129,20 @@
   /* ------------------------------------------------------------------
      Rendering: kaarten
      ------------------------------------------------------------------ */
+
+  // Slim-score: unieke Batterijmaatje-score voor slim aansturen (0 tot 6 punten).
+  // Homey, Home Assistant en dynamisch contract tellen elk: ja = 2, deels = 1, nee = 0.
+  // De formule staat uitgelegd op uitleg.html#slim-score en over-ons.html.
+  function slimScore(b) {
+    const punt = (v) => { const s = driewaardig(v).status; return s === "ja" ? 2 : s === "deels" ? 1 : 0; };
+    return punt(b.homey) + punt(b.home_assistant) + punt(b.dynamisch_contract);
+  }
+
+  function slimScoreBadge(b) {
+    const score = slimScore(b);
+    const klasse = score >= 5 ? "slim-hoog" : score >= 3 ? "slim-midden" : "slim-laag";
+    return `<span class="badge slim-score ${klasse}" title="Slim-score ${score} van 6: punten voor samenwerking met Homey, Home Assistant en een dynamisch energiecontract (2 punten per volledige, 1 per gedeeltelijke ondersteuning). Tik voor de details.">🏠 Slim-score ${score}/6</span>`;
+  }
 
   function badgeHtml(label, waarde, titelJa, titelDeels) {
     const d = driewaardig(waarde);
@@ -191,6 +206,7 @@
         <div class="uitleg">${escapeHtml(b.zonnepanelen_koppeling || "")}</div>
       </div>
       <div class="kaart-badges">
+        ${slimScoreBadge(b)}
         ${badgeHtml("Homey", b.homey)}
         ${badgeHtml("Home Assistant", b.home_assistant)}
         ${badgeHtml("Dynamisch contract", b.dynamisch_contract)}
@@ -244,6 +260,7 @@
     { key: "totaal", label: "Totaal (indicatie)", get: (b) => b.totaalprijs_van_eur || Infinity },
     { key: "perkwh", label: "€/kWh", get: (b) => prijsPerKwh(b) || Infinity },
     { key: "koppeling", label: "PV-koppeling", get: (b) => b.koppeling_gemak || 0 },
+    { key: "slim", label: "Slim-score", get: (b) => slimScore(b) },
     { key: "homey", label: "Homey", get: (b) => driewaardig(b.homey).status },
     { key: "ha", label: "Home Assistant", get: (b) => driewaardig(b.home_assistant).status },
     { key: "actie", label: "", get: () => "" },
@@ -281,6 +298,7 @@
             <td title="${escapeHtml(b.totaalprijs_toelichting || "")}">${totaalprijsTekst(b) || "op aanvraag"}</td>
             <td>${perKwh ? eurFmt.format(perKwh) : "n.b."}</td>
             <td title="${escapeHtml(b.zonnepanelen_koppeling || "")}"><span class="sterren" style="color:var(--kleur-accent)">${sterren(b.koppeling_gemak)}</span></td>
+            <td title="Punten voor Homey, Home Assistant en dynamisch contract"><b>${slimScore(b)}/6</b></td>
             <td>${checkCel(b.homey)}</td>
             <td>${checkCel(b.home_assistant)}</td>
             <td>${beste && beste.url ? `<a class="knop" style="padding:7px 12px;font-size:0.85rem;" href="${escapeHtml(beste.url)}" target="_blank" rel="noopener sponsored">Bekijk →</a>` : ""}</td>
@@ -311,6 +329,7 @@
         ${rij("Prijs dekt", (b) => `<small>${escapeHtml(b.prijs_omvat || "")}</small>`)}
         ${rij("Installatie", (b) => (b.installatie === "zelf" ? "Zelf (stopcontact)" : "Installateur vereist"))}
         ${rij("Koppeling zonnepanelen", (b) => `<span class="sterren" style="color:var(--kleur-accent)">${sterren(b.koppeling_gemak)}</span><br><small>${escapeHtml(b.zonnepanelen_koppeling || "")}</small>`)}
+        ${rij("Slim-score", (b) => `<b>${slimScore(b)}/6</b>`)}
         ${rij("Homey", (b) => d3(b.homey))}
         ${rij("Home Assistant", (b) => d3(b.home_assistant))}
         ${rij("Dynamisch contract", (b) => d3(b.dynamisch_contract))}

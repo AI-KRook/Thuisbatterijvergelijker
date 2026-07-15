@@ -17,7 +17,7 @@ const SITE = "https://batterijmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260713b";
+const ASSET_VERSIE = "20260715";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/batterijen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "batterij"), { recursive: true });
@@ -57,6 +57,19 @@ function totaalprijsTekst(b) {
 function sterren(score) {
   const s = Math.max(0, Math.min(5, Math.round(score || 0)));
   return "★".repeat(s) + "☆".repeat(5 - s);
+}
+
+// Slim-score: zelfde formule als assets/app.js en uitleg.html#slim-score.
+// Homey, Home Assistant en dynamisch contract tellen elk: ja = 2, deels = 1, nee = 0.
+function slimScore(b) {
+  const punt = (v) => { const s = driewaardig(v).status; return s === "ja" ? 2 : s === "deels" ? 1 : 0; };
+  return punt(b.homey) + punt(b.home_assistant) + punt(b.dynamisch_contract);
+}
+
+function slimScoreBadge(b) {
+  const score = slimScore(b);
+  const klasse = score >= 5 ? "slim-hoog" : score >= 3 ? "slim-midden" : "slim-laag";
+  return `<span class="badge slim-score ${klasse}" title="Punten voor Homey, Home Assistant en dynamisch contract">\u{1F3E0} Slim-score ${score}/6</span>`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -186,7 +199,8 @@ ${productLd(b)}
   <p>${esc(b.zonnepanelen_koppeling || "")}</p>
 
   <h2>Smart home en slim aansturen</h2>
-  <p style="display:flex;gap:8px;flex-wrap:wrap;">${badge("Homey", homey)} ${badge("Home Assistant", ha)} ${badge("Dynamisch contract", dyn)}</p>
+  <p style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">${slimScoreBadge(b)} ${badge("Homey", homey)} ${badge("Home Assistant", ha)} ${badge("Dynamisch contract", dyn)}</p>
+  <p class="datum-stempel">De <a href="/uitleg.html#slim-score">Slim-score</a> telt de ondersteuning voor Homey, Home Assistant en een dynamisch contract op: 2 punten per volledige, 1 per gedeeltelijke ondersteuning.</p>
   <ul>
     <li><b>Homey:</b> ${esc(homey.tekst)}</li>
     <li><b>Home Assistant:</b> ${esc(ha.tekst)}</li>
@@ -215,7 +229,172 @@ ${productLd(b)}
   <div class="container">
     <b>\u{1F50B} Batterijmaatje</b>
     <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
-    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/over-ons.html">Over ons</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
+  </div>
+</footer>
+
+</body>
+</html>
+`;
+}
+
+/* ------------------------------------------------------------------
+   Overzichtspagina's per smart-home-platform (SEO-landingspagina's).
+   Worden dagelijks mee-gegenereerd, zodat prijzen en de lijst met
+   ondersteunde batterijen automatisch actueel blijven.
+   ------------------------------------------------------------------ */
+
+const OVERZICHTEN = [
+  {
+    bestand: "beste-thuisbatterij-home-assistant.html",
+    veld: "home_assistant",
+    naam: "Home Assistant",
+    anker: "home-assistant",
+    intro: "Home Assistant is het populairste gratis smart-home-platform voor wie zijn huis zelf wil automatiseren. Een thuisbatterij die je in Home Assistant kunt uitlezen en aansturen, kun je laten samenwerken met je zonnepanelen, dynamische stroomprijzen en de rest van je slimme huis. Maar de ondersteuning verschilt enorm per merk: van een officiële integratie die je in twee minuten koppelt tot helemaal niets.",
+    deelsUitleg: "Bij deze batterijen werkt de koppeling via een omweg: een community-integratie (HACS), een lokale API of Modbus. Dat werkt vaak prima, maar vraagt wat meer handigheid en kan na een firmware-update van de fabrikant haperen.",
+  },
+  {
+    bestand: "beste-thuisbatterij-homey.html",
+    veld: "homey",
+    naam: "Homey",
+    anker: "homey",
+    intro: "Homey is het laagdrempelige smart-home-kastje waarmee je apparaten in huis laat samenwerken zonder te programmeren. Een thuisbatterij met een goede Homey-app kun je automatisch laten laden op goedkope uren en meenemen in je energie-overzicht. De ondersteuning verschilt per merk: sommige batterijen hebben een officiële app, andere werken alleen via een community-app of de Homey Energy Dongle.",
+    deelsUitleg: "Bij deze batterijen loopt de koppeling via een community-app, een extra kastje (zoals de Homey Energy Dongle) of een beperkte integratie. Vaak goed werkbaar, maar geen officiële ondersteuning van de fabrikant.",
+  },
+];
+
+function overzichtRij(b) {
+  const beste = bestePrijs(b);
+  const perKwh = beste && b.capaciteit_kwh ? Math.round(beste.prijs_eur / b.capaciteit_kwh) : null;
+  return { b, beste, perKwh };
+}
+
+function overzichtTabel(lijst, veld) {
+  const rijen = lijst.map(overzichtRij).sort((a, x) => (a.perKwh || Infinity) - (x.perKwh || Infinity));
+  return `<div style="overflow-x:auto;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);margin:14px 0;">
+  <table style="width:100%;border-collapse:collapse;font-size:0.93rem;min-width:640px;">
+    <thead><tr>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Batterij</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Capaciteit</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Beste prijs</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Per kWh</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Slim-score</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Hoe werkt de koppeling?</th>
+    </tr></thead>
+    <tbody>${rijen.map(({ b, beste, perKwh }) => {
+      const d = driewaardig(b[veld]);
+      return `
+      <tr>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);"><a href="/batterij/${esc(b.id)}.html"><b>${esc(b.merk)} ${esc(b.model)}</b></a></td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${nl(b.capaciteit_kwh)} kWh</td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${beste ? `<b>${eur(beste.prijs_eur)}</b><br><small>bij ${esc(beste.winkel)}</small>` : "op aanvraag"}</td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${perKwh ? eur(perKwh) : "n.b."}</td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;"><b>${slimScore(b)}/6</b></td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);">${d.status === "ja" ? "Officiële ondersteuning" : esc(d.tekst)}</td>
+      </tr>`;
+    }).join("")}</tbody>
+  </table>
+  </div>`;
+}
+
+function overzichtsPagina(cfg) {
+  const ja = data.batterijen.filter((b) => driewaardig(b[cfg.veld]).status === "ja");
+  const deels = data.batterijen.filter((b) => driewaardig(b[cfg.veld]).status === "deels");
+  const nee = data.batterijen.filter((b) => driewaardig(b[cfg.veld]).status === "nee");
+  const titel = `Beste thuisbatterij voor ${cfg.naam} (2026): ${ja.length + deels.length} modellen vergeleken`;
+  const metaDesc = `Welke thuisbatterij werkt met ${cfg.naam}? Overzicht van ${ja.length} batterijen met volledige en ${deels.length} met gedeeltelijke ondersteuning, met actuele prijzen, prijs per kWh en Slim-score. Dagelijks bijgewerkt.`;
+  const alleGetoond = [...ja, ...deels];
+
+  const itemList = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": titel,
+    "itemListElement": alleGetoond.map((b, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": `${b.merk} ${b.model}`,
+      "url": `${SITE}/batterij/${b.id}.html`,
+    })),
+  }, null, 2);
+
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(titel)} | Batterijmaatje.nl</title>
+  <meta name="description" content="${esc(metaDesc)}">
+  <link rel="canonical" href="${SITE}/${cfg.bestand}">
+  <meta property="og:title" content="${esc(titel)}">
+  <meta property="og:description" content="${esc(metaDesc)}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${SITE}/${cfg.bestand}">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:image" content="${SITE}/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Batterijmaatje.nl">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+${itemList}
+  </script>
+  <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/index.html">
+      <span class="logo-icoon">\u{1F50B}</span>
+      <span>Batterij<b>maatje</b></span>
+    </a>
+    <nav class="hoofdnav">
+      <a href="/index.html">Vergelijken</a>
+      <a href="/uitleg.html">Uitleg</a>
+      <a href="/advies.html">Keuzehulp</a>
+      <a href="/rekenmodule.html">Terugverdientijd</a>
+      <a href="/regelgeving.html">Regels &amp; subsidies</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container" style="max-width:900px;">
+  <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle thuisbatterijen vergelijken</a></p>
+  <h1>Beste thuisbatterij voor ${esc(cfg.naam)} (2026)</h1>
+  <p class="datum-stempel">Dagelijks automatisch bijgewerkt · laatst gecontroleerd op ${VANDAAG}</p>
+  <p>${esc(cfg.intro)}</p>
+  <p>Hieronder zie je alle ${data.batterijen.length} thuisbatterijen uit onze vergelijker, ingedeeld naar ${esc(cfg.naam)}-ondersteuning. De prijzen worden dagelijks automatisch gecontroleerd bij de winkels. De <a href="/uitleg.html#slim-score">Slim-score</a> (0 tot 6 punten) telt daarnaast ook de ondersteuning voor ${cfg.veld === "homey" ? "Home Assistant" : "Homey"} en een dynamisch energiecontract mee.</p>
+
+  <h2>✓ Volledige ${esc(cfg.naam)}-ondersteuning (${ja.length})</h2>
+  <p>Deze batterijen hebben een officiële ${esc(cfg.naam)}-koppeling van de fabrikant. Installeren, koppelen en klaar.</p>
+  ${overzichtTabel(ja, cfg.veld)}
+
+  <h2>~ Gedeeltelijke ondersteuning (${deels.length})</h2>
+  <p>${esc(cfg.deelsUitleg)}</p>
+  ${overzichtTabel(deels, cfg.veld)}
+
+  <h2>✕ Geen ${esc(cfg.naam)}-ondersteuning (${nee.length})</h2>
+  <p>${nee.length ? `Van deze batterijen is geen bruikbare ${esc(cfg.naam)}-koppeling bekend: ${nee.map((b) => `<a href="/batterij/${esc(b.id)}.html">${esc(b.merk)} ${esc(b.model)}</a>`).join(", ")}.` : `Alle batterijen in onze vergelijker hebben een vorm van ${esc(cfg.naam)}-ondersteuning.`}</p>
+
+  <h2>Zo kies je</h2>
+  <ul>
+    <li><b>Wil je zekerheid?</b> Kies een batterij uit de eerste tabel: officiële ondersteuning blijft werken na updates en de fabrikant helpt bij problemen.</li>
+    <li><b>Ben je handig?</b> De tweede tabel biedt vaak meer batterij voor je geld; community-integraties werken meestal goed, maar zonder garantie.</li>
+    <li><b>Twijfel je over de maat?</b> Doe de <a href="/advies.html">keuzehulp</a>: die rekent uit welke capaciteit bij je verbruik past.</li>
+    <li><b>Wat is ${esc(cfg.naam)} eigenlijk?</b> Lees de eenvoudige uitleg in onze <a href="/uitleg.html#${cfg.anker}">woordenlijst</a>.</li>
+  </ul>
+
+  <div class="waarschuwing-kader">Prijzen en integraties veranderen regelmatig. Deze pagina wordt dagelijks automatisch bijgewerkt vanuit onze <a href="/index.html">vergelijker</a>; de prijs en specificaties op de website van de winkel zijn altijd leidend.</div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <b>\u{1F50B} Batterijmaatje</b>
+    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
+    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>
@@ -234,6 +413,11 @@ for (const b of data.batterijen) {
 }
 console.log(`${data.batterijen.length} batterijpagina's gegenereerd in /batterij/`);
 
+for (const cfg of OVERZICHTEN) {
+  writeFileSync(resolve(ROOT, cfg.bestand), overzichtsPagina(cfg), "utf8");
+}
+console.log(`${OVERZICHTEN.length} overzichtspagina's gegenereerd (Home Assistant, Homey)`);
+
 /* ------------------------------------------------------------------
    Sitemap herbouwen (vaste pagina's + batterijpagina's)
    ------------------------------------------------------------------ */
@@ -244,6 +428,8 @@ const vast = [
   { loc: `${SITE}/advies.html`, freq: "weekly", prio: "0.9" },
   { loc: `${SITE}/rekenmodule.html`, freq: "weekly", prio: "0.8" },
   { loc: `${SITE}/regelgeving.html`, freq: "monthly", prio: "0.8" },
+  { loc: `${SITE}/beste-thuisbatterij-home-assistant.html`, freq: "daily", prio: "0.8" },
+  { loc: `${SITE}/beste-thuisbatterij-homey.html`, freq: "daily", prio: "0.8" },
   { loc: `${SITE}/over-ons.html`, freq: "monthly", prio: "0.4" },
   { loc: `${SITE}/privacy.html`, freq: "yearly", prio: "0.2" },
 ];

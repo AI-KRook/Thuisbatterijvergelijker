@@ -31,6 +31,18 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://batterijmaatje.nl/beste-thuisbatterij-home-assistant.html</loc>
+    <lastmod>2026-07-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://batterijmaatje.nl/beste-thuisbatterij-homey.html</loc>
+    <lastmod>2026-07-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://batterijmaatje.nl/over-ons.html</loc>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
