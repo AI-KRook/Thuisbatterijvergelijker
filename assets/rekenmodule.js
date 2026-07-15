@@ -166,7 +166,7 @@
     const doel = el("resultaat");
 
     if (!r.investering || !r.bruikbareCap) {
-      doel.innerHTML = '<p class="datum-stempel">Vul de investering en de capaciteit van de batterij in (of kies een batterij uit de lijst) om het resultaat te zien.</p>';
+      doel.innerHTML = '<p class="datum-stempel">👈 Kies bij stap 1 een batterij uit de lijst; het resultaat verschijnt hier direct. Wil je liever met eigen bedragen rekenen? Open dan "Alle getallen bekijken of aanpassen" en vul de investering en capaciteit zelf in.</p>';
       return;
     }
 
@@ -249,7 +249,7 @@
     const opties = batterijen
       .filter((b) => b.capaciteit_kwh && bestePrijs(b))
       .map((b) => `<option value="${b.id}">${b.merk} ${b.model} (${eurFmt.format(bestePrijs(b))})</option>`);
-    sel.innerHTML = '<option value="">Zelf invullen…</option>' + opties.join("");
+    sel.innerHTML = '<option value="">— Kies een batterij —</option>' + opties.join("");
   }
 
   function kiesBatterij(id) {
@@ -265,6 +265,17 @@
   function togglePvVelden() {
     const heeftPv = el("inpPv").value === "ja";
     el("pvVelden").style.display = heeftPv ? "" : "none";
+    el("veldPanelen").style.display = heeftPv ? "" : "none";
+    bereken();
+  }
+
+  // Vertaalt het aantal panelen naar jaaropwek (ca. 350 kWh per paneel),
+  // zodat bezoekers geen kWh-getal hoeven op te zoeken.
+  function panelenNaarOpwek() {
+    const n = parseInt(el("inpPanelen").value, 10);
+    if (Number.isFinite(n) && n > 0) {
+      el("inpOpwek").value = n * 350;
+    }
     bereken();
   }
 
@@ -292,6 +303,7 @@
     }
 
     el("inpBatterij").addEventListener("change", (e) => kiesBatterij(e.target.value));
+    el("inpPanelen").addEventListener("input", panelenNaarOpwek);
     el("inpPv").addEventListener("change", togglePvVelden);
     el("inpContract").addEventListener("change", toggleContractVelden);
     document.querySelectorAll("#rekenformulier input, #rekenformulier select").forEach((inp) => {

@@ -16,7 +16,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="Batterijmaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="assets/style.css?v=20260715e">
+  <link rel="stylesheet" href="assets/style.css?v=20260716">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <style>
@@ -33,6 +33,7 @@
     .veld .hint { font-size: 0.8rem; color: var(--kleur-tekst-licht); }
     .veld-rij { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 480px) { .veld-rij { grid-template-columns: 1fr; } }
+    .stappen-intro { margin: 0 0 6px; font-size: 0.95rem; color: var(--kleur-tekst-licht); background: var(--kleur-primair-licht); border-radius: 8px; padding: 10px 14px; }
     details.geavanceerd { margin-top: 18px; border-top: 1px dashed var(--kleur-rand); padding-top: 10px; }
     details.geavanceerd summary { cursor: pointer; font-weight: 700; color: var(--kleur-primair); font-size: 0.92rem; }
     #resultaat { position: sticky; top: 84px; }
@@ -77,92 +78,105 @@
 
     <form id="rekenformulier" class="reken-paneel" onsubmit="return false;">
 
+      <p class="stappen-intro">Drie keuzes en je ziet rechts direct het resultaat. Voor alle prijzen rekenen wij alvast met Nederlandse gemiddelden; aanpassen kan, maar hoeft niet.</p>
+
       <h2>1. Kies een batterij</h2>
       <div class="veld">
         <label for="inpBatterij">Batterij uit de vergelijker</label>
         <select id="inpBatterij"></select>
-        <span class="hint" id="batterijHint"></span>
-      </div>
-      <div class="veld-rij">
-        <div class="veld">
-          <label for="inpInvestering">Totale investering (€)</label>
-          <input type="number" id="inpInvestering" min="0" step="50" placeholder="bijv. 1299">
-          <span class="hint">Incl. btw en eventuele installatie</span>
-        </div>
-        <div class="veld">
-          <label for="inpCapaciteit">Capaciteit (kWh)</label>
-          <input type="number" id="inpCapaciteit" min="0" step="0.1" placeholder="bijv. 5,12">
-        </div>
+        <span class="hint" id="batterijHint">De prijs en capaciteit worden automatisch ingevuld.</span>
       </div>
 
-      <h2>2. Jouw situatie</h2>
+      <h2>2. Heb je zonnepanelen?</h2>
       <div class="veld-rij">
         <div class="veld">
-          <label for="inpPv">Heb je zonnepanelen?</label>
+          <label for="inpPv">Zonnepanelen</label>
           <select id="inpPv">
             <option value="ja">Ja</option>
             <option value="nee">Nee</option>
           </select>
         </div>
-        <div class="veld">
-          <label for="inpContract">Energiecontract</label>
-          <select id="inpContract">
-            <option value="dynamisch">Dynamisch (uurprijzen)</option>
-            <option value="vast">Vast of variabel tarief</option>
-          </select>
+        <div class="veld" id="veldPanelen">
+          <label for="inpPanelen">Hoeveel panelen ongeveer?</label>
+          <input type="number" id="inpPanelen" value="10" min="1" max="60" step="1">
+          <span class="hint">Een schatting is prima; wij rekenen 350 kWh per paneel per jaar</span>
         </div>
       </div>
 
-      <div id="pvVelden">
-        <div class="veld-rij">
-          <div class="veld">
-            <label for="inpOpwek">Opwek zonnepanelen (kWh per jaar)</label>
-            <input type="number" id="inpOpwek" value="3500" min="0" step="100">
-          </div>
-          <div class="veld">
-            <label for="inpEigenVerbruik">Direct eigen verbruik (%)</label>
-            <input type="number" id="inpEigenVerbruik" value="30" min="0" max="100" step="5">
-            <span class="hint">Deel van de zonnestroom dat je nu al direct gebruikt (vaak 25 tot 35%)</span>
-          </div>
-        </div>
-      </div>
-
-      <h2>3. Prijzen</h2>
-      <div class="veld-rij">
-        <div class="veld">
-          <label for="inpStroomprijs">Stroomprijs (€ per kWh)</label>
-          <input type="number" id="inpStroomprijs" value="0.30" min="0" step="0.01">
-          <span class="hint">Wat je gemiddeld betaalt, incl. belastingen</span>
-        </div>
-        <div class="veld">
-          <label for="inpTeruglever">Terugleververgoeding vanaf 2027 (€ per kWh)</label>
-          <input type="number" id="inpTeruglever" value="0.05" min="0" step="0.01">
-          <span class="hint">Indicatief 0,04 tot 0,06</span>
-        </div>
-      </div>
+      <h2>3. Wat voor energiecontract heb je?</h2>
       <div class="veld">
-        <label for="inpTerugleverkosten">Terugleverkosten (€ per teruggeleverde kWh)</label>
-        <input type="number" id="inpTerugleverkosten" value="0.02" min="0" step="0.01">
-        <span class="hint">Staat in je contract; vul 0 in als je leverancier ze niet rekent</span>
-      </div>
-
-      <div id="dynVelden">
-        <div class="veld-rij">
-          <div class="veld">
-            <label for="inpLaadprijs">Gemiddelde laadprijs op goedkope uren (€ per kWh)</label>
-            <input type="number" id="inpLaadprijs" value="0.15" min="0" step="0.01">
-            <span class="hint">Incl. belastingen, bijv. 's nachts of rond het middaguur</span>
-          </div>
-          <div class="veld">
-            <label for="inpOntlaadwaarde">Waarde per kWh op dure uren (€ per kWh)</label>
-            <input type="number" id="inpOntlaadwaarde" value="0.32" min="0" step="0.01">
-            <span class="hint">Vermeden inkoop op avondpiek, of terugleveropbrengst op piekuren</span>
-          </div>
-        </div>
+        <label for="inpContract">Energiecontract</label>
+        <select id="inpContract">
+          <option value="dynamisch">Dynamisch: prijs per uur (bijv. Tibber, Frank Energie, Zonneplan)</option>
+          <option value="vast">Vast of variabel tarief, of weet ik niet</option>
+        </select>
+        <span class="hint">Met een dynamisch contract kan de batterij extra verdienen door goedkoop te laden</span>
       </div>
 
       <details class="geavanceerd">
-        <summary>Geavanceerde aannames aanpassen</summary>
+        <summary>Alle getallen bekijken of aanpassen (optioneel)</summary>
+        <p class="hint" style="margin-top:8px;">Wij rekenen standaard met: stroomprijs € 0,30 per kWh, terugleververgoeding € 0,05, terugleverkosten € 0,02, en bij een dynamisch contract laden voor € 0,15 en ontladen ter waarde van € 0,32. Wijkt jouw situatie af? Pas het hier aan; het resultaat rekent direct mee.</p>
+
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="inpInvestering">Totale investering (€)</label>
+            <input type="number" id="inpInvestering" min="0" step="50" placeholder="bijv. 1299">
+            <span class="hint">Incl. btw en eventuele installatie; automatisch ingevuld bij je batterijkeuze</span>
+          </div>
+          <div class="veld">
+            <label for="inpCapaciteit">Capaciteit (kWh)</label>
+            <input type="number" id="inpCapaciteit" min="0" step="0.1" placeholder="bijv. 5,12">
+          </div>
+        </div>
+
+        <div id="pvVelden">
+          <div class="veld-rij">
+            <div class="veld">
+              <label for="inpOpwek">Opwek zonnepanelen (kWh per jaar)</label>
+              <input type="number" id="inpOpwek" value="3500" min="0" step="100">
+              <span class="hint">Wordt geschat uit je aantal panelen; staat de echte opwek op je jaarafrekening, vul die dan hier in</span>
+            </div>
+            <div class="veld">
+              <label for="inpEigenVerbruik">Direct eigen verbruik (%)</label>
+              <input type="number" id="inpEigenVerbruik" value="30" min="0" max="100" step="5">
+              <span class="hint">Deel van de zonnestroom dat je nu al direct gebruikt (vaak 25 tot 35%)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="inpStroomprijs">Stroomprijs (€ per kWh)</label>
+            <input type="number" id="inpStroomprijs" value="0.30" min="0" step="0.01">
+            <span class="hint">Wat je gemiddeld betaalt, incl. belastingen</span>
+          </div>
+          <div class="veld">
+            <label for="inpTeruglever">Terugleververgoeding vanaf 2027 (€ per kWh)</label>
+            <input type="number" id="inpTeruglever" value="0.05" min="0" step="0.01">
+            <span class="hint">Indicatief 0,04 tot 0,06</span>
+          </div>
+        </div>
+        <div class="veld">
+          <label for="inpTerugleverkosten">Terugleverkosten (€ per teruggeleverde kWh)</label>
+          <input type="number" id="inpTerugleverkosten" value="0.02" min="0" step="0.01">
+          <span class="hint">Staat in je contract; vul 0 in als je leverancier ze niet rekent</span>
+        </div>
+
+        <div id="dynVelden">
+          <div class="veld-rij">
+            <div class="veld">
+              <label for="inpLaadprijs">Gemiddelde laadprijs op goedkope uren (€ per kWh)</label>
+              <input type="number" id="inpLaadprijs" value="0.15" min="0" step="0.01">
+              <span class="hint">Incl. belastingen, bijv. 's nachts of rond het middaguur</span>
+            </div>
+            <div class="veld">
+              <label for="inpOntlaadwaarde">Waarde per kWh op dure uren (€ per kWh)</label>
+              <input type="number" id="inpOntlaadwaarde" value="0.32" min="0" step="0.01">
+              <span class="hint">Vermeden inkoop op avondpiek, of terugleveropbrengst op piekuren</span>
+            </div>
+          </div>
+        </div>
+
         <div class="veld-rij">
           <div class="veld">
             <label for="inpBruikbaar">Bruikbaar deel van de capaciteit (%)</label>
@@ -265,6 +279,6 @@
   </div>
 </footer>
 
-<script src="assets/rekenmodule.js?v=20260715e"></script>
+<script src="assets/rekenmodule.js?v=20260716"></script>
 </body>
 </html>
