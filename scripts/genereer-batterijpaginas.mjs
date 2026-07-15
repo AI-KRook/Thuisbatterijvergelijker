@@ -17,7 +17,7 @@ const SITE = "https://batterijmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260715d";
+const ASSET_VERSIE = "20260715e";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/batterijen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "batterij"), { recursive: true });
@@ -70,6 +70,12 @@ function slimScoreBadge(b) {
   const score = slimScore(b);
   const klasse = score >= 5 ? "slim-hoog" : score >= 3 ? "slim-midden" : "slim-laag";
   return `<span class="badge slim-score ${klasse}" title="Punten voor Homey, Home Assistant en dynamisch contract">\u{1F3E0} Slim-score ${score}/6</span>`;
+}
+
+// Merklogo: officiële logo's uit assets/logos/, geregistreerd in data (merk_logos)
+function merkLogoHtml(merk) {
+  const logo = (data.merk_logos || {})[merk];
+  return logo ? `<img class="merk-logo" src="/${esc(logo)}" alt="" loading="lazy"> ` : "";
 }
 
 /* ------------------------------------------------------------------ */
@@ -174,7 +180,7 @@ ${productLd(b)}
 <main class="content-pagina">
 
   <p class="datum-stempel"><a href="/index.html">Vergelijker</a> › ${esc(b.merk)} ${esc(b.model)}</p>
-  <h1>${esc(b.merk)} ${esc(b.model)}</h1>
+  <h1>${merkLogoHtml(b.merk)}${esc(b.merk)} ${esc(b.model)}</h1>
   <p class="intro">${esc(typeLabel)} thuisbatterij van ${nl(b.capaciteit_kwh)} kWh${b.uitbreidbaar_tot_kwh ? `, uitbreidbaar tot ${nl(b.uitbreidbaar_tot_kwh)} kWh` : ""}. Prijzen dagelijks gecontroleerd, laatst op ${esc(b.prijs_datum || data.laatst_bijgewerkt)}.</p>
 
   <div class="info-kader">
@@ -294,7 +300,7 @@ function overzichtTabel(lijst, veld) {
       const d = driewaardig(b[veld]);
       return `
       <tr>
-        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);"><a href="/batterij/${esc(b.id)}.html"><b>${esc(b.merk)} ${esc(b.model)}</b></a></td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);">${merkLogoHtml(b.merk)}<a href="/batterij/${esc(b.id)}.html"><b>${esc(b.merk)} ${esc(b.model)}</b></a></td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${nl(b.capaciteit_kwh)} kWh</td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${beste ? `<b>${eur(beste.prijs_eur)}</b><br><small>bij ${esc(beste.winkel)}</small>` : "op aanvraag"}</td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${perKwh ? eur(perKwh) : "n.b."}</td>

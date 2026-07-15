@@ -26,6 +26,7 @@
   const kwhFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 });
 
   let batterijen = [];
+  let merkLogos = {};
   let gestart = false; // pas advies tonen nadat de bezoeker er zelf om vraagt
 
   /* ------------------------------------------------------------------ */
@@ -213,7 +214,7 @@
         <article class="batterij-kaart">
           <div class="kaart-kop">
             <div>
-              <div class="merk">${i === 0 ? "🏆 Beste match · " : ""}${escapeHtml(b.merk)}</div>
+              <div class="merk">${i === 0 ? "🏆 Beste match · " : ""}${merkLogos[b.merk] ? `<img class="merk-logo" src="${escapeHtml(merkLogos[b.merk])}" alt="" loading="lazy"> ` : ""}${escapeHtml(b.merk)}</div>
               <h3><a href="batterij/${encodeURIComponent(b.id)}.html" style="color:inherit;text-decoration:none;" title="Alle details van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">${escapeHtml(b.model)}</a></h3>
               <span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml({ "plug-in": "Plug-in (stopcontact)", "ac-gekoppeld": "AC-gekoppeld", "hybride": "Hybride omvormer" }[b.type] || b.type)}</span>
               <div style="margin-top:6px;">${slimScoreBadge(b)}</div>
@@ -274,6 +275,7 @@
       const res = await fetch("data/batterijen.json", { cache: "no-cache" });
       const data = await res.json();
       batterijen = data.batterijen || [];
+      merkLogos = data.merk_logos || {};
     } catch (err) {
       console.error("Batterijen konden niet geladen worden:", err);
     }

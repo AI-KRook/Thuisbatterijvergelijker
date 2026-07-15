@@ -413,6 +413,11 @@ a.term-link:hover { color: var(--kleur-primair); }
 .badge.ja { background: var(--kleur-groen-licht); border-color: #bbf7d0; color: #166534; }
 .badge.deels { background: var(--kleur-accent-licht); border-color: #fde68a; color: #92400e; }
 
+/* Merklogo's: klein, uitgelijnd met de tekst; alleen zichtbaar als het
+   logobestand in assets/logos/ staat en in data/batterijen.json is geregistreerd */
+.merk-logo { height: 16px; width: auto; max-width: 90px; vertical-align: -3px; }
+h1 .merk-logo { height: 28px; vertical-align: -4px; }
+
 /* Legenda: ingeklapte uitleg van de symbolen, rustig en scanbaar */
 .legenda { margin: 8px 0 0; font-size: 0.88rem; }
 .legenda summary {

@@ -130,6 +130,15 @@
      Rendering: kaarten
      ------------------------------------------------------------------ */
 
+  // Merklogo: toont het officiële logo naast de merknaam zodra het bestand in
+  // assets/logos/ staat en is geregistreerd in data/batterijen.json (merk_logos).
+  function merkHtml(b) {
+    const logo = (state.meta.merk_logos || {})[b.merk];
+    return logo
+      ? `<img class="merk-logo" src="${escapeHtml(logo)}" alt="" loading="lazy"> ${escapeHtml(b.merk)}`
+      : escapeHtml(b.merk);
+  }
+
   // Slim-score: unieke Batterijmaatje-score voor slim aansturen (0 tot 6 punten).
   // Homey, Home Assistant en dynamisch contract tellen elk: ja = 2, deels = 1, nee = 0.
   // De formule staat uitgelegd op uitleg.html#slim-score en over-ons.html.
@@ -188,7 +197,7 @@
       </div>
       <div class="kaart-kop">
         <div>
-          <div class="merk">${escapeHtml(b.merk)}</div>
+          <div class="merk">${merkHtml(b)}</div>
           <h3><a href="batterij/${encodeURIComponent(b.id)}.html" style="color:inherit;text-decoration:none;" title="Alle details van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">${escapeHtml(b.model)}</a></h3>
           <a class="term-link" href="uitleg.html#${escapeHtml(b.type)}" title="Wat betekent dit? Lees de uitleg in de woordenlijst"><span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml(typeLabel)}</span></a>
         </div>
@@ -290,7 +299,7 @@
           const beste = bestePrijs(b);
           const perKwh = prijsPerKwh(b);
           return `<tr>
-            <td><b>${escapeHtml(b.merk)}</b><br><a href="batterij/${encodeURIComponent(b.id)}.html">${escapeHtml(b.model)}</a></td>
+            <td><b>${merkHtml(b)}</b><br><a href="batterij/${encodeURIComponent(b.id)}.html">${escapeHtml(b.model)}</a></td>
             <td>${b.capaciteit_kwh ? String(b.capaciteit_kwh).replace(".", ",") : "?"}</td>
             <td>${b.vermogen_kw ? String(b.vermogen_kw).replace(".", ",") : "?"}</td>
             <td>${escapeHtml(b.type)}</td>
