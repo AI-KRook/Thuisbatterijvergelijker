@@ -16,7 +16,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="Batterijmaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="assets/style.css?v=20260715">
+  <link rel="stylesheet" href="assets/style.css?v=20260715b">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <style>
@@ -99,16 +99,19 @@
   <dl>
     <div class="woord" id="fase"><dt>1-fase en 3-fase</dt><dd>Zegt iets over je stroomaansluiting. De meeste huizen hebben 1-fase (één "stroomdraad" het huis in). Huizen met bijvoorbeeld een warmtepomp of laadpaal hebben vaak 3-fase (drie draden, dus meer vermogen mogelijk). Het staat op je meterkast of jaarafrekening. Sommige grote batterijen hebben een 3-fase aansluiting nodig.</dd></div>
     <div class="woord" id="ac-gekoppeld"><dt>AC-gekoppeld</dt><dd>De batterij wordt aangesloten op het gewone stroomnet van je huis, los van je zonnepanelen. Voordeel: hij werkt met elk merk zonnepanelen, er hoeft niets aan je bestaande installatie te veranderen.</dd></div>
+    <div class="woord" id="leverancier-sturing"><dt>Aansturing door je energieleverancier</dt><dd>Sommige energieleveranciers met dynamische contracten (zoals Tibber, Frank Energie en Zonneplan) kunnen bepaalde thuisbatterijen automatisch voor je aansturen: laden als stroom goedkoop is, ontladen als stroom duur is, soms zelfs meedoen aan de onbalansmarkt. Jij hoeft dan niets in te stellen. Let op: dit werkt alleen met batterijen die de leverancier ondersteunt; controleer dat vóór aanschaf bij de leverancier zelf.</dd></div>
     <div class="woord" id="capaciteit"><dt>Capaciteit (kWh)</dt><dd>Hoeveel stroom er in de batterij past, gemeten in kilowattuur (kWh). Ter vergelijking: een gemiddeld huishouden gebruikt zo'n 8 kWh per dag. Een batterij van 5 kWh kan dus ruwweg een avond en nacht overbruggen.</dd></div>
     <div class="woord" id="cycli"><dt>Cycli (laadcycli)</dt><dd>Eén cyclus is één keer helemaal opladen en weer leegmaken. Fabrikanten beloven vaak 6.000 cycli of meer. Bij één cyclus per dag gaat de batterij dan ruim 15 jaar mee.</dd></div>
     <div class="woord" id="dynamisch-contract"><dt>Dynamisch energiecontract</dt><dd>Een stroomcontract waarbij de prijs ieder uur anders is: goedkoop als er veel wind en zon is, duur op drukke momenten. Handig met een batterij, want die kan slim inkopen als het goedkoop is. Aanbieders zijn bijvoorbeeld Tibber, Frank Energie en Zonneplan.</dd></div>
     <div class="woord" id="energiebelasting"><dt>Energiebelasting</dt><dd>Belasting die je betaalt over elke kilowattuur stroom die je van het net koopt. Zit in de prijs die je leverancier rekent.</dd></div>
+    <div class="woord" id="fabrikant-app"><dt>Fabrikant-app</dt><dd>Elke thuisbatterij heeft een eigen app van de fabrikant op je telefoon. Daarmee zie je hoe vol de batterij is en wat hij doet. De verschillen zitten in wat de app kán: sommige apps kunnen alleen meekijken, andere kunnen de batterij ook slim laten laden op goedkope uren. In de vergelijker staat bij elke batterij de naam van de app; je hebt dus geen Homey of Home Assistant nodig om een batterij te gebruiken.</dd></div>
     <div class="woord" id="home-assistant"><dt>Home Assistant</dt><dd>Een gratis computerprogramma voor mensen die hun "slimme huis" zelf willen regelen. Je kunt er veel batterijen mee uitlezen en aansturen. Vooral iets voor hobbyisten; je hebt het niet nodig om een batterij te gebruiken.</dd></div>
     <div class="woord" id="homey"><dt>Homey</dt><dd>Een kastje dat slimme apparaten in huis (lampen, thermostaat, batterij) met elkaar laat samenwerken. Net als Home Assistant niet verplicht, wel handig voor liefhebbers.</dd></div>
     <div class="woord" id="hybride"><dt>Hybride omvormer</dt><dd>Een omvormer (zie hieronder) waarop de zonnepanelen én de batterij allebei rechtstreeks worden aangesloten. Efficiënt, maar meestal betekent dit dat je huidige omvormer vervangen wordt. Werk voor een installateur.</dd></div>
     <div class="woord" id="kw"><dt>kW (kilowatt)</dt><dd>Het vermogen: hoe snel de batterij stroom kan leveren of opnemen. Een batterij van 2,5 kW kan bijvoorbeeld tegelijk een wasmachine en een televisie van stroom voorzien. Hoe hoger het getal, hoe meer apparaten tegelijk.</dd></div>
     <div class="woord" id="kwh"><dt>kWh (kilowattuur)</dt><dd>De hoeveelheid stroom, zoals liters bij water. Eén kWh is genoeg om ongeveer één wasje te draaien of zeven uur televisie te kijken. Zie ook "capaciteit".</dd></div>
     <div class="woord" id="lfp"><dt>LFP (LiFePO4)</dt><dd>De batterijsoort die in vrijwel alle thuisbatterijen zit (voluit: lithium-ijzerfosfaat). Gaat lang mee en is een stuk brandveiliger dan de batterijen in telefoons en laptops.</dd></div>
+    <div class="woord" id="matter"><dt>Matter</dt><dd>Een nieuwe, universele "taal" waarmee slimme apparaten van verschillende merken met elkaar praten, gesteund door onder andere Apple, Google, Amazon en Samsung. De nieuwste versies van Matter ondersteunen ook thuisbatterijen, maar in de praktijk zijn er anno 2026 nog maar weinig batterijen die dit al kunnen. De verwachting is dat dit de komende jaren groeit; voor nu lopen koppelingen vooral via de fabrikant-app, Homey of Home Assistant.</dd></div>
     <div class="woord" id="netcongestie"><dt>Netcongestie (vol stroomnet)</dt><dd>Op veel plekken in Nederland is het stroomnet overvol, zoals file op de snelweg. Daarom kan een nieuwe of zwaardere aansluiting soms lang duren. Een slimme batterij kan juist helpen door het net te ontlasten.</dd></div>
     <div class="woord" id="noodstroom"><dt>Noodstroom</dt><dd>Stroom uit de batterij tijdens een stroomstoring. Let op: veel batterijen vallen bij een storing juist úit, omdat ze met het net meedraaien. Sommige hebben een apart noodstroom-stopcontact, andere kunnen met extra apparatuur het hele huis blijven voeden. In de vergelijker zie je dit per batterij.</dd></div>
     <div class="woord" id="omvormer"><dt>Omvormer</dt><dd>Het kastje dat de stroom van zonnepanelen (gelijkstroom) omzet naar stroom die je huis kan gebruiken (wisselstroom). Iedereen met zonnepanelen heeft er een, vaak op zolder of in de meterkast.</dd></div>
@@ -133,7 +136,7 @@
   <div class="container">
     <b>🔋 Batterijmaatje</b>
     <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
-    <p><a href="index.html">Vergelijken</a> · <a href="uitleg.html">Uitleg</a> · <a href="advies.html">Keuzehulp</a> · <a href="rekenmodule.html">Terugverdientijd</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="over-ons.html">Over ons</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="index.html">Vergelijken</a> · <a href="uitleg.html">Uitleg</a> · <a href="advies.html">Keuzehulp</a> · <a href="rekenmodule.html">Terugverdientijd</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="over-ons.html">Over ons</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: deze uitleg is algemene informatie, geen persoonlijk advies. Prijzen, regels en producten veranderen; controleer belangrijke zaken bij de aanbieder of een erkend installateur.</p>
   </div>
 </footer>

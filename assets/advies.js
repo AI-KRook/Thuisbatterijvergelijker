@@ -48,6 +48,18 @@
     return driewaardig(v);
   }
 
+  // Slim-score: zelfde formule als de vergelijker (assets/app.js) en uitleg.html#slim-score
+  function slimScore(b) {
+    const punt = (v) => { const s = driewaardig(v); return s === "ja" ? 2 : s === "deels" ? 1 : 0; };
+    return punt(b.homey) + punt(b.home_assistant) + punt(b.dynamisch_contract);
+  }
+
+  function slimScoreBadge(b) {
+    const score = slimScore(b);
+    const klasse = score >= 5 ? "slim-hoog" : score >= 3 ? "slim-midden" : "slim-laag";
+    return `<span class="badge slim-score ${klasse}" title="Punten voor Homey, Home Assistant en dynamisch contract (2 per volledige, 1 per gedeeltelijke ondersteuning)">\u{1F3E0} Slim-score ${score}/6</span>`;
+  }
+
   function getal(id, fallback) {
     const v = parseFloat(String(el(id).value).replace(",", "."));
     return Number.isFinite(v) ? v : fallback;
@@ -202,8 +214,9 @@
           <div class="kaart-kop">
             <div>
               <div class="merk">${i === 0 ? "🏆 Beste match · " : ""}${escapeHtml(b.merk)}</div>
-              <h3>${escapeHtml(b.model)}</h3>
-              <span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml(b.type)}</span>
+              <h3><a href="batterij/${encodeURIComponent(b.id)}.html" style="color:inherit;text-decoration:none;" title="Alle details van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">${escapeHtml(b.model)}</a></h3>
+              <span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml({ "plug-in": "Plug-in (stopcontact)", "ac-gekoppeld": "AC-gekoppeld", "hybride": "Hybride omvormer" }[b.type] || b.type)}</span>
+              <div style="margin-top:6px;">${slimScoreBadge(b)}</div>
             </div>
           </div>
           <div class="kaart-specs">
