@@ -79,7 +79,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="assets/style.css?v=20260715c">
+  <link rel="stylesheet" href="assets/style.css?v=20260715d">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 </head>
@@ -125,7 +125,7 @@
 
   <div class="regel-banner">
     <span class="icoon">⚠️</span>
-    <p><b>Salderingsregeling stopt per 1 januari 2027.</b> Teruggeleverde zonnestroom wegstrepen tegen je verbruik kan dan niet meer. Een thuisbatterij wordt daardoor voor veel huishoudens met zonnepanelen interessanter. <a href="regelgeving.html">Lees wat de regels betekenen voor jouw situatie →</a></p>
+    <p><b>Salderingsregeling stopt per 1 januari 2027.</b> Zonnestroom zelf opslaan en gebruiken wordt daardoor veel interessanter. <a href="regelgeving.html">Wat betekent dit voor jou? →</a></p>
   </div>
 
   <button class="filter-toggle" id="filterToggle">🔍 Filteren en sorteren ▾</button>
@@ -192,9 +192,17 @@
     </div>
   </div>
 
-  <p style="font-size:0.85rem;color:var(--kleur-tekst-licht);margin:4px 0 0;">
-    Legenda: <span class="badge slim-hoog">🏠 Slim-score</span> punten voor Homey, Home Assistant en dynamisch contract (<a href="uitleg.html#slim-score">hoe werkt dit?</a>) &nbsp;·&nbsp; <span class="badge ja">✓</span> ondersteund &nbsp;·&nbsp; <span class="badge deels">~</span> werkt via een app, integratie of extra hardware (tik op de badge voor uitleg) &nbsp;·&nbsp; <span class="badge nee" style="text-decoration:none;">✕</span> niet ondersteund &nbsp;·&nbsp; <span class="badge onbekend">?</span> onbekend &nbsp;·&nbsp; Onbekende term? Bekijk de <a href="uitleg.html#woordenlijst">woordenlijst</a>
-  </p>
+  <details class="legenda">
+    <summary>ℹ️ Wat betekenen de symbolen?</summary>
+    <div class="legenda-lijst">
+      <div class="legenda-rij"><span class="badge slim-hoog">🏠 Slim-score</span><span>Punten (0 tot 6) voor Homey, Home Assistant en dynamisch contract. <a href="uitleg.html#slim-score">Hoe werkt dit?</a></span></div>
+      <div class="legenda-rij"><span class="badge ja">✓</span><span>Ondersteund</span></div>
+      <div class="legenda-rij"><span class="badge deels">~</span><span>Werkt via een app, integratie of extra hardware. Tik op de badge voor de uitleg.</span></div>
+      <div class="legenda-rij"><span class="badge nee">✕</span><span>Niet ondersteund</span></div>
+      <div class="legenda-rij"><span class="badge onbekend">?</span><span>Onbekend</span></div>
+      <div class="legenda-rij"><span>📖</span><span>Onbekende term? Bekijk de <a href="uitleg.html#woordenlijst">woordenlijst</a>.</span></div>
+    </div>
+  </details>
 
   <div class="resultaten-balk">
     <span class="resultaten-telling" id="resultatenTelling">Laden…</span>
@@ -309,6 +317,6 @@
   </div>
 </footer>
 
-<script src="assets/app.js?v=20260715c"></script>
+<script src="assets/app.js?v=20260715d"></script>
 </body>
 </html>

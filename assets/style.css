@@ -413,6 +413,36 @@ a.term-link:hover { color: var(--kleur-primair); }
 .badge.ja { background: var(--kleur-groen-licht); border-color: #bbf7d0; color: #166534; }
 .badge.deels { background: var(--kleur-accent-licht); border-color: #fde68a; color: #92400e; }
 
+/* Legenda: ingeklapte uitleg van de symbolen, rustig en scanbaar */
+.legenda { margin: 8px 0 0; font-size: 0.88rem; }
+.legenda summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-block;
+  color: var(--kleur-tekst-licht);
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  user-select: none;
+}
+.legenda summary::-webkit-details-marker { display: none; }
+.legenda summary:hover { background: var(--kleur-achtergrond); color: var(--kleur-tekst); }
+.legenda[open] summary { color: var(--kleur-primair-donker); }
+.legenda .legenda-lijst {
+  background: var(--kleur-wit);
+  border: 1px solid var(--kleur-rand);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 560px;
+}
+.legenda .legenda-rij { display: flex; align-items: baseline; gap: 10px; }
+.legenda .legenda-rij > span:first-child { flex-shrink: 0; }
+.legenda .legenda-rij > span:last-child { color: var(--kleur-tekst-licht); }
+
 /* Slim-score: eigen Batterijmaatje-score voor slim aansturen (0-6 punten) */
 .badge.slim-score { font-weight: 700; }
 .badge.slim-hoog { background: #ccfbf1; border-color: #99f6e4; color: #0f766e; }
