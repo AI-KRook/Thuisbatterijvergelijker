@@ -16,7 +16,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="Batterijmaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="assets/style.css?v=20260716d">
+  <link rel="stylesheet" href="assets/style.css?v=20260716e">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <style>
@@ -179,6 +179,76 @@
     <div class="icoon-kaart"><span class="icoon">🧾</span><b>Terugleverkosten voorkomen</b>Door minder terug te leveren kun je de <a href="#terugleverkosten">terugleverkosten</a> van je leverancier verlagen of voorkomen.</div>
     <div class="icoon-kaart"><span class="icoon">🚗</span><b>En je elektrische auto?</b>Wees realistisch: een thuisbatterij (5 tot 10 kWh) is veel kleiner dan een auto-accu (60+ kWh); "de auto vol laden uit de batterij" kan niet. Wél slim: de laadpaal op zonnige of goedkope uren laten laden en de batterij voor het huis gebruiken.</div>
   </div>
+
+  <h2 id="vast-of-dynamisch">Vast of dynamisch contract: wat is het verschil?</h2>
+  <p>Bij een <b>vast (of variabel) contract</b> betaal je elk uur van de dag dezelfde stroomprijs. Bij een <b>dynamisch contract</b> verandert de prijs ieder uur, en dat verschil is precies waar een slimme batterij zijn geld verdient. De grafiek hieronder laat een voorbeelddag zien:</p>
+
+  <svg viewBox="0 0 680 330" role="img" aria-label="Voorbeeld van dynamische uurprijzen op één dag vergeleken met een vast tarief van 30 cent: 's nachts en midden op de dag is stroom goedkoop en laadt de batterij, aan het begin van de avond is stroom duur en levert de batterij" style="width:100%;height:auto;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);">
+  <!-- laadvensters (goedkoop) en leveringsvenster (duur) -->
+  <rect x="103.16666666666666" y="40" width="76.75000000000003" height="256" fill="#0d9488" opacity="0.1"/>
+  <rect x="333.41666666666663" y="40" width="102.33333333333337" height="256" fill="#0d9488" opacity="0.1"/>
+  <rect x="486.9166666666667" y="40" width="102.33333333333331" height="256" fill="#d97706" opacity="0.12"/>
+  <line x1="52" y1="296" x2="666" y2="296" stroke="#d7d2c4" stroke-width="1"/>
+   <text x="44" y="300" text-anchor="end" font-size="12" fill="#5d6d6a">€ 0,10</text>
+  <line x1="52" y1="222.85714285714283" x2="666" y2="222.85714285714283" stroke="#d7d2c4" stroke-width="1"/>
+   <text x="44" y="226.85714285714283" text-anchor="end" font-size="12" fill="#5d6d6a">€ 0,20</text>
+  <line x1="52" y1="149.71428571428572" x2="666" y2="149.71428571428572" stroke="#d7d2c4" stroke-width="1"/>
+   <text x="44" y="153.71428571428572" text-anchor="end" font-size="12" fill="#5d6d6a">€ 0,30</text>
+  <line x1="52" y1="76.57142857142853" x2="666" y2="76.57142857142853" stroke="#d7d2c4" stroke-width="1"/>
+   <text x="44" y="80.57142857142853" text-anchor="end" font-size="12" fill="#5d6d6a">€ 0,40</text>
+  <text x="52" y="320" text-anchor="middle" font-size="12" fill="#5d6d6a">0:00</text>
+  <text x="205.5" y="320" text-anchor="middle" font-size="12" fill="#5d6d6a">6:00</text>
+  <text x="359" y="320" text-anchor="middle" font-size="12" fill="#5d6d6a">12:00</text>
+  <text x="512.5" y="320" text-anchor="middle" font-size="12" fill="#5d6d6a">18:00</text>
+  <text x="666" y="320" text-anchor="middle" font-size="12" fill="#5d6d6a">24:00</text>
+  <!-- vast tarief -->
+  <line x1="52" y1="149.71428571428572" x2="666" y2="149.71428571428572" stroke="#d97706" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <!-- dynamische uurprijzen -->
+  <path d="M 52 208.22857142857143 L 77.58333333333333 208.22857142857143 L 77.58333333333333 222.85714285714283 L 103.16666666666666 222.85714285714283 L 103.16666666666666 237.4857142857143 L 128.75 237.4857142857143 L 128.75 244.79999999999998 L 154.33333333333331 244.79999999999998 L 154.33333333333331 244.79999999999998 L 179.91666666666669 244.79999999999998 L 179.91666666666669 230.17142857142858 L 205.5 230.17142857142858 L 205.5 193.60000000000002 L 231.08333333333334 193.60000000000002 L 231.08333333333334 157.02857142857144 L 256.66666666666663 157.02857142857144 L 256.66666666666663 142.4 L 282.25 142.4 L 282.25 171.65714285714284 L 307.83333333333337 171.65714285714284 L 307.83333333333337 208.22857142857143 L 333.41666666666663 208.22857142857143 L 333.41666666666663 237.4857142857143 L 359 237.4857142857143 L 359 259.42857142857144 L 384.5833333333333 259.42857142857144 L 384.5833333333333 266.74285714285713 L 410.1666666666667 266.74285714285713 L 410.1666666666667 259.42857142857144 L 435.75 259.42857142857144 L 435.75 237.4857142857143 L 461.3333333333333 237.4857142857143 L 461.3333333333333 193.60000000000002 L 486.9166666666667 193.60000000000002 L 486.9166666666667 135.08571428571426 L 512.5 135.08571428571426 L 512.5 91.19999999999996 L 538.0833333333333 91.19999999999996 L 538.0833333333333 69.2571428571429 L 563.6666666666667 69.2571428571429 L 563.6666666666667 98.51428571428568 L 589.25 98.51428571428568 L 589.25 142.4 L 614.8333333333333 142.4 L 614.8333333333333 171.65714285714284 L 640.4166666666667 171.65714285714284 L 640.4166666666667 193.60000000000002 L 666 193.60000000000002" fill="none" stroke="#0d9488" stroke-width="2.5" stroke-linejoin="round"/>
+  <!-- vensterlabels -->
+  <text x="141.54166666666669" y="56" text-anchor="middle" font-size="12" font-weight="700" fill="#0b6b60">🔋 laden</text>
+  <text x="384.5833333333333" y="56" text-anchor="middle" font-size="12" font-weight="700" fill="#0b6b60">🔋 laden</text>
+  <text x="538.0833333333334" y="56" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">💡 leveren</text>
+  <!-- legenda -->
+  <line x1="52" y1="18" x2="78" y2="18" stroke="#0d9488" stroke-width="3"/>
+  <text x="84" y="22" font-size="13" font-weight="600" fill="#24312f">dynamisch (per uur)</text>
+  <line x1="252" y1="18" x2="278" y2="18" stroke="#d97706" stroke-width="3" stroke-dasharray="7 6"/>
+  <text x="284" y="22" font-size="13" font-weight="600" fill="#24312f">vast tarief (€ 0,30)</text>
+  <circle cx="64.79166666666666" cy="208.22857142857143" r="9" fill="transparent"><title>00:00 – 01:00: € 0,22 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="90.375" cy="222.85714285714283" r="9" fill="transparent"><title>01:00 – 02:00: € 0,20 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="115.95833333333333" cy="237.4857142857143" r="9" fill="transparent"><title>02:00 – 03:00: € 0,18 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="141.54166666666666" cy="244.79999999999998" r="9" fill="transparent"><title>03:00 – 04:00: € 0,17 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="167.125" cy="244.79999999999998" r="9" fill="transparent"><title>04:00 – 05:00: € 0,17 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="192.70833333333334" cy="230.17142857142858" r="9" fill="transparent"><title>05:00 – 06:00: € 0,19 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="218.29166666666669" cy="193.60000000000002" r="9" fill="transparent"><title>06:00 – 07:00: € 0,24 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="243.875" cy="157.02857142857144" r="9" fill="transparent"><title>07:00 – 08:00: € 0,29 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="269.4583333333333" cy="142.4" r="9" fill="transparent"><title>08:00 – 09:00: € 0,31 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="295.0416666666667" cy="171.65714285714284" r="9" fill="transparent"><title>09:00 – 10:00: € 0,27 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="320.625" cy="208.22857142857143" r="9" fill="transparent"><title>10:00 – 11:00: € 0,22 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="346.2083333333333" cy="237.4857142857143" r="9" fill="transparent"><title>11:00 – 12:00: € 0,18 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="371.79166666666663" cy="259.42857142857144" r="9" fill="transparent"><title>12:00 – 13:00: € 0,15 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="397.375" cy="266.74285714285713" r="9" fill="transparent"><title>13:00 – 14:00: € 0,14 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="422.95833333333337" cy="259.42857142857144" r="9" fill="transparent"><title>14:00 – 15:00: € 0,15 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="448.54166666666663" cy="237.4857142857143" r="9" fill="transparent"><title>15:00 – 16:00: € 0,18 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="474.125" cy="193.60000000000002" r="9" fill="transparent"><title>16:00 – 17:00: € 0,24 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="499.70833333333337" cy="135.08571428571426" r="9" fill="transparent"><title>17:00 – 18:00: € 0,32 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="525.2916666666666" cy="91.19999999999996" r="9" fill="transparent"><title>18:00 – 19:00: € 0,38 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="550.875" cy="69.2571428571429" r="9" fill="transparent"><title>19:00 – 20:00: € 0,41 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="576.4583333333334" cy="98.51428571428568" r="9" fill="transparent"><title>20:00 – 21:00: € 0,37 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="602.0416666666666" cy="142.4" r="9" fill="transparent"><title>21:00 – 22:00: € 0,31 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="627.625" cy="171.65714285714284" r="9" fill="transparent"><title>22:00 – 23:00: € 0,27 per kWh (vast: € 0,30)</title></circle>
+  <circle cx="653.2083333333334" cy="193.60000000000002" r="9" fill="transparent"><title>23:00 – 24:00: € 0,24 per kWh (vast: € 0,30)</title></circle>
+</svg>
+
+  <p class="datum-stempel">Illustratief voorbeeld van één dag, prijzen inclusief belastingen. Echte uurprijzen verschillen per dag en seizoen; bij veel wind en zon zijn de dalen dieper, op donkere windstille winterdagen zijn de pieken hoger.</p>
+
+  <p>Wat je in de grafiek ziet:</p>
+  <ul>
+    <li><b>'s Nachts (2 tot 5 uur) en midden op de dag (11 tot 15 uur) is stroom goedkoop</b>, in dit voorbeeld € 0,14 tot € 0,18 per kWh. Dat zijn de momenten waarop een slimme batterij automatisch laadt. Midden op de dag komt dat door al die zonnepanelen: soms is stroom dan bijna gratis of zelfs negatief geprijsd.</li>
+    <li><b>Aan het begin van de avond (17 tot 21 uur) is stroom duur</b>, hier tot € 0,41: iedereen komt thuis, kookt en de zon is weg. Dan gebruikt je huis de batterij in plaats van het net, of levert de batterij terug tegen die hoge prijs.</li>
+    <li><b>De stippellijn is het vaste tarief (€ 0,30)</b>: altijd dezelfde prijs, dus geen goedkope uren om te benutten. Met een vast contract verdient een batterij alleen via het opslaan van je eigen zonnestroom; het slimme laden op goedkope uren komt daar met een dynamisch contract bovenop.</li>
+  </ul>
+  <p>In dit voorbeeld is het verschil tussen het goedkoopste en het duurste uur € 0,27 per kWh. Een batterij van 5 kWh die dat verschil één keer per dag benut, verdient zo grofweg een euro per dag, naast de opbrengst van je zonnestroom. Benieuwd wat dat voor jouw situatie betekent? <a href="rekenmodule.html">Reken het door in de terugverdientijd-berekening</a>, of lees in de woordenlijst wat een <a href="#dynamisch-contract">dynamisch contract</a> precies is.</p>
 
   <h2 id="waar-op-letten">Waar moet je op letten vóór je koopt?</h2>
   <p>Dit zijn de punten waar kopers achteraf het vaakst tegenaan lopen:</p>
