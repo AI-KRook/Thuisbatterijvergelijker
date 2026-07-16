@@ -244,21 +244,39 @@
      Batterijkeuze en events
      ------------------------------------------------------------------ */
 
+  // De eerlijkste investering om mee te rekenen: de totaalprijs compleet
+  // gebruiksklaar als die bekend is (belangrijk bij installatiesystemen),
+  // anders de beste winkelprijs.
+  function investeringVoor(b) {
+    if (b.totaalprijs_van_eur) return { bedrag: b.totaalprijs_van_eur, soort: "totaal" };
+    const p = bestePrijs(b);
+    return p ? { bedrag: p, soort: "winkel" } : null;
+  }
+
   function vulBatterijKeuze() {
     const sel = el("inpBatterij");
-    const opties = batterijen
-      .filter((b) => b.capaciteit_kwh && bestePrijs(b))
-      .map((b) => `<option value="${b.id}">${b.merk} ${b.model} (${eurFmt.format(bestePrijs(b))})</option>`);
-    sel.innerHTML = '<option value="">— Kies een batterij —</option>' + opties.join("");
+    const metPrijs = batterijen.filter((b) => b.capaciteit_kwh && investeringVoor(b));
+    const zonderPrijs = batterijen.filter((b) => b.capaciteit_kwh && !investeringVoor(b));
+    const opties = metPrijs.map((b) => {
+      const inv = investeringVoor(b);
+      return `<option value="${b.id}">${b.merk} ${b.model} (${eurFmt.format(inv.bedrag)}${inv.soort === "totaal" ? " gebruiksklaar" : ""})</option>`;
+    });
+    const grijs = zonderPrijs.map((b) => `<option value="" disabled>${b.merk} ${b.model} (prijs op aanvraag; vul zelf een offertebedrag in)</option>`);
+    sel.innerHTML = '<option value="">— Kies een batterij —</option>' + opties.join("") + grijs.join("");
   }
 
   function kiesBatterij(id) {
     const b = batterijen.find((x) => x.id === id);
     if (!b) return;
+    const inv = investeringVoor(b);
     el("inpCapaciteit").value = b.capaciteit_kwh;
-    el("inpInvestering").value = bestePrijs(b) || "";
+    el("inpInvestering").value = inv ? inv.bedrag : "";
     const hint = el("batterijHint");
-    hint.textContent = b.prijs_omvat ? `Let op wat de prijs dekt: ${b.prijs_omvat}. Tel installatiekosten zelf op bij de investering als die er niet in zitten.` : "";
+    if (inv && inv.soort === "totaal") {
+      hint.textContent = `Als investering is de indicatie compleet gebruiksklaar ingevuld (${eurFmt.format(inv.bedrag)}${b.totaalprijs_tot_eur ? ` tot ${eurFmt.format(b.totaalprijs_tot_eur)}` : ""}, incl. installatie). Heb je een offerte? Vul dan dat bedrag in bij "alle getallen".`;
+    } else {
+      hint.textContent = b.prijs_omvat ? `Let op wat de prijs dekt: ${b.prijs_omvat}. Tel installatiekosten zelf op bij de investering als die er niet in zitten.` : "";
+    }
     bereken();
   }
 
