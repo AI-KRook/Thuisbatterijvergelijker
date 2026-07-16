@@ -157,13 +157,13 @@
     const d = driewaardig(waarde);
     const icoon = d.status === "ja" ? "✓" : d.status === "deels" ? "~" : "✕";
     const titel = d.status === "deels" ? d.tekst : d.status === "ja" ? (titelJa || "Ondersteund") : "Niet ondersteund";
-    return `<span class="badge ${d.status}" title="${escapeHtml(titel)}">${icoon} ${escapeHtml(label)}</span>`;
+    return `<span class="badge ${d.status}" data-uitleg="${escapeHtml(label)}" title="${escapeHtml(titel)}">${icoon} ${escapeHtml(label)}</span>`;
   }
 
   function noodstroomBadge(b) {
     const d = vierwaardig(b.noodstroom);
     const icoon = { ja: "✓", deels: "~", nee: "✕", onbekend: "?" }[d.status];
-    return `<span class="badge ${d.status}" title="${escapeHtml(b.noodstroom_uitleg || d.tekst)}">${icoon} Noodstroom</span>`;
+    return `<span class="badge ${d.status}" data-uitleg="Noodstroom" title="${escapeHtml(b.noodstroom_uitleg || d.tekst)}">${icoon} Noodstroom</span>`;
   }
 
   function sterren(score) {
@@ -417,16 +417,33 @@
 
     // Gedelegeerde events voor dynamische content
     el("resultaten").addEventListener("click", (e) => {
-      // Tik op een info-badge (zoals "~ Home Assistant") opent de details met uitleg
+      // Tik op een info-badge (zoals "~ Home Assistant"): opent de details en
+      // springt naar de bijbehorende uitleg, die even oplicht zodat er altijd
+      // zichtbaar iets gebeurt (ook als de details al open stonden).
       const badge = e.target.closest(".kaart-badges .badge");
       if (badge) {
         const kaart = badge.closest(".batterij-kaart");
         const details = kaart && kaart.querySelector(".kaart-details");
         const knop = kaart && kaart.querySelector(".details-toggle");
-        if (details && details.hidden) {
+        if (!details) return;
+        if (details.hidden) {
           details.hidden = false;
           if (knop) knop.textContent = "Verberg details";
         }
+        const label = badge.dataset.uitleg || "";
+        let doel = null;
+        details.querySelectorAll("dt").forEach((dt) => {
+          if (!doel && label && dt.textContent.trim().startsWith(label)) doel = dt;
+        });
+        details.classList.remove("uitgelicht");
+        details.querySelectorAll(".uitgelicht").forEach((el2) => el2.classList.remove("uitgelicht"));
+        const uitgelicht = doel ? [doel, doel.nextElementSibling] : [details];
+        uitgelicht.forEach((el2) => {
+          if (!el2) return;
+          void el2.offsetWidth; // herstart de animatie bij een tweede tik
+          el2.classList.add("uitgelicht");
+        });
+        (doel || details).scrollIntoView({ behavior: "smooth", block: "center" });
         return;
       }
       const toggle = e.target.closest(".details-toggle");
