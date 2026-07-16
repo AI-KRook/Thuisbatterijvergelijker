@@ -3,6 +3,32 @@
   "toelichting": "Tarieven verzameld uit openbare bronnen op de peildatum. Terugleverkosten gelden doorgaans alleen voor vaste en variabele contracten (niet voor dynamische) en niet voor vaste contracten van vóór de invoeringsdatum. Bedragen wijzigen regelmatig; het contract en de website van de leverancier zijn altijd leidend.",
   "leveranciers": [
     {
+      "id": "budget",
+      "naam": "Budget Energie (Budget Thuis)",
+      "contract": "vast-variabel",
+      "terugleverkosten_model": "staffel: vast bedrag per maand (26 schalen)",
+      "terugleverkosten_omschrijving": "bijv. € 2/mnd tot 500 kWh/jaar; gemiddeld ca. € 0,109 per kWh, begin 2026 de laagste van de grote leveranciers",
+      "terugleverkosten_per_kwh_indicatie": 0.11,
+      "terugleververgoeding_omschrijving": "geen concreet bedrag gevonden (2026)",
+      "vanaf_2027": "aangekondigd: netto vergoeding ca. € 0,026 per kWh",
+      "kanttekening": "Geen terugleverkosten bij het dynamische of combi-contract van Budget.",
+      "bron": "https://www.budgetthuis.nl/energie/terugleverkosten",
+      "peildatum": "2026-02"
+    },
+    {
+      "id": "coolblue",
+      "naam": "Coolblue Energie",
+      "contract": "vast-variabel",
+      "terugleverkosten_model": "per teruggeleverde kWh (nieuwe contracten) of hoger vastrecht (oudere contracten)",
+      "terugleverkosten_omschrijving": "€ 0,115 per kWh bij contracten na 17 oktober 2025; oudere contracten betalen in plaats daarvan een hoger vastrecht",
+      "terugleverkosten_per_kwh_indicatie": 0.115,
+      "terugleververgoeding_omschrijving": "ca. € 0,07 per kWh (bronnen niet eensluidend)",
+      "vanaf_2027": null,
+      "kanttekening": "Bronnen spreken elkaar tegen over model en vergoeding; controleer je eigen contract. Geen terugleverkosten bij het dynamische contract.",
+      "bron": "https://www.coolblue.nl/energiecontracten/advies/hoe-werken-terugleverkosten-coolblue-energie",
+      "peildatum": "2026-06"
+    },
+    {
       "id": "eneco",
       "naam": "Eneco",
       "contract": "vast-variabel",
@@ -16,6 +42,19 @@
       "peildatum": "2026-06"
     },
     {
+      "id": "engie",
+      "naam": "ENGIE",
+      "contract": "vast-variabel",
+      "terugleverkosten_model": "per teruggeleverde kWh",
+      "terugleverkosten_omschrijving": "€ 0,117 per kWh; let op: ENGIE rekent wel een hoger vastrecht",
+      "terugleverkosten_per_kwh_indicatie": 0.117,
+      "terugleververgoeding_omschrijving": "ca. € 0,130 per kWh",
+      "vanaf_2027": null,
+      "kanttekening": null,
+      "bron": "https://www.engie.nl/product-advies/zonnepanelen/orientatie/terugleverkosten",
+      "peildatum": "2026-07"
+    },
+    {
       "id": "essent",
       "naam": "Essent",
       "contract": "vast-variabel",
@@ -26,6 +65,58 @@
       "vanaf_2027": "aangekondigd: netto vergoeding ca. € 0,0025 per kWh",
       "kanttekening": "Indicatie per kWh is omgerekend uit de staffel; het echte bedrag hangt af van je jaarlijkse teruglevering.",
       "bron": "https://www.essent.nl/klantenservice/contract/terugleverkosten",
+      "peildatum": "2026"
+    },
+    {
+      "id": "greenchoice",
+      "naam": "Greenchoice",
+      "contract": "vast-variabel",
+      "terugleverkosten_model": "per teruggeleverde kWh",
+      "terugleverkosten_omschrijving": "€ 0,1162 per kWh (variabel en 1 jaar vast); € 0,12705 (2-3 jaar vast)",
+      "terugleverkosten_per_kwh_indicatie": 0.116,
+      "terugleververgoeding_omschrijving": "€ 0,145 per kWh",
+      "vanaf_2027": "aangekondigd: terugleverkosten dalen naar € 0,052 per kWh",
+      "kanttekening": null,
+      "bron": "https://www.greenchoice.nl/klantenservice/terugleverkosten/",
+      "peildatum": "2026"
+    },
+    {
+      "id": "mega",
+      "naam": "Mega",
+      "contract": "vast-variabel",
+      "terugleverkosten_model": "per teruggeleverde kWh",
+      "terugleverkosten_omschrijving": "€ 0,133 (1 jaar) tot € 0,147 (3 jaar) per kWh voor contracten na 9 januari 2026",
+      "terugleverkosten_per_kwh_indicatie": 0.14,
+      "terugleververgoeding_omschrijving": "ca. € 0,138 per kWh (bronnen niet eensluidend)",
+      "vanaf_2027": null,
+      "kanttekening": "Geen terugleverkosten bij het dynamische contract van Mega (opslag € 0,0182 per kWh).",
+      "bron": "https://www.mega.nl/veelgestelde-vragen-energiecontract/",
+      "peildatum": "2026-07"
+    },
+    {
+      "id": "oxxio",
+      "naam": "Oxxio",
+      "contract": "vast-variabel",
+      "terugleverkosten_model": "per teruggeleverde kWh",
+      "terugleverkosten_omschrijving": "ca. € 0,132 tot € 0,142 per kWh, afhankelijk van contractvorm",
+      "terugleverkosten_per_kwh_indicatie": 0.14,
+      "terugleververgoeding_omschrijving": "ca. € 0,152 per kWh",
+      "vanaf_2027": "aangekondigd: netto vergoeding ca. € 0,011 per kWh",
+      "kanttekening": "Geen terugleverkosten bij het dynamische contract van Oxxio.",
+      "bron": "https://www.oxxio.nl/klantenservice/terugleverkosten/",
+      "peildatum": "2026-07"
+    },
+    {
+      "id": "vandebron",
+      "naam": "Vandebron",
+      "contract": "vast-variabel",
+      "terugleverkosten_model": "staffel: vast bedrag per maand naar jaarlijkse teruglevering",
+      "terugleverkosten_omschrijving": "bijv. ca. € 10,94/mnd bij 750-1.000 kWh en ca. € 29,69/mnd bij 2.250-2.500 kWh per jaar",
+      "terugleverkosten_per_kwh_indicatie": 0.15,
+      "terugleververgoeding_omschrijving": "€ 0,16 (vast) tot € 0,17 (variabel) per kWh, alleen over het surplus",
+      "vanaf_2027": "aangekondigd: vergoeding ca. € 0,054 tot € 0,061 per kWh",
+      "kanttekening": "Indicatie per kWh is omgerekend uit de staffel. Geen terugleverkosten bij het dynamische contract (€ 4,50/mnd vast, opslag € 0,02 per kWh).",
+      "bron": "https://vandebron.nl/blog/vaste-terugleveringskosten",
       "peildatum": "2026"
     },
     {
@@ -42,42 +133,55 @@
       "peildatum": "2026-05"
     },
     {
-      "id": "greenchoice",
-      "naam": "Greenchoice",
-      "contract": "vast-variabel",
-      "terugleverkosten_model": "per teruggeleverde kWh",
-      "terugleverkosten_omschrijving": "€ 0,1162 per kWh (variabel en 1 jaar vast); € 0,12705 (2-3 jaar vast)",
-      "terugleverkosten_per_kwh_indicatie": 0.116,
-      "terugleververgoeding_omschrijving": "€ 0,145 per kWh",
-      "vanaf_2027": "aangekondigd: terugleverkosten dalen naar € 0,052 per kWh",
-      "kanttekening": null,
-      "bron": "https://www.greenchoice.nl/klantenservice/terugleverkosten/",
-      "peildatum": "2026"
-    },
-    {
-      "id": "budget",
-      "naam": "Budget Energie (Budget Thuis)",
-      "contract": "vast-variabel",
-      "terugleverkosten_model": "staffel: vast bedrag per maand (26 schalen)",
-      "terugleverkosten_omschrijving": "bijv. € 2/mnd tot 500 kWh/jaar; gemiddeld ca. € 0,109 per kWh, begin 2026 de laagste van de grote leveranciers",
-      "terugleverkosten_per_kwh_indicatie": 0.11,
-      "terugleververgoeding_omschrijving": "geen concreet bedrag gevonden (2026)",
-      "vanaf_2027": "aangekondigd: netto vergoeding ca. € 0,026 per kWh",
-      "kanttekening": "Geen terugleverkosten bij het dynamische of combi-contract van Budget.",
-      "bron": "https://www.budgetthuis.nl/energie/terugleverkosten",
-      "peildatum": "2026-02"
-    },
-    {
-      "id": "engie",
-      "naam": "ENGIE",
-      "contract": "vast-variabel",
-      "terugleverkosten_model": "per teruggeleverde kWh",
-      "terugleverkosten_omschrijving": "€ 0,117 per kWh; let op: ENGIE rekent wel een hoger vastrecht",
-      "terugleverkosten_per_kwh_indicatie": 0.117,
-      "terugleververgoeding_omschrijving": "ca. € 0,130 per kWh",
+      "id": "anwb",
+      "naam": "ANWB Energie (dynamisch)",
+      "contract": "dynamisch",
+      "terugleverkosten_model": "geen",
+      "terugleverkosten_omschrijving": "geen terugleverkosten; teruglevering tegen uurprijs (gemiddeld ca. € 0,04 per kWh over een jaar)",
+      "terugleverkosten_per_kwh_indicatie": 0,
+      "terugleververgoeding_omschrijving": "uurprijs; vaste kosten ca. € 5,50 tot € 8,50/mnd (bronnen verschillen), opslag € 0,022 per kWh",
       "vanaf_2027": null,
-      "kanttekening": null,
-      "bron": "https://www.engie.nl/product-advies/zonnepanelen/orientatie/terugleverkosten",
+      "kanttekening": "Geen eigen batterij-aansturing gevonden.",
+      "bron": "https://www.anwb.nl/energie/dynamisch-energiecontract-zonnepanelen",
+      "peildatum": "2026-05"
+    },
+    {
+      "id": "easyenergy",
+      "naam": "easyEnergy (dynamisch)",
+      "contract": "dynamisch",
+      "terugleverkosten_model": "geen",
+      "terugleverkosten_omschrijving": "geen terugleverkosten; teruglevering tegen kale spotprijs (bij negatieve prijzen betaal je)",
+      "terugleverkosten_per_kwh_indicatie": 0,
+      "terugleververgoeding_omschrijving": "spotprijs; vaste kosten € 7,00/mnd, opslag € 0,02178 per kWh",
+      "vanaf_2027": null,
+      "kanttekening": "Geen eigen batterij-aansturing; eigen systeem (Homey, Home Assistant of fabrikant-app) nodig.",
+      "bron": "https://www.easyenergy.com/klantenservice/ons-aanbod/wat-kost-energie-bij-easyenergy",
+      "peildatum": "2026-07"
+    },
+    {
+      "id": "frank",
+      "naam": "Frank Energie (dynamisch)",
+      "contract": "dynamisch",
+      "terugleverkosten_model": "geen",
+      "terugleverkosten_omschrijving": "geen terugleverkosten; met 'Slim Terugleveren' juist marktprijs plus ca. € 0,018 per kWh",
+      "terugleverkosten_per_kwh_indicatie": 0,
+      "terugleververgoeding_omschrijving": "uurprijs, met bonus bij slim terugleveren; vaste kosten ca. € 4,99 tot € 7,00/mnd (bronnen verschillen)",
+      "vanaf_2027": null,
+      "kanttekening": "Batterij-aansturing 'Slim Handelen': winstdeling 85% klant / 15% Frank, geen servicekosten.",
+      "bron": "https://www.frankenergie.nl/nl/terugleverkosten",
+      "peildatum": "2026-06"
+    },
+    {
+      "id": "nextenergy",
+      "naam": "NextEnergy (dynamisch)",
+      "contract": "dynamisch",
+      "terugleverkosten_model": "geen",
+      "terugleverkosten_omschrijving": "geen terugleverkosten; sinds april 2026 ook geen verkoopvergoeding meer bij teruglevering",
+      "terugleverkosten_per_kwh_indicatie": 0,
+      "terugleververgoeding_omschrijving": "beursprijs; met NextSolar-zonnebonus 1,5x de beursprijs (max. 6.000 kWh/jaar, tussen 6:00 en 22:00). Vaste kosten € 5,99/mnd, opslag € 0,021 per kWh",
+      "vanaf_2027": null,
+      "kanttekening": "Slimme batterij-aansturing met opbrengstverdeling 85% klant / 15% NextEnergy.",
+      "bron": "https://www.nextenergy.nl/zonnepanelen",
       "peildatum": "2026-07"
     },
     {
@@ -94,19 +198,6 @@
       "peildatum": "2026-06"
     },
     {
-      "id": "frank",
-      "naam": "Frank Energie (dynamisch)",
-      "contract": "dynamisch",
-      "terugleverkosten_model": "geen",
-      "terugleverkosten_omschrijving": "geen terugleverkosten; met 'Slim Terugleveren' juist marktprijs plus ca. € 0,018 per kWh",
-      "terugleverkosten_per_kwh_indicatie": 0,
-      "terugleververgoeding_omschrijving": "uurprijs, met bonus bij slim terugleveren; vaste kosten ca. € 4,99 tot € 7,00/mnd (bronnen verschillen)",
-      "vanaf_2027": null,
-      "kanttekening": "Batterij-aansturing 'Slim Handelen': winstdeling 85% klant / 15% Frank, geen servicekosten.",
-      "bron": "https://www.frankenergie.nl/nl/terugleverkosten",
-      "peildatum": "2026-06"
-    },
-    {
       "id": "zonneplan",
       "naam": "Zonneplan (dynamisch)",
       "contract": "dynamisch",
@@ -118,32 +209,6 @@
       "kanttekening": "Powerplay-batterijsturing vereist Zonneplan als leverancier; ingehouden marge niet openbaar.",
       "bron": "https://www.zonneplan.nl/energie/zonnepanelen/terugleverkosten-dynamisch-contract",
       "peildatum": "2026-07"
-    },
-    {
-      "id": "easyenergy",
-      "naam": "easyEnergy (dynamisch)",
-      "contract": "dynamisch",
-      "terugleverkosten_model": "geen",
-      "terugleverkosten_omschrijving": "geen terugleverkosten; teruglevering tegen kale spotprijs (bij negatieve prijzen betaal je)",
-      "terugleverkosten_per_kwh_indicatie": 0,
-      "terugleververgoeding_omschrijving": "spotprijs; vaste kosten € 7,00/mnd, opslag € 0,02178 per kWh",
-      "vanaf_2027": null,
-      "kanttekening": "Geen eigen batterij-aansturing; eigen systeem (Homey, Home Assistant of fabrikant-app) nodig.",
-      "bron": "https://www.easyenergy.com/klantenservice/ons-aanbod/wat-kost-energie-bij-easyenergy",
-      "peildatum": "2026-07"
-    },
-    {
-      "id": "anwb",
-      "naam": "ANWB Energie (dynamisch)",
-      "contract": "dynamisch",
-      "terugleverkosten_model": "geen",
-      "terugleverkosten_omschrijving": "geen terugleverkosten; teruglevering tegen uurprijs (gemiddeld ca. € 0,04 per kWh over een jaar)",
-      "terugleverkosten_per_kwh_indicatie": 0,
-      "terugleververgoeding_omschrijving": "uurprijs; vaste kosten ca. € 5,50 tot € 8,50/mnd (bronnen verschillen), opslag € 0,022 per kWh",
-      "vanaf_2027": null,
-      "kanttekening": "Geen eigen batterij-aansturing gevonden.",
-      "bron": "https://www.anwb.nl/energie/dynamisch-energiecontract-zonnepanelen",
-      "peildatum": "2026-05"
     }
   ]
 }
