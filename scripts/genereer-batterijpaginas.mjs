@@ -17,7 +17,7 @@ const SITE = "https://batterijmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260716c";
+const ASSET_VERSIE = "20260716d";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/batterijen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "batterij"), { recursive: true });
@@ -76,6 +76,58 @@ function slimScoreBadge(b) {
 function merkLogoHtml(merk) {
   const logo = (data.merk_logos || {})[merk];
   return logo ? `<img class="merk-logo" src="/${esc(logo)}" alt="" loading="lazy"> ` : "";
+}
+
+// Mini-illustraties per batterijtype, in de huisstijl (inkt-teal, teal, amber).
+// Eigen tekeningen, dus geen rechtenkwesties.
+function typeIllustratie(type) {
+  const svgs = {
+    "plug-in": `<svg viewBox="0 0 170 120" role="img" aria-label="Stekkerbatterij: batterij met stekker in een gewoon stopcontact" class="type-illustratie">
+      <rect x="14" y="26" width="58" height="82" rx="9" fill="#0e4f49"/>
+      <rect x="24" y="84" width="38" height="11" rx="3" fill="#2dd4bf"/>
+      <rect x="24" y="68" width="38" height="11" rx="3" fill="#2dd4bf"/>
+      <rect x="24" y="52" width="38" height="11" rx="3" fill="#2dd4bf" opacity="0.45"/>
+      <circle cx="43" cy="38" r="4" fill="#f59e0b"/>
+      <path d="M 72 60 C 100 60, 104 74, 124 74" fill="none" stroke="#0a3733" stroke-width="4" stroke-linecap="round"/>
+      <rect x="124" y="66" width="14" height="16" rx="3" fill="#0a3733"/>
+      <rect x="142" y="52" width="22" height="44" rx="6" fill="#ffffff" stroke="#0a3733" stroke-width="3"/>
+      <circle cx="153" cy="68" r="2.6" fill="#0a3733"/>
+      <circle cx="153" cy="80" r="2.6" fill="#0a3733"/>
+      <text x="14" y="16" font-size="11" font-weight="700" fill="#0a3733">zelf aansluiten</text>
+    </svg>`,
+    "ac-gekoppeld": `<svg viewBox="0 0 170 120" role="img" aria-label="AC-gekoppelde batterij: aangesloten op de meterkast, werkt naast elk zonnepanelensysteem" class="type-illustratie">
+      <rect x="14" y="26" width="58" height="82" rx="9" fill="#0e4f49"/>
+      <rect x="24" y="84" width="38" height="11" rx="3" fill="#2dd4bf"/>
+      <rect x="24" y="68" width="38" height="11" rx="3" fill="#2dd4bf"/>
+      <rect x="24" y="52" width="38" height="11" rx="3" fill="#2dd4bf" opacity="0.45"/>
+      <circle cx="43" cy="38" r="4" fill="#f59e0b"/>
+      <path d="M 72 66 L 116 66" fill="none" stroke="#0a3733" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6"/>
+      <rect x="116" y="30" width="42" height="78" rx="6" fill="#ffffff" stroke="#0a3733" stroke-width="3"/>
+      <circle cx="137" cy="52" r="10" fill="none" stroke="#0f766e" stroke-width="3"/>
+      <line x1="137" y1="52" x2="143" y2="46" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+      <rect x="126" y="74" width="22" height="8" rx="2" fill="#f59e0b"/>
+      <rect x="126" y="88" width="22" height="8" rx="2" fill="#0f766e" opacity="0.4"/>
+      <text x="14" y="16" font-size="11" font-weight="700" fill="#0a3733">via de meterkast</text>
+    </svg>`,
+    "hybride": `<svg viewBox="0 0 170 120" role="img" aria-label="Hybride systeem: zonnepanelen en batterij delen één omvormer" class="type-illustratie">
+      <g transform="rotate(-14 40 44)">
+        <rect x="16" y="30" width="24" height="17" rx="2" fill="#0f766e" stroke="#0a3733" stroke-width="2"/>
+        <rect x="43" y="30" width="24" height="17" rx="2" fill="#0f766e" stroke="#0a3733" stroke-width="2"/>
+        <rect x="16" y="50" width="24" height="17" rx="2" fill="#0f766e" stroke="#0a3733" stroke-width="2"/>
+        <rect x="43" y="50" width="24" height="17" rx="2" fill="#0f766e" stroke="#0a3733" stroke-width="2"/>
+      </g>
+      <path d="M 72 52 L 92 52" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-dasharray="7 6"/>
+      <rect x="92" y="34" width="34" height="36" rx="6" fill="#ffffff" stroke="#0a3733" stroke-width="3"/>
+      <path d="M 99 52 q 5 -8 10 0 q 5 8 10 0" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 109 70 L 109 82" fill="none" stroke="#0a3733" stroke-width="4" stroke-linecap="round"/>
+      <rect x="82" y="82" width="54" height="30" rx="7" fill="#0e4f49"/>
+      <rect x="92" y="90" width="34" height="9" rx="3" fill="#2dd4bf"/>
+      <circle cx="130" cy="89" r="3" fill="#f59e0b"/>
+      <text x="92" y="16" font-size="11" font-weight="700" fill="#0a3733">één omvormer</text>
+      <text x="92" y="28" font-size="11" font-weight="700" fill="#0a3733">voor alles</text>
+    </svg>`,
+  };
+  return svgs[type] || "";
 }
 
 /* ------------------------------------------------------------------ */
@@ -180,8 +232,13 @@ ${productLd(b)}
 <main class="content-pagina">
 
   <p class="datum-stempel"><a href="/index.html">Vergelijker</a> › ${esc(b.merk)} ${esc(b.model)}</p>
-  <h1>${merkLogoHtml(b.merk)}${esc(b.merk)} ${esc(b.model)}</h1>
-  <p class="intro">${esc(typeLabel)} thuisbatterij van ${nl(b.capaciteit_kwh)} kWh${b.uitbreidbaar_tot_kwh ? `, uitbreidbaar tot ${nl(b.uitbreidbaar_tot_kwh)} kWh` : ""}. Prijzen dagelijks gecontroleerd, laatst op ${esc(b.prijs_datum || data.laatst_bijgewerkt)}.</p>
+  <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+    <div style="flex:1;min-width:250px;">
+      <h1>${merkLogoHtml(b.merk)}${esc(b.merk)} ${esc(b.model)}</h1>
+      <p class="intro">${esc(typeLabel)} thuisbatterij van ${nl(b.capaciteit_kwh)} kWh${b.uitbreidbaar_tot_kwh ? `, uitbreidbaar tot ${nl(b.uitbreidbaar_tot_kwh)} kWh` : ""}. Prijzen dagelijks gecontroleerd, laatst op ${esc(b.prijs_datum || data.laatst_bijgewerkt)}.</p>
+    </div>
+    ${typeIllustratie(b.type)}
+  </div>
 
   <div class="info-kader">
     ${beste ? `<div style="font-size:1.6rem;font-weight:800;">${eur(beste.prijs_eur)} <span style="font-size:0.95rem;font-weight:400;color:var(--kleur-tekst-licht);">bij ${esc(beste.winkel)}${perKwh ? ` · ${eur(perKwh)} per kWh opslag` : ""}</span></div>` : "<div><b>Prijs op aanvraag</b></div>"}

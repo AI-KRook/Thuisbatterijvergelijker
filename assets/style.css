@@ -457,6 +457,19 @@ a.term-link:hover { color: var(--kleur-primair); }
 .merk-logo { height: 16px; width: auto; max-width: 90px; vertical-align: -3px; }
 h1 .merk-logo { height: 28px; vertical-align: -4px; }
 
+/* Mini-illustraties per batterijtype (eigen tekeningen in de huisstijl) */
+.type-illustratie {
+  width: 170px;
+  height: auto;
+  flex-shrink: 0;
+  background: var(--kleur-wit);
+  border: 1px solid var(--kleur-rand);
+  border-radius: var(--radius);
+  padding: 10px;
+}
+@media (max-width: 560px) { .type-illustratie { width: 150px; margin: 0 auto; } }
+.icoon-kaart .type-illustratie { width: 100%; max-width: 220px; margin-bottom: 8px; border: none; padding: 0; }
+
 /* Icoon-kaarten: opsommingen als scanbare kaartjes in plaats van tekstmuren */
 .icoon-kaarten {
   display: grid;
