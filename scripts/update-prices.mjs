@@ -30,6 +30,65 @@ const TIMEOUT_MS = 20000;
 const USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 ThuisbatterijVergelijker-prijscheck/1.0";
 
+/* ------------------------------------------------------------------
+   Bol.com Marketing Catalog API (officiële partnerroute).
+   Bol blokkeert gewone scraping (403); met partner-inloggegevens halen
+   we prijzen op via de API. Zonder BOL_CLIENT_ID/BOL_CLIENT_SECRET in
+   de omgeving wordt dit overgeslagen en blijft de oude prijs staan.
+   Auth: https://api.bol.com/marketing/docs/catalog-api/authentication.html
+   ------------------------------------------------------------------ */
+
+const BOL_CLIENT_ID = process.env.BOL_CLIENT_ID || "";
+const BOL_CLIENT_SECRET = process.env.BOL_CLIENT_SECRET || "";
+let bolToken = null;
+
+async function haalBolToken() {
+  if (!BOL_CLIENT_ID || !BOL_CLIENT_SECRET) return null;
+  if (bolToken) return bolToken;
+  const res = await fetch("https://login.bol.com/token?grant_type=client_credentials", {
+    method: "POST",
+    headers: {
+      "Authorization": "Basic " + Buffer.from(`${BOL_CLIENT_ID}:${BOL_CLIENT_SECRET}`).toString("base64"),
+      "Accept": "application/json",
+    },
+  });
+  if (!res.ok) throw new Error(`bol-token HTTP ${res.status}`);
+  bolToken = (await res.json()).access_token;
+  return bolToken;
+}
+
+// Defensief: vind de eerste plausibele price-waarde in de API-respons,
+// zodat kleine wijzigingen in het responsformaat ons niet breken.
+function zoekPrijsInRespons(obj) {
+  if (obj == null || typeof obj !== "object") return null;
+  if (Array.isArray(obj)) {
+    for (const x of obj) { const p = zoekPrijsInRespons(x); if (p) return p; }
+    return null;
+  }
+  if (typeof obj.price === "number" && obj.price >= 50 && obj.price <= 30000) return obj.price;
+  for (const k of Object.keys(obj)) {
+    const p = zoekPrijsInRespons(obj[k]);
+    if (p) return p;
+  }
+  return null;
+}
+
+async function bolApiPrijs(aanbieding) {
+  const token = await haalBolToken();
+  if (!token) return null;
+  const m = (aanbieding.url || "").match(/\/(\d{8,})\/?$/);
+  if (!m) { console.log(`  ~ bol-API: geen product-id herkend in ${aanbieding.url}`); return null; }
+  const res = await fetch(`https://api.bol.com/marketing/catalog/v1/products/${m[1]}/offers/best?country-code=NL`, {
+    headers: { "Authorization": `Bearer ${token}`, "Accept": "application/json" },
+  });
+  if (!res.ok) {
+    console.log(`  ~ bol-API ${m[1]}: HTTP ${res.status} (respons kort: ${(await res.text()).slice(0, 120)})`);
+    return null;
+  }
+  const prijs = zoekPrijsInRespons(await res.json());
+  return prijs ? Math.round(prijs) : null;
+}
+
 /* ------------------------------------------------------------------ */
 
 async function haalPagina(url) {
@@ -127,8 +186,13 @@ function plausibel(nieuw, oud) {
 async function updateAanbieding(batterij, aanbieding) {
   if (!aanbieding.url) return false;
   try {
-    const html = await haalPagina(aanbieding.url);
-    const nieuw = prijsUitJsonLd(html) ?? prijsUitMeta(html) ?? prijsUitTekst(html);
+    let nieuw;
+    if (/www\.bol\.com/.test(aanbieding.url) && BOL_CLIENT_ID && BOL_CLIENT_SECRET) {
+      nieuw = await bolApiPrijs(aanbieding);
+    } else {
+      const html = await haalPagina(aanbieding.url);
+      nieuw = prijsUitJsonLd(html) ?? prijsUitMeta(html) ?? prijsUitTekst(html);
+    }
     if (!nieuw) {
       console.log(`  ~ ${batterij.id} @ ${aanbieding.winkel}: geen prijs gevonden, oude prijs blijft (€${aanbieding.prijs_eur})`);
       return false;

@@ -24,6 +24,11 @@ jobs:
           node-version: "22"
 
       - name: Prijzen bijwerken
+        env:
+          # Bol.com Marketing API (partner): repository secrets; zonder deze
+          # secrets worden bol-prijzen overgeslagen en blijft de oude staan
+          BOL_CLIENT_ID: ${{ secrets.BOL_CLIENT_ID }}
+          BOL_CLIENT_SECRET: ${{ secrets.BOL_CLIENT_SECRET }}
         run: node scripts/update-prices.mjs
 
       - name: Batterijpagina's en sitemap herbouwen
