@@ -230,7 +230,7 @@
           <div class="koppelgemak"><span class="uitleg">Compleet gebruiksklaar (indicatie): <b>${b.totaalprijs_van_eur ? eurFmt.format(b.totaalprijs_van_eur) + (b.totaalprijs_tot_eur ? " tot " + eurFmt.format(b.totaalprijs_tot_eur) : "") : "op aanvraag"}</b></span></div>
           ${b.prijs_omvat ? `<div class="koppelgemak"><span class="uitleg">Winkelprijs dekt: ${escapeHtml(b.prijs_omvat)}</span></div>` : ""}
           <div class="kaart-acties" style="margin-top:auto;">
-            ${prijs && prijs.url ? `<a class="knop" href="${escapeHtml(prijs.url)}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : ""}
+            ${prijs && prijs.url ? `<a class="knop" href="${escapeHtml(prijs.affiliate_url || prijs.url)}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : ""}
             <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}">Terugverdientijd</a>
           </div>
         </article>`).join("") + "</div>";
