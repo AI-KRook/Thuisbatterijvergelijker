@@ -457,6 +457,52 @@ a.term-link:hover { color: var(--kleur-primair); }
 .merk-logo { height: 16px; width: auto; max-width: 90px; vertical-align: -3px; }
 h1 .merk-logo { height: 28px; vertical-align: -4px; }
 
+/* Icoon-kaarten: opsommingen als scanbare kaartjes in plaats van tekstmuren */
+.icoon-kaarten {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.icoon-kaart {
+  background: var(--kleur-wit);
+  border: 1px solid var(--kleur-rand);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  font-size: 0.97rem;
+  line-height: 1.55;
+}
+.icoon-kaart .icoon { font-size: 1.6rem; display: block; }
+.icoon-kaart b { display: block; margin: 6px 0 4px; color: var(--kleur-primair-donker); }
+
+/* Woordenlijst: klikbare chips om direct naar een begrip te springen */
+.woordenlijst-nav { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0 20px; }
+.woordenlijst-nav a {
+  font-size: 0.85rem;
+  background: var(--kleur-wit);
+  border: 1px solid var(--kleur-rand);
+  border-radius: 999px;
+  padding: 5px 12px;
+  text-decoration: none;
+  color: var(--kleur-primair-donker);
+  font-weight: 600;
+}
+.woordenlijst-nav a:hover { background: var(--kleur-primair-licht); border-color: var(--kleur-primair); }
+.woord { scroll-margin-top: 90px; }
+
+/* Lees-meer: lange tekstblokken standaard ingeklapt */
+details.lees-meer summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--kleur-primair);
+  font-weight: 700;
+  padding: 4px 0;
+  user-select: none;
+}
+details.lees-meer summary::-webkit-details-marker { display: none; }
+details.lees-meer summary::after { content: " ▾"; }
+details.lees-meer[open] summary::after { content: " ▴"; }
+
 /* Legenda: ingeklapte uitleg van de symbolen, rustig en scanbaar */
 .legenda { margin: 8px 0 0; font-size: 0.88rem; }
 .legenda summary {
