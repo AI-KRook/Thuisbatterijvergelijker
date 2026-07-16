@@ -262,6 +262,65 @@
     bereken();
   }
 
+  /* ------------------------------------------------------------------
+     Leveranciers: terugleverkosten automatisch invullen + tarieventabel
+     (bron: data/leveranciers.json, maandelijks gecontroleerd)
+     ------------------------------------------------------------------ */
+
+  let leveranciersData = null;
+
+  function vulLeveranciers() {
+    const sel = el("inpLeverancier");
+    if (!sel || !leveranciersData) return;
+    const vast = leveranciersData.leveranciers.filter((l) => l.contract === "vast-variabel");
+    const dyn = leveranciersData.leveranciers.filter((l) => l.contract === "dynamisch");
+    const optie = (l) => `<option value="${l.id}">${l.naam}</option>`;
+    sel.innerHTML = '<option value="">— Kies je leverancier (of sla over) —</option>' +
+      `<optgroup label="Vast of variabel contract">${vast.map(optie).join("")}</optgroup>` +
+      `<optgroup label="Dynamisch contract">${dyn.map(optie).join("")}</optgroup>`;
+  }
+
+  function kiesLeverancier() {
+    const hint = el("leverancierHint");
+    const l = (leveranciersData?.leveranciers || []).find((x) => x.id === el("inpLeverancier").value);
+    if (!l) {
+      hint.textContent = "Dan vullen wij de terugleverkosten alvast voor je in; zelf opzoeken hoeft niet.";
+      bereken();
+      return;
+    }
+    if (l.terugleverkosten_per_kwh_indicatie != null) {
+      el("inpTerugleverkosten").value = l.terugleverkosten_per_kwh_indicatie;
+    }
+    if (l.contract === "dynamisch" && el("inpContract").value !== "dynamisch") {
+      el("inpContract").value = "dynamisch";
+      toggleContractVelden();
+    }
+    hint.textContent = `Ingevuld: ${l.terugleverkosten_omschrijving}. ` +
+      (l.kanttekening ? l.kanttekening + " " : "") +
+      `(peildatum ${l.peildatum}; indicatie, je contract is leidend)`;
+    bereken();
+  }
+
+  function toonLeveranciersTabel() {
+    const doel = el("leveranciersTabel");
+    if (!doel || !leveranciersData) return;
+    const rij = (l) => `
+      <tr>
+        <td><b>${l.naam}</b></td>
+        <td>${l.terugleverkosten_omschrijving}</td>
+        <td>${l.terugleververgoeding_omschrijving}</td>
+        <td>${l.vanaf_2027 || "nog niet bekend"}</td>
+        <td style="white-space:nowrap;"><a href="${l.bron}" target="_blank" rel="noopener">bron</a> · ${l.peildatum}</td>
+      </tr>`;
+    doel.innerHTML = `
+      <div style="overflow-x:auto;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);">
+      <table class="vergelijk-tabel" style="min-width:760px;">
+        <thead><tr><th>Leverancier</th><th>Terugleverkosten (nu)</th><th>Terugleververgoeding (nu)</th><th>Aangekondigd voor 2027</th><th>Bron</th></tr></thead>
+        <tbody>${leveranciersData.leveranciers.map(rij).join("")}</tbody>
+      </table>
+      </div>`;
+  }
+
   function togglePvVelden() {
     const heeftPv = el("inpPv").value === "ja";
     el("pvVelden").style.display = heeftPv ? "" : "none";
@@ -302,7 +361,19 @@
       console.error("Batterijen konden niet geladen worden:", err);
     }
 
+    try {
+      const resL = await fetch("data/leveranciers.json", { cache: "no-cache" });
+      leveranciersData = await resL.json();
+      vulLeveranciers();
+      toonLeveranciersTabel();
+    } catch (err) {
+      console.error("Leverancierstarieven konden niet geladen worden:", err);
+      const doel = el("leveranciersTabel");
+      if (doel) doel.innerHTML = '<p class="datum-stempel">De tarieventabel kon niet worden geladen.</p>';
+    }
+
     el("inpBatterij").addEventListener("change", (e) => kiesBatterij(e.target.value));
+    el("inpLeverancier").addEventListener("change", kiesLeverancier);
     el("inpPanelen").addEventListener("input", panelenNaarOpwek);
     el("inpPv").addEventListener("change", togglePvVelden);
     el("inpContract").addEventListener("change", toggleContractVelden);

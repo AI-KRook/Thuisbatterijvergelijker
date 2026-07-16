@@ -16,7 +16,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="Batterijmaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="assets/style.css?v=20260716e">
+  <link rel="stylesheet" href="assets/style.css?v=20260716f">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <style>
@@ -111,6 +111,11 @@
           <option value="vast">Vast of variabel tarief, of weet ik niet</option>
         </select>
         <span class="hint">Met een dynamisch contract kan de batterij extra verdienen door goedkoop te laden. <a href="uitleg.html#vast-of-dynamisch">Zie het verschil in één grafiek</a></span>
+      </div>
+      <div class="veld">
+        <label for="inpLeverancier">Wie is je energieleverancier? (optioneel)</label>
+        <select id="inpLeverancier"></select>
+        <span class="hint" id="leverancierHint">Dan vullen wij de terugleverkosten alvast voor je in; zelf opzoeken hoeft niet.</span>
       </div>
 
       <details class="geavanceerd">
@@ -258,6 +263,13 @@
     </div>
     <p>Let wel: dit is een voorbeeld met gemiddelde aannames, geen belofte. Een groter gezin, een andere batterij of een vast contract geeft een heel andere uitkomst. <a href="rekenmodule.html?batterij=marstek-venus-e-3">Open dit voorbeeld in de rekenmodule</a> en pas de getallen aan naar jouw situatie; de grafiek en tabellen rekenen direct mee.</p>
 
+    <h2 id="leveranciers">Terugleverkosten en vergoedingen per leverancier</h2>
+    <p>Zodat je het niet zelf hoeft op te zoeken: dit rekenen de grootste leveranciers op dit moment voor teruggeleverde zonnestroom. Kies je leverancier hierboven in het formulier, dan vullen wij het passende bedrag automatisch in.</p>
+    <div id="leveranciersTabel"><p class="datum-stempel">Tabel wordt geladen…</p></div>
+    <div class="waarschuwing-kader" style="margin-top:12px;">
+      Deze bedragen zijn met bronvermelding verzameld uit openbare tariefinformatie en worden maandelijks opnieuw gecontroleerd, maar leveranciers wijzigen ze regelmatig en per contractvorm. Bij staffelmodellen (vast bedrag per maand of jaar) tonen wij een omgerekende indicatie per kWh. Je eigen contract en de website van de leverancier zijn altijd leidend. Vanaf 2027 (einde salderingsregeling) hebben meerdere leveranciers al andere tarieven aangekondigd; die staan in de laatste kolom.
+    </div>
+
     <h2>Standaardwaarden en bronnen</h2>
     <ul class="bron-lijst">
       <li>Terugleververgoeding vanaf 2027 (indicatief 0,04 tot 0,06 euro per kWh) en het einde van de salderingsregeling: Wet beëindiging salderingsregeling, <a href="https://www.eerstekamer.nl/wetsvoorstel/36611_wet_beeindiging" target="_blank" rel="noopener">eerstekamer.nl</a>.</li>
@@ -279,6 +291,6 @@
   </div>
 </footer>
 
-<script src="assets/rekenmodule.js?v=20260716e"></script>
+<script src="assets/rekenmodule.js?v=20260716f"></script>
 </body>
 </html>
