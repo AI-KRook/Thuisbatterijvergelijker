@@ -192,8 +192,8 @@
       const kleur = t <= 8 ? "var(--kleur-groen)" : t <= 15 ? "var(--kleur-accent)" : "var(--kleur-rood)";
       oordeel = `<div style="font-size:2rem;font-weight:800;color:${kleur};">${jaarFmt.format(t)} jaar</div>
         <div class="datum-stempel">terugverdientijd bij een jaarlijkse opbrengst van ${eurFmt.format(r.totaal)}</div>`;
-      if (t > 15) waarschuwingen.push("De berekende terugverdientijd is langer dan de levensduur die vaak wordt aangehouden (10 tot 15 jaar). Met deze invoer verdient de batterij zichzelf waarschijnlijk niet terug.");
-      else if (t > 10) waarschuwingen.push("De terugverdientijd nadert de verwachte levensduur van de batterij (10 tot 15 jaar). Reken jezelf niet rijk en vergelijk meerdere scenario's.");
+      if (t > 15) waarschuwingen.push('De berekende terugverdientijd is langer dan de levensduur die vaak wordt aangehouden (10 tot 15 jaar). Met deze invoer verdient de batterij zichzelf waarschijnlijk niet terug. Lees ook: <a href="uitleg.html#waarom-toch">is een thuisbatterij het waard bij een lange terugverdientijd?</a>');
+      else if (t > 10) waarschuwingen.push('De terugverdientijd nadert de verwachte levensduur van de batterij (10 tot 15 jaar). Reken jezelf niet rijk en vergelijk meerdere scenario\'s. Lees ook: <a href="uitleg.html#waarom-toch">is een thuisbatterij het waard bij een lange terugverdientijd?</a>');
     }
 
     if (r.contract === "vast" && !r.heeftPv) {
