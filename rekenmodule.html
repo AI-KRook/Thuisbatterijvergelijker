@@ -16,7 +16,7 @@
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="Batterijmaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="assets/style.css?v=20260716i">
+  <link rel="stylesheet" href="assets/style.css?v=20260716j">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <style>
@@ -214,6 +214,13 @@
             <span class="hint">Alleen invullen als je een <a href="uitleg.html#aggregator">aggregator</a>-aanbod hebt; opbrengsten dalen</span>
           </div>
         </div>
+        <div class="veld-rij">
+          <div class="veld">
+            <label for="inpStandby">Standby-verbruik van de batterij (watt)</label>
+            <input type="number" id="inpStandby" value="10" min="0" max="60" step="1">
+            <span class="hint">De elektronica verbruikt zelf continu stroom, typisch 5 tot 20 W; wordt als kostenpost meegerekend</span>
+          </div>
+        </div>
       </details>
 
     </form>
@@ -227,7 +234,7 @@
 
   <section style="max-width:820px;margin:0 auto 50px;">
     <h2>Hoe rekent deze module?</h2>
-    <p>Het model telt twee opbrengsten bij elkaar op, afhankelijk van je situatie:</p>
+    <p>Het model telt twee opbrengsten bij elkaar op, afhankelijk van je situatie, en trekt daar het eigen (standby-)verbruik van de batterij vanaf:</p>
     <ol>
       <li><b>Opslag van eigen zonnestroom</b> (alleen met zonnepanelen): het overschot dat je nu terugleveren zou, gaat in de batterij en vervangt 's avonds inkoop. Elke opgeslagen kWh levert het verschil op tussen je stroomprijs (verminderd met het omzetverlies van de batterij) en de terugleververgoeding die je misloopt, plus bespaarde terugleverkosten. De opslag is begrensd door de batterijcapaciteit en het aantal dagen met zonneoverschot.</li>
       <li><b>Slim laden en ontladen op uurprijzen</b> (alleen met een dynamisch contract): op dagen zonder zonneoverschot laadt de batterij op goedkope uren en dekt hij je verbruik op dure uren (of levert hij terug op piekmomenten). De winst per cyclus is het prijsverschil maal de bruikbare capaciteit, verminderd met het omzetverlies.</li>
@@ -251,7 +258,8 @@
       <tbody>
         <tr><td>Eigen zonnestroom opslaan in plaats van terugleveren (ca. 860 kWh, het verschil tussen stroomprijs en terugleververgoeding)</td><td style="text-align:right;font-weight:700;">≈ € 207</td></tr>
         <tr><td>Slim laden en ontladen op uurprijzen in de maanden zonder zonneoverschot (ca. 145 dagen)</td><td style="text-align:right;font-weight:700;">≈ € 92</td></tr>
-        <tr><td style="font-weight:800;">Totale besparing</td><td style="text-align:right;font-weight:800;">≈ € 299</td></tr>
+        <tr><td>Eigen stroomverbruik van de batterij (standby, ca. 10 W ≈ 88 kWh per jaar)</td><td style="text-align:right;font-weight:700;">≈ − € 26</td></tr>
+        <tr><td style="font-weight:800;">Totale besparing</td><td style="text-align:right;font-weight:800;">≈ € 273</td></tr>
       </tbody>
     </table>
     </div>
@@ -259,9 +267,9 @@
     <table class="vergelijk-tabel" style="min-width:0;">
       <thead><tr><th>Verloop</th><th style="text-align:right;">Bespaard</th><th style="text-align:right;">Saldo (bespaard minus € 1.299)</th></tr></thead>
       <tbody>
-        <tr><td>Na 4,3 jaar</td><td style="text-align:right;">≈ € 1.299</td><td style="text-align:right;font-weight:700;">€ 0, <b>terugverdiend</b></td></tr>
-        <tr><td>Na 10 jaar</td><td style="text-align:right;">≈ € 2.990</td><td style="text-align:right;font-weight:700;color:var(--kleur-groen);">≈ + € 1.691</td></tr>
-        <tr><td>Na 15 jaar</td><td style="text-align:right;">≈ € 4.485</td><td style="text-align:right;font-weight:700;color:var(--kleur-groen);">≈ + € 3.186</td></tr>
+        <tr><td>Na 4,8 jaar</td><td style="text-align:right;">≈ € 1.299</td><td style="text-align:right;font-weight:700;">€ 0, <b>terugverdiend</b></td></tr>
+        <tr><td>Na 10 jaar</td><td style="text-align:right;">≈ € 2.730</td><td style="text-align:right;font-weight:700;color:var(--kleur-groen);">≈ + € 1.431</td></tr>
+        <tr><td>Na 15 jaar</td><td style="text-align:right;">≈ € 4.095</td><td style="text-align:right;font-weight:700;color:var(--kleur-groen);">≈ + € 2.796</td></tr>
       </tbody>
     </table>
     </div>
@@ -295,6 +303,6 @@
   </div>
 </footer>
 
-<script src="assets/rekenmodule.js?v=20260716i"></script>
+<script src="assets/rekenmodule.js?v=20260716j"></script>
 </body>
 </html>

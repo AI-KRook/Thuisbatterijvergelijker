@@ -71,6 +71,7 @@
     const mismatch = getal("inpMismatch", 85) / 100;
     const cycliPerDag = getal("inpCycli", 1);
     const extraOnbalans = getal("inpOnbalans", 0);
+    const standbyWatt = getal("inpStandby", 10);
 
     const bruikbareCap = capaciteit * bruikbaarPct;
 
@@ -91,14 +92,19 @@
       opbrengstArb = Math.max(0, arbDagen * cycliPerDag * winstPerCyclus);
     }
 
-    const totaal = opbrengstZelf + opbrengstArb + extraOnbalans;
+    // 3. Eigen (standby-)verbruik van de batterij: loopt 24 uur per dag door,
+    // dus tegen de gewone (gemiddelde) stroomprijs, niet de goedkope laadprijs
+    const standbyKwh = standbyWatt * 8760 / 1000;
+    const kostenStandby = standbyKwh * stroomprijs;
+
+    const totaal = opbrengstZelf + opbrengstArb + extraOnbalans - kostenStandby;
     const terugverdientijd = totaal > 0 && investering > 0 ? investering / totaal : null;
 
     toonResultaat({
       heeftPv, contract, investering, bruikbareCap,
       overschot, opslagJaar, opbrengstZelf,
       arbDagen, cycliPerDag, winstPerCyclus, opbrengstArb,
-      extraOnbalans, totaal, terugverdientijd,
+      extraOnbalans, standbyWatt, standbyKwh, kostenStandby, totaal, terugverdientijd,
       stroomprijs, terugleverVergoeding, laadprijs, ontlaadwaarde, rendement,
     });
   }
@@ -180,6 +186,9 @@
     }
     if (r.extraOnbalans > 0) {
       regels.push(`<tr><td>Opgegeven extra opbrengst (bijv. onbalansmarkt via aggregator)</td>${bedragCel(r.extraOnbalans)}</tr>`);
+    }
+    if (r.kostenStandby > 0) {
+      regels.push(`<tr><td>Eigen stroomverbruik van de batterij (standby, ${numFmt.format(r.standbyWatt)} W ≈ ${numFmt.format(r.standbyKwh)} kWh per jaar)</td><td style="text-align:right;font-weight:700;color:var(--kleur-rood);">− ${eurFmt.format(r.kostenStandby)}</td></tr>`);
     }
 
     let oordeel = "";
