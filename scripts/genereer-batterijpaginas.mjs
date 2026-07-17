@@ -17,7 +17,7 @@ const SITE = "https://batterijmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260717c";
+const ASSET_VERSIE = "20260717d";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/batterijen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "batterij"), { recursive: true });
@@ -31,6 +31,12 @@ const esc = (s) => String(s == null ? "" : s)
 const eur = (n) => "€ " + Number(n).toLocaleString("nl-NL", { maximumFractionDigits: 0 });
 const nl = (n) => String(n).replace(".", ",");
 
+// ISO-datum (2026-07-13) leesbaar maken als "13 juli 2026"
+const datumNL = (iso) => {
+  const d = new Date(`${iso}T12:00:00`);
+  return Number.isNaN(d.getTime()) ? String(iso) : d.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+};
+
 function bestePrijs(b) {
   const a = (b.aanbiedingen || []).filter((x) => x && x.prijs_eur);
   if (a.length) return a.reduce((m, x) => (x.prijs_eur < m.prijs_eur ? x : m));
@@ -39,6 +45,8 @@ function bestePrijs(b) {
 }
 
 function driewaardig(v) {
+  // Objectvorm {status, tekst}: officiële ondersteuning ("ja") mét uitlegtekst
+  if (v && typeof v === "object") return { status: v.status || "deels", tekst: v.tekst || "" };
   if (v === true) return { status: "ja", tekst: "Ja" };
   if (typeof v === "string" && v.trim()) return { status: "deels", tekst: v };
   return { status: "nee", tekst: "Nee" };
@@ -137,9 +145,9 @@ function productLd(b) {
   const ld = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": `${b.merk} ${b.model}`,
+    "name": `${volledigeNaam(b)}`,
     "brand": { "@type": "Brand", "name": b.merk },
-    "description": `${b.merk} ${b.model}: thuisbatterij van ${nl(b.capaciteit_kwh)} kWh. ${b.zonnepanelen_koppeling || ""}`.slice(0, 300),
+    "description": `${volledigeNaam(b)}: thuisbatterij van ${nl(b.capaciteit_kwh)} kWh. ${b.zonnepanelen_koppeling || ""}`.slice(0, 300),
     "url": `${SITE}/batterij/${b.id}.html`,
   };
   if (offers.length === 1) {
@@ -167,7 +175,7 @@ function pagina(b) {
   const nood = vierwaardig(b.noodstroom);
   const typeLabel = { "plug-in": "Plug-in (stopcontact)", "ac-gekoppeld": "AC-gekoppeld", "hybride": "Hybride omvormer" }[b.type] || b.type;
 
-  const metaDesc = `${b.merk} ${b.model}: ${nl(b.capaciteit_kwh)} kWh thuisbatterij` +
+  const metaDesc = `${volledigeNaam(b)}: ${nl(b.capaciteit_kwh)} kWh thuisbatterij` +
     (beste ? `, vanaf ${eur(beste.prijs_eur).replace(" ", " ")} bij ${beste.winkel}` : "") +
     ". Bekijk specificaties, koppeling met zonnepanelen, Homey en Home Assistant, en bereken je terugverdientijd.";
 
@@ -183,10 +191,10 @@ function pagina(b) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${esc(b.merk)} ${esc(b.model)}: prijs, specificaties en beste aanbieding | Batterijmaatje.nl</title>
+  <title>${esc(volledigeNaam(b))}: prijs, specificaties en beste aanbieding | Batterijmaatje.nl</title>
   <meta name="description" content="${esc(metaDesc)}">
   <link rel="canonical" href="${SITE}/batterij/${esc(b.id)}.html">
-  <meta property="og:title" content="${esc(b.merk)} ${esc(b.model)}: prijs en specificaties">
+  <meta property="og:title" content="${esc(volledigeNaam(b))}: prijs en specificaties">
   <meta property="og:description" content="${esc(metaDesc)}">
   <meta property="og:type" content="product">
   <meta property="og:url" content="${SITE}/batterij/${esc(b.id)}.html">
@@ -231,11 +239,11 @@ ${productLd(b)}
 
 <main class="content-pagina">
 
-  <p class="datum-stempel"><a href="/index.html">Vergelijker</a> › ${esc(b.merk)} ${esc(b.model)}</p>
+  <p class="datum-stempel"><a href="/index.html">Vergelijker</a> › ${esc(volledigeNaam(b))}</p>
   <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
     <div style="flex:1;min-width:250px;">
-      <h1>${merkLogoHtml(b.merk)}${esc(b.merk)} ${esc(b.model)}</h1>
-      <p class="intro">${esc(typeLabel)} thuisbatterij van ${nl(b.capaciteit_kwh)} kWh${b.uitbreidbaar_tot_kwh ? `, uitbreidbaar tot ${nl(b.uitbreidbaar_tot_kwh)} kWh` : ""}. Prijzen dagelijks gecontroleerd, laatst op ${esc(b.prijs_datum || data.laatst_bijgewerkt)}.</p>
+      <h1>${merkLogoHtml(b.merk)}${esc(volledigeNaam(b))}</h1>
+      <p class="intro">${esc(typeLabel)} thuisbatterij van ${nl(b.capaciteit_kwh)} kWh${b.uitbreidbaar_tot_kwh ? `, uitbreidbaar tot ${nl(b.uitbreidbaar_tot_kwh)} kWh` : ""}. Prijzen dagelijks gecontroleerd, laatst op ${esc(datumNL(b.prijs_datum || data.laatst_bijgewerkt))}.</p>
     </div>
     ${typeIllustratie(b.type)}
   </div>
@@ -287,7 +295,7 @@ ${productLd(b)}
 
   ${(b.aanbiedingen || []).length ? `<h2>Verkrijgbaar bij</h2>
   <ul>
-    ${b.aanbiedingen.map((a) => `<li><a href="${esc(a.affiliate_url || a.url)}" target="_blank" rel="noopener sponsored">${esc(a.winkel)}</a>: <b>${eur(a.prijs_eur)}</b> <span class="datum-stempel">${a.datum ? `(gecontroleerd ${esc(a.datum)})` : "(prijsindicatie; klik voor de actuele prijs)"}</span></li>`).join("\n    ")}
+    ${b.aanbiedingen.map((a) => `<li><a href="${esc(a.affiliate_url || a.url)}" target="_blank" rel="noopener sponsored">${esc(a.winkel)}</a>: <b>${eur(a.prijs_eur)}</b> <span class="datum-stempel">${a.datum ? `(gecontroleerd ${esc(datumNL(a.datum))})` : "(prijsindicatie; klik voor de actuele prijs)"}</span></li>`).join("\n    ")}
   </ul>
   <p class="datum-stempel">Prijzen worden dagelijks automatisch gecontroleerd; de prijs op de website van de winkel is altijd leidend.${(b.aanbiedingen || []).some((a) => a.affiliate_url) ? " Sommige links zijn commissielinks: koop je via die link, dan ontvangen wij een kleine vergoeding van de winkel. Dit kost jou niets en be\u00efnvloedt onze prijzen, scores en volgorde niet." : ""}</p>` : ""}
 
@@ -314,6 +322,7 @@ ${productLd(b)}
   </div>
 </footer>
 
+<script src="/assets/nav.js?v=${ASSET_VERSIE}" defer></script>
 </body>
 </html>
 `;
@@ -355,7 +364,7 @@ function overzichtTabel(lijst, veld) {
   return `<div style="overflow-x:auto;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);margin:14px 0;">
   <table style="width:100%;border-collapse:collapse;font-size:0.93rem;min-width:640px;">
     <thead><tr>
-      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Batterij</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);position:sticky;left:0;z-index:1;box-shadow:2px 0 0 var(--kleur-rand);">Batterij</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Capaciteit</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Beste prijs</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Per kWh</th>
@@ -366,12 +375,12 @@ function overzichtTabel(lijst, veld) {
       const d = driewaardig(b[veld]);
       return `
       <tr>
-        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);">${merkLogoHtml(b.merk)}<a href="/batterij/${esc(b.id)}.html"><b>${esc(b.merk)} ${esc(b.model)}</b></a></td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);position:sticky;left:0;z-index:1;background:var(--kleur-wit);box-shadow:2px 0 0 var(--kleur-rand);">${merkLogoHtml(b.merk)}<a href="/batterij/${esc(b.id)}.html"><b>${esc(volledigeNaam(b))}</b></a></td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${nl(b.capaciteit_kwh)} kWh</td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${beste ? `<b>${eur(beste.prijs_eur)}</b><br><small>bij ${esc(beste.winkel)}</small>` : "op aanvraag"}</td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${perKwh ? eur(perKwh) : "n.b."}</td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;"><b>${slimScore(b)}/6</b></td>
-        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);">${d.status === "ja" ? "Officiële ondersteuning" : esc(d.tekst)}</td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);">${d.tekst && d.tekst !== "Ja" ? esc(d.tekst) : "Officiële ondersteuning"}</td>
       </tr>`;
     }).join("")}</tbody>
   </table>
@@ -393,7 +402,7 @@ function overzichtsPagina(cfg) {
     "itemListElement": alleGetoond.map((b, i) => ({
       "@type": "ListItem",
       "position": i + 1,
-      "name": `${b.merk} ${b.model}`,
+      "name": `${volledigeNaam(b)}`,
       "url": `${SITE}/batterij/${b.id}.html`,
     })),
   }, null, 2);
@@ -452,7 +461,7 @@ ${itemList}
 <main class="container" style="max-width:900px;">
   <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle thuisbatterijen vergelijken</a></p>
   <h1>Beste thuisbatterij voor ${esc(cfg.naam)} (2026)</h1>
-  <p class="datum-stempel">Dagelijks automatisch bijgewerkt · laatst gecontroleerd op ${VANDAAG}</p>
+  <p class="datum-stempel">Dagelijks automatisch bijgewerkt · laatst gecontroleerd op ${datumNL(VANDAAG)}</p>
   <p>${esc(cfg.intro)}</p>
   <p>Hieronder zie je alle ${data.batterijen.length} thuisbatterijen uit onze vergelijker, ingedeeld naar ${esc(cfg.naam)}-ondersteuning. De prijzen worden dagelijks automatisch gecontroleerd bij de winkels. De <a href="/uitleg.html#slim-score">Slim-score</a> (0 tot 6 punten) telt daarnaast ook de ondersteuning voor ${cfg.veld === "homey" ? "Home Assistant" : "Homey"} en een dynamisch energiecontract mee.</p>
 
@@ -465,7 +474,7 @@ ${itemList}
   ${overzichtTabel(deels, cfg.veld)}
 
   <h2>✕ Geen ${esc(cfg.naam)}-ondersteuning (${nee.length})</h2>
-  <p>${nee.length ? `Van deze batterijen is geen bruikbare ${esc(cfg.naam)}-koppeling bekend: ${nee.map((b) => `<a href="/batterij/${esc(b.id)}.html">${esc(b.merk)} ${esc(b.model)}</a>`).join(", ")}.` : `Alle batterijen in onze vergelijker hebben een vorm van ${esc(cfg.naam)}-ondersteuning.`}</p>
+  <p>${nee.length ? `Van deze batterijen is geen bruikbare ${esc(cfg.naam)}-koppeling bekend: ${nee.map((b) => `<a href="/batterij/${esc(b.id)}.html">${esc(volledigeNaam(b))}</a>`).join(", ")}.` : `Alle batterijen in onze vergelijker hebben een vorm van ${esc(cfg.naam)}-ondersteuning.`}</p>
 
   <h2>Zo kies je</h2>
   <ul>
@@ -494,6 +503,7 @@ ${itemList}
   </div>
 </footer>
 
+<script src="/assets/nav.js?v=${ASSET_VERSIE}" defer></script>
 </body>
 </html>
 `;
@@ -549,7 +559,7 @@ function vergelijkingsPagina(v) {
 
   const celStijl = 'style="padding:10px 14px;border-top:1px solid var(--kleur-rand);vertical-align:top;"';
   const rij = (label, wa, wb, winnaar = -1) =>
-    `<tr><th style="text-align:left;padding:10px 14px;border-top:1px solid var(--kleur-rand);background:var(--kleur-achtergrond);white-space:nowrap;vertical-align:top;">${esc(label)}</th>` +
+    `<tr><th style="text-align:left;padding:10px 14px;border-top:1px solid var(--kleur-rand);background:var(--kleur-achtergrond);white-space:normal;min-width:110px;vertical-align:top;position:sticky;left:0;z-index:1;box-shadow:2px 0 0 var(--kleur-rand);">${esc(label)}</th>` +
     `<td ${celStijl}>${winnaar === 0 ? `<b>${wa}</b>` : wa}</td>` +
     `<td ${celStijl}>${winnaar === 1 ? `<b>${wb}</b>` : wb}</td></tr>`;
 
@@ -626,13 +636,13 @@ ${itemList}
 <main class="container" style="max-width:900px;">
   <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle thuisbatterijen vergelijken</a></p>
   <h1>${esc(naam(A))} vs ${esc(naam(B))}</h1>
-  <p class="datum-stempel">Prijzen dagelijks automatisch gecontroleerd · laatst op ${VANDAAG}</p>
+  <p class="datum-stempel">Prijzen dagelijks automatisch gecontroleerd · laatst op ${datumNL(VANDAAG)}</p>
   <p>Twee veelvergeleken thuisbatterijen naast elkaar, op basis van dezelfde feiten als in onze <a href="/index.html">vergelijker</a>. Onder de tabel staan de belangrijkste verschillen op een rij. Vetgedrukt betekent: op dit punt objectief in het voordeel.</p>
 
   <div style="overflow-x:auto;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);margin:14px 0;">
   <table style="width:100%;border-collapse:collapse;font-size:0.93rem;min-width:560px;">
     <thead><tr>
-      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);"></th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);position:sticky;left:0;z-index:1;"></th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);"><a href="/batterij/${esc(A.id)}.html">${esc(naam(A))}</a></th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);"><a href="/batterij/${esc(B.id)}.html">${esc(naam(B))}</a></th>
     </tr></thead>
@@ -683,6 +693,7 @@ ${itemList}
   </div>
 </footer>
 
+<script src="/assets/nav.js?v=${ASSET_VERSIE}" defer></script>
 </body>
 </html>
 `;

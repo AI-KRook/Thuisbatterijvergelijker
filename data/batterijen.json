@@ -144,7 +144,10 @@
       "zonnepanelen_koppeling": "Werkt via de HomeWizard P1-meter op de slimme meter: de batterij regelt op nul-op-de-meter en vangt het overschot van elk bestaand zonnepanelensysteem op. Stekker in het stopcontact, klaar.",
       "koppeling_gemak": 5,
       "homey": true,
-      "home_assistant": "Officiële integratie in Home Assistant core (lokale API), incl. batterijmodi",
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële integratie in Home Assistant core (lokale API), incl. batterijmodi"
+      },
       "dynamisch_contract": true,
       "app": "HomeWizard Energy app",
       "garantie_jaar": 2,
@@ -389,8 +392,14 @@
       "installatie": "installateur",
       "zonnepanelen_koppeling": "AC-gekoppeld: werkt naast elke bestaande omvormer (retrofit zonder vervanging). Optioneel ook DC-koppeling via Victron SmartSolar MPPT. Installatie en configuratie vragen om een ervaren installateur.",
       "koppeling_gemak": 4,
-      "homey": "Officiële 'Victron Energy' Homey-app (lokaal via Modbus TCP op het GX-apparaat), incl. ESS-sturing",
-      "home_assistant": "Officiële integratie 'victron_gx' via het GX-apparaat; daarnaast HACS-opties",
+      "homey": {
+        "status": "ja",
+        "tekst": "Officiële 'Victron Energy' Homey-app (lokaal via Modbus TCP op het GX-apparaat), incl. ESS-sturing"
+      },
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële integratie 'victron_gx' via het GX-apparaat; daarnaast HACS-opties"
+      },
       "dynamisch_contract": "Ja, Victron Dynamic ESS (gratis in VRM): laadt en ontlaadt automatisch op day-ahead prijzen",
       "app": "VictronConnect + VRM Portal",
       "garantie_jaar": 5,
@@ -902,7 +911,10 @@
       "zonnepanelen_koppeling": "Koppelt aan GoodWe hybride omvormers (ES/EM/SBP-serie). Heb je al een GoodWe-omvormer, dan is dit een logische uitbreiding; bij een ander merk omvormer is een extra of vervangende omvormer nodig.",
       "koppeling_gemak": 2,
       "homey": "Via de community-app 'GoodWe Inverter' (uitlezen via het SEMS Portal); geen officiële app",
-      "home_assistant": "Officiële GoodWe-integratie in Home Assistant core (lokaal uitlezen via de omvormer)",
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële GoodWe-integratie in Home Assistant core (lokaal uitlezen via de omvormer)"
+      },
       "dynamisch_contract": true,
       "app": "SEMS Portal / SEMS+",
       "garantie_jaar": 10,
@@ -941,7 +953,10 @@
       "zonnepanelen_koppeling": "Hoogspanningsbatterij bij een SolaX hybride omvormer (X1 voor 1-fase, X3 voor 3-fase). Vooral interessant bij een nieuw systeem of als de omvormer toch vervangen wordt.",
       "koppeling_gemak": 2,
       "homey": "Via community-apps 'Solax Inverter' (cloud) en 'Solax Inverter Local API' (lokaal); geen officiële app",
-      "home_assistant": "Officiële SolaX-integratie in Home Assistant core (lokale API); uitgebreider sturen kan via de HACS Modbus-integratie",
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële SolaX-integratie in Home Assistant core (lokale API); uitgebreider sturen kan via de HACS Modbus-integratie"
+      },
       "dynamisch_contract": true,
       "app": "SolaX Cloud",
       "garantie_jaar": 10,

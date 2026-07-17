@@ -39,6 +39,7 @@
   }
 
   function driewaardig(v) {
+    if (v && typeof v === "object") return v.status || "deels";
     if (v === true) return "ja";
     if (typeof v === "string" && v.trim()) return "deels";
     return "nee";

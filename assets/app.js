@@ -22,6 +22,7 @@
       homey: false,
       homeAssistant: false,
       dynamisch: false,
+      officieel: false,
       noodstroom: false,
       aanbieding: false,
     },
@@ -76,6 +77,8 @@
 
   // true / "tekst" => ondersteund (evt. met kanttekening); false/null => niet
   function driewaardig(v) {
+    // Objectvorm {status, tekst}: officiële ondersteuning ("ja") mét uitlegtekst
+    if (v && typeof v === "object") return { status: v.status || "deels", tekst: v.tekst || "" };
     if (v === true) return { status: "ja", tekst: "Ja" };
     if (typeof v === "string" && v.trim()) return { status: "deels", tekst: v };
     return { status: "nee", tekst: "Nee" };
@@ -100,6 +103,38 @@
     }
   }
 
+  /* Filter- en sorteerstatus in de URL: back-navigatie behoudt de context en
+     een gefilterde lijst is deelbaar als link. */
+  const FILTER_KEYS = ["type", "capaciteit", "installatie", "merk"];
+  const CHECK_KEYS = [["homey", "homey"], ["homeAssistant", "ha"], ["dynamisch", "dynamisch"], ["officieel", "officieel"], ["noodstroom", "noodstroom"], ["aanbieding", "aanbieding"]];
+
+  function syncUrl() {
+    const f = state.filters;
+    const p = new URLSearchParams();
+    FILTER_KEYS.forEach((k) => { if (f[k] !== "alle") p.set(k, f[k]); });
+    CHECK_KEYS.forEach(([k, kort]) => { if (f[k]) p.set(kort, "1"); });
+    if (state.sortering !== "prijs-per-kwh") p.set("sorteer", state.sortering);
+    const qs = p.toString();
+    history.replaceState(null, "", qs ? `?${qs}` : location.pathname);
+  }
+
+  function leesUrl() {
+    const p = new URLSearchParams(location.search);
+    FILTER_KEYS.forEach((k) => { if (p.get(k)) state.filters[k] = p.get(k); });
+    CHECK_KEYS.forEach(([k, kort]) => { if (p.get(kort) === "1") state.filters[k] = true; });
+    if (p.get("sorteer")) state.sortering = p.get("sorteer");
+    // Formulier gelijkzetten met de ingelezen status
+    const zet = (id, w) => { const n = el(id); if (n) n.value = w; };
+    zet("filterType", state.filters.type); zet("filterCapaciteit", state.filters.capaciteit);
+    zet("filterInstallatie", state.filters.installatie); zet("filterMerk", state.filters.merk);
+    zet("sorteer", state.sortering);
+    const vink = (id, w) => { const n = el(id); if (n) n.checked = w; };
+    vink("checkHomey", state.filters.homey); vink("checkHA", state.filters.homeAssistant);
+    vink("checkDynamisch", state.filters.dynamisch); vink("checkOfficieel", state.filters.officieel);
+    vink("checkNoodstroom", state.filters.noodstroom);
+    vink("checkAanbieding", state.filters.aanbieding);
+  }
+
   function gefilterd() {
     const f = state.filters;
     return state.batterijen.filter((b) => {
@@ -108,9 +143,10 @@
       if (!capaciteitInBereik(b.capaciteit_kwh || 0, f.capaciteit)) return false;
       if (f.installatie === "zelf" && b.installatie !== "zelf") return false;
       if (f.installatie === "installateur" && b.installatie !== "installateur") return false;
-      if (f.homey && driewaardig(b.homey).status === "nee") return false;
-      if (f.homeAssistant && driewaardig(b.home_assistant).status === "nee") return false;
-      if (f.dynamisch && driewaardig(b.dynamisch_contract).status === "nee") return false;
+      const eis = f.officieel ? ["ja"] : ["ja", "deels"];
+      if (f.homey && !eis.includes(driewaardig(b.homey).status)) return false;
+      if (f.homeAssistant && !eis.includes(driewaardig(b.home_assistant).status)) return false;
+      if (f.dynamisch && !eis.includes(driewaardig(b.dynamisch_contract).status)) return false;
       if (f.noodstroom && !["ja", "deels"].includes(vierwaardig(b.noodstroom).status)) return false;
       if (f.aanbieding && !heeftKorting(b)) return false;
       return true;
@@ -183,10 +219,22 @@
       .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
   }
 
+  // "Sessy" + model "Sessy 5 kWh" zou anders "Sessy Sessy 5 kWh" opleveren
+  const naamVan = (b) => b.model.toLowerCase().startsWith(b.merk.toLowerCase()) ? b.model : `${b.merk} ${b.model}`;
+
+  // ISO-datum (2026-07-13) leesbaar maken als "13 juli 2026"
+  function datumNL(iso) {
+    const d = new Date(`${iso}T12:00:00`);
+    return Number.isNaN(d.getTime()) ? iso : datumFmt.format(d);
+  }
+
   function kaartHtml(b) {
     const beste = bestePrijs(b);
     const korting = heeftKorting(b);
     const perKwh = prijsPerKwh(b);
+    // Prijzen excl. btw/installatie krijgen een nadrukkelijker waarschuwing,
+    // zodat de kale winkelprijs geen verkeerd prijsbeeld geeft
+    const exclPrijs = /excl/i.test(b.prijs_omvat || "");
     const typeLabel = { "plug-in": "Plug-in (stopcontact)", "ac-gekoppeld": "AC-gekoppeld", "hybride": "Hybride omvormer" }[b.type] || b.type;
     const geselecteerd = state.vergelijkSelectie.includes(b.id);
 
@@ -204,7 +252,7 @@
       <div class="kaart-kop">
         <div>
           <div class="merk">${merkHtml(b)}</div>
-          <h3><a href="batterij/${encodeURIComponent(b.id)}.html" style="color:inherit;text-decoration:none;" title="Alle details van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">${escapeHtml(b.model)}</a></h3>
+          <h3><a href="batterij/${encodeURIComponent(b.id)}.html" style="color:inherit;text-decoration:none;" title="Alle details van de ${escapeHtml(naamVan(b))}">${escapeHtml(b.model)}</a></h3>
           <a class="term-link" href="uitleg.html#${escapeHtml(b.type)}" title="Wat betekent dit? Lees de uitleg in de woordenlijst"><span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml(typeLabel)}</span></a>
         </div>
         ${korting ? '<span class="aanbieding-vlag">Aanbieding</span>' : ""}
@@ -239,7 +287,7 @@
         ${b.app ? `<dt>App</dt><dd>${escapeHtml(b.app)}</dd>` : ""}
         ${(b.aanbiedingen || []).length ? `<dt>Verkrijgbaar bij</dt><dd><ul class="winkel-lijst">${b.aanbiedingen.map((a) => `<li><span>${escapeHtml(a.winkel)}</span><span><b>${eurFmt.format(a.prijs_eur)}</b> &nbsp;<a href="${escapeHtml(koopUrl(a))}" target="_blank" rel="noopener sponsored">bekijk</a></span></li>`).join("")}</ul></dd>` : ""}
         ${b.product_url ? `<dt>Fabrikant</dt><dd><a href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener">officiële productpagina</a></dd>` : ""}
-        ${b.prijs_datum ? `<dd class="datum-stempel" style="margin-top:8px;">Prijs gecontroleerd: ${escapeHtml(b.prijs_datum)}</dd>` : ""}
+        ${b.prijs_datum ? `<dd class="datum-stempel" style="margin-top:8px;">Prijs gecontroleerd: ${escapeHtml(datumNL(b.prijs_datum))}</dd>` : ""}
       </div>
       <div class="kaart-prijs">
         <div class="prijs-blok">
@@ -247,8 +295,8 @@
           <div class="prijs">${beste ? eurFmt.format(beste.prijs_eur) : "Prijs op aanvraag"}</div>
           ${perKwh ? `<div class="prijs-per-kwh">${eurFmt.format(perKwh)} per kWh opslag</div>` : ""}
           ${beste && beste.winkel ? `<div class="prijs-winkel">bij ${escapeHtml(beste.winkel)}</div>` : ""}
-          ${b.prijs_omvat ? `<div class="prijs-winkel">${escapeHtml(b.prijs_omvat)}</div>` : ""}
-          <div class="prijs-winkel" style="margin-top:6px;border-top:1px dashed var(--kleur-rand);padding-top:6px;" title="${escapeHtml(b.totaalprijs_toelichting || "")}">
+          ${b.prijs_omvat ? `<div class="prijs-winkel"${exclPrijs ? ' style="color:var(--kleur-accent-donker);font-weight:700;"' : ""}>${exclPrijs ? "⚠ " : ""}${escapeHtml(b.prijs_omvat)}</div>` : ""}
+          <div class="prijs-winkel" style="margin-top:6px;border-top:1px dashed var(--kleur-rand);padding-top:6px;${exclPrijs ? "font-size:0.95rem;color:var(--kleur-tekst);" : ""}" title="${escapeHtml(b.totaalprijs_toelichting || "")}">
             ${beste && b.totaalprijs_van_eur === beste.prijs_eur && !b.totaalprijs_tot_eur
               ? "✓ Dit is de complete prijs, gebruiksklaar"
               : `Compleet gebruiksklaar (indicatie): <b>${totaalprijsTekst(b) || "op aanvraag"}</b>`}
@@ -259,6 +307,7 @@
         ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : (b.product_url ? `<a class="knop" href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener">Naar aanbieder →</a>` : "")}
         <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}" title="Bereken de terugverdientijd van deze batterij voor jouw situatie">Terugverdientijd</a>
       </div>
+      ${beste && beste.affiliate_url ? `<div class="datum-stempel" style="padding:0 20px 12px;">Dit is een commissielink: kost jou niets, beïnvloedt de vergelijking niet. <a href="over-ons.html">Uitleg</a></div>` : ""}
     </article>`;
   }
 
@@ -267,7 +316,7 @@
      ------------------------------------------------------------------ */
 
   const tabelKolommen = [
-    { key: "model", label: "Model", get: (b) => `${b.merk} ${b.model}` },
+    { key: "model", label: "Model", get: (b) => naamVan(b) },
     { key: "capaciteit", label: "kWh", get: (b) => b.capaciteit_kwh || 0 },
     { key: "vermogen", label: "kW", get: (b) => b.vermogen_kw || 0 },
     { key: "type", label: "Type", get: (b) => b.type },
@@ -328,13 +377,14 @@
      ------------------------------------------------------------------ */
 
   function vergelijkModalHtml(items) {
-    const rij = (label, fn) => `<tr><th style="text-align:left;padding:8px 10px;background:var(--kleur-achtergrond);white-space:nowrap;">${label}</th>${items.map((b) => `<td style="padding:8px 10px;border-bottom:1px solid var(--kleur-rand);">${fn(b)}</td>`).join("")}</tr>`;
+    // Eerste kolom sticky, zodat de labels leesbaar blijven bij horizontaal scrollen op een telefoon
+    const rij = (label, fn) => `<tr><th style="text-align:left;padding:8px 10px;background:var(--kleur-achtergrond);white-space:nowrap;position:sticky;left:0;z-index:1;box-shadow:2px 0 0 var(--kleur-rand);">${label}</th>${items.map((b) => `<td style="padding:8px 10px;border-bottom:1px solid var(--kleur-rand);">${fn(b)}</td>`).join("")}</tr>`;
     const d3 = (v) => { const d = driewaardig(v); return d.status === "nee" ? "✕ Nee" : d.status === "deels" ? `~ ${escapeHtml(d.tekst)}` : `✓ ${escapeHtml(d.tekst)}`; };
     return `
       <h2>Vergelijking</h2>
       <div style="overflow-x:auto;">
       <table style="width:100%;border-collapse:collapse;font-size:0.93rem;min-width:${220 * items.length + 160}px;">
-        ${rij("Model", (b) => `<b>${escapeHtml(b.merk)} ${escapeHtml(b.model)}</b>`)}
+        ${rij("Model", (b) => `<b>${escapeHtml(naamVan(b))}</b>`)}
         ${rij("Type", (b) => escapeHtml(b.type))}
         ${rij("Capaciteit", (b) => (b.capaciteit_kwh ? String(b.capaciteit_kwh).replace(".", ",") + " kWh" : "?") + (b.uitbreidbaar_tot_kwh ? ` (uitbreidbaar tot ${String(b.uitbreidbaar_tot_kwh).replace(".", ",")} kWh)` : ""))}
         ${rij("Vermogen", (b) => (b.vermogen_kw ? String(b.vermogen_kw).replace(".", ",") + " kW" : "?"))}
@@ -360,6 +410,7 @@
      ------------------------------------------------------------------ */
 
   function render() {
+    syncUrl();
     const lijst = gesorteerd(gefilterd());
     el("resultatenTelling").textContent = `${lijst.length} van ${state.batterijen.length} thuisbatterijen`;
 
@@ -372,13 +423,15 @@
       doel.innerHTML = `<div class="tabel-wrap">${tabelHtml(lijst)}</div>`;
     }
 
-    // Vergelijk-balk
+    // Vergelijk-balk (+ ruimte onderaan de pagina zodat de footer bereikbaar blijft)
     const balk = el("vergelijkBalk");
     if (state.vergelijkSelectie.length >= 2) {
       balk.classList.add("zichtbaar");
+      document.body.classList.add("vergelijkbalk-actief");
       el("vergelijkBalkTekst").textContent = `${state.vergelijkSelectie.length} batterijen geselecteerd`;
     } else {
       balk.classList.remove("zichtbaar");
+      document.body.classList.remove("vergelijkbalk-actief");
     }
   }
 
@@ -395,7 +448,7 @@
       });
     });
 
-    [["checkHomey", "homey"], ["checkHA", "homeAssistant"], ["checkDynamisch", "dynamisch"], ["checkNoodstroom", "noodstroom"], ["checkAanbieding", "aanbieding"]].forEach(([id, key]) => {
+    [["checkHomey", "homey"], ["checkHA", "homeAssistant"], ["checkDynamisch", "dynamisch"], ["checkOfficieel", "officieel"], ["checkNoodstroom", "noodstroom"], ["checkAanbieding", "aanbieding"]].forEach(([id, key]) => {
       el(id).addEventListener("change", (e) => { state.filters[key] = e.target.checked; render(); });
     });
 
@@ -412,10 +465,10 @@
     }
 
     el("resetFilters").addEventListener("click", () => {
-      state.filters = { type: "alle", capaciteit: "alle", installatie: "alle", merk: "alle", homey: false, homeAssistant: false, dynamisch: false, noodstroom: false, aanbieding: false };
+      state.filters = { type: "alle", capaciteit: "alle", installatie: "alle", merk: "alle", homey: false, homeAssistant: false, dynamisch: false, officieel: false, noodstroom: false, aanbieding: false };
       el("filterType").value = "alle"; el("filterCapaciteit").value = "alle";
       el("filterInstallatie").value = "alle"; el("filterMerk").value = "alle";
-      ["checkHomey", "checkHA", "checkDynamisch", "checkNoodstroom", "checkAanbieding"].forEach((id) => { el(id).checked = false; });
+      ["checkHomey", "checkHA", "checkDynamisch", "checkOfficieel", "checkNoodstroom", "checkAanbieding"].forEach((id) => { el(id).checked = false; });
       render();
     });
 
@@ -477,7 +530,11 @@
       if (check.checked) {
         if (state.vergelijkSelectie.length >= 3) {
           check.checked = false;
-          alert("Je kunt maximaal 3 batterijen tegelijk vergelijken.");
+          // Niet-blokkerende melding via de vergelijk-balk in plaats van alert()
+          const tekst = el("vergelijkBalkTekst");
+          const oud = tekst.textContent;
+          tekst.textContent = "Maximaal 3 batterijen tegelijk; haal er eerst één weg.";
+          setTimeout(() => { tekst.textContent = oud; }, 2500);
           return;
         }
         state.vergelijkSelectie.push(id);
@@ -520,6 +577,7 @@
       el("filterMerk").innerHTML = '<option value="alle">Alle merken</option>' + merken.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");
 
       koppelEvents();
+      leesUrl(); // na het vullen van het merkenfilter, zodat ?merk=... aankomt
       render();
     } catch (err) {
       el("resultaten").innerHTML = '<div class="leeg-melding">De batterijgegevens konden niet worden geladen. Vernieuw de pagina of probeer het later opnieuw.</div>';

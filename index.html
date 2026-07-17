@@ -84,7 +84,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="assets/style.css?v=20260717c">
+  <link rel="stylesheet" href="assets/style.css?v=20260717d">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 </head>
@@ -117,7 +117,7 @@
 <section class="hero">
   <div class="container">
     <h1>Thuisbatterij vergelijken op wat hem écht slim maakt</h1>
-    <p>Andere vergelijkers tonen alleen prijzen. Wij laten per batterij ook zien of hij samenwerkt met <b>Homey, Home Assistant en een dynamisch energiecontract</b> (de Slim-score), en wat hij <b>compleet gebruiksklaar</b> echt kost. Onafhankelijk, dagelijks gecontroleerd en uitgelegd in taal die iedereen begrijpt.</p>
+    <p>Andere vergelijkers tonen alleen prijzen. Wij laten per batterij ook zien of hij samenwerkt met <b>Homey, Home Assistant en een dynamisch energiecontract</b> (de Slim-score), en wat hij <b>compleet gebruiksklaar</b> echt kost. Onafhankelijk, dagelijks gecontroleerd en uitgelegd in taal die iedereen begrijpt. En geen slim huis? Geen probleem: elke batterij werkt ook gewoon met zijn eigen app, en een lage Slim-score is dan geen enkel bezwaar.</p>
     <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
       <span class="update-info">🔋 28 batterijen</span>
       <span class="update-info">🔄 Prijzen gecontroleerd: <b id="updateDatum">…</b></span>
@@ -193,6 +193,7 @@
           <label><input type="checkbox" id="checkHomey"> Homey</label>
           <label><input type="checkbox" id="checkHA"> Home Assistant</label>
           <label><input type="checkbox" id="checkDynamisch"> Dynamisch energiecontract</label>
+          <label title="Toon alleen batterijen met een officiële koppeling (✓); community-integraties en omwegen (~) vallen dan af"><input type="checkbox" id="checkOfficieel"> alleen officiële koppelingen (✓)</label>
           <label><input type="checkbox" id="checkNoodstroom"> 🔌 Noodstroom bij stroomuitval</label>
           <label><input type="checkbox" id="checkAanbieding"> 🔥 Alleen aanbiedingen</label>
         </div>
@@ -333,6 +334,7 @@
   </div>
 </footer>
 
-<script src="assets/app.js?v=20260717c"></script>
+<script src="assets/app.js?v=20260717d"></script>
+<script src="assets/nav.js?v=20260717d" defer></script>
 </body>
 </html>

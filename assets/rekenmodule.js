@@ -44,7 +44,8 @@
 
   function getal(id, fallback) {
     const v = parseFloat(String(el(id).value).replace(",", "."));
-    return Number.isFinite(v) ? v : fallback;
+    // Negatieve invoer (bijv. verbruik -500) zou onzinnige uitkomsten geven
+    return Number.isFinite(v) ? Math.max(0, v) : fallback;
   }
 
   /* ------------------------------------------------------------------
@@ -184,7 +185,11 @@
     const doel = el("resultaat");
 
     if (!r.investering || !r.bruikbareCap) {
-      doel.innerHTML = '<p class="datum-stempel">👈 Kies bij stap 1 een batterij uit de lijst; het resultaat verschijnt hier direct. Wil je liever met eigen bedragen rekenen? Open dan "Alle getallen bekijken of aanpassen" en vul de investering en capaciteit zelf in.</p>';
+      // Benoem wat er precies ontbreekt, in plaats van altijd naar stap 1 te wijzen
+      const melding = r.bruikbareCap && !r.investering
+        ? 'Er is een batterij gekozen, maar de <b>investering (€)</b> ontbreekt nog. Open "Alle getallen bekijken of aanpassen" en vul daar een bedrag in (bijvoorbeeld je offerteprijs).'
+        : 'Kies bij stap 1 een batterij uit de lijst; het resultaat verschijnt hier direct. Wil je liever met eigen bedragen rekenen? Open dan "Alle getallen bekijken of aanpassen" en vul de investering en capaciteit zelf in.';
+      doel.innerHTML = `<p class="datum-stempel">${melding}</p>`;
       return;
     }
 
@@ -310,6 +315,11 @@
       hint.textContent = b.prijs_omvat ? `Let op wat de prijs dekt: ${b.prijs_omvat}. Tel installatiekosten zelf op bij de investering als die er niet in zitten.` : "";
     }
     bereken();
+    // Op smalle schermen staat het resultaat onder het formulier en zou een
+    // batterijkeuze anders onzichtbaar blijven: scroll er dan even naartoe.
+    if (window.matchMedia("(max-width: 860px)").matches) {
+      el("resultaat").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 
   /* ------------------------------------------------------------------
