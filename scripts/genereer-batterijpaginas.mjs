@@ -258,6 +258,7 @@ ${productLd(b)}
     ${specRij("Type", `<a class="term-link" href="/uitleg.html#${esc(b.type)}" title="Wat betekent dit? Lees de uitleg in de woordenlijst">${esc(typeLabel)}</a>`)}
     ${specRij("Aansluiting", esc(b.fase || ""))}
     ${specRij("Installatie", b.installatie === "zelf" ? "Zelf aan te sluiten (stopcontact)" : "Door installateur")}
+    ${specRij("Beschermingsgraad", b.ip_klasse ? `<a class="term-link" href="/uitleg.html#ip-waarde" title="Wat zegt de IP-waarde? Lees de uitleg in de woordenlijst">${esc(b.ip_klasse)}</a>${b.buiten_toelichting ? ` <small>(${esc(b.buiten_toelichting)})</small>` : ""}` : null)}
     ${specRij("Garantie", b.garantie_jaar ? `${b.garantie_jaar} jaar` : null)}
     ${specRij("Laadcycli", b.cycli ? esc(String(b.cycli)) : null)}
     ${specRij("App", b.app ? `${esc(b.app)} <small>(<a class="term-link" href="/uitleg.html#fabrikant-app" title="Wat kan de app van de fabrikant? Lees de uitleg">wat kan zo'n app?</a>)</small>` : "")}

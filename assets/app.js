@@ -348,6 +348,7 @@
         ${rij("Homey", (b) => d3(b.homey))}
         ${rij("Home Assistant", (b) => d3(b.home_assistant))}
         ${rij("Dynamisch contract", (b) => d3(b.dynamisch_contract))}
+        ${rij("Beschermingsgraad (IP)", (b) => b.ip_klasse ? `${escapeHtml(b.ip_klasse)}${b.buiten_toelichting ? `<br><small>${escapeHtml(b.buiten_toelichting)}</small>` : ""}` : "?")}
         ${rij("Garantie", (b) => (b.garantie_jaar ? b.garantie_jaar + " jaar" : "?"))}
         ${rij("", (b) => { const p = bestePrijs(b); return p && p.url ? `<a class="knop" href="${escapeHtml(koopUrl(p))}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : ""; })}
       </table>
