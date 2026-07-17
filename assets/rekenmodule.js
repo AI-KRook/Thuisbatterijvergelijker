@@ -32,6 +32,7 @@
   const eur2Fmt = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
   const numFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 0 });
   const jaarFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 });
+  const eenDec = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 });
 
   let batterijen = [];
 
@@ -72,14 +73,22 @@
     const cycliPerDag = getal("inpCycli", 1);
     const extraOnbalans = getal("inpOnbalans", 0);
     const standbyWatt = getal("inpStandby", 10);
+    const jaarVerbruik = getal("inpVerbruik", 2900);
 
     const bruikbareCap = capaciteit * bruikbaarPct;
+    // Wat kan het huishouden per dag zinvol uit de batterij opmaken?
+    // Aanname: ~70% van het verbruik valt buiten de zonuren (avond, nacht,
+    // vroege ochtend). Een batterij groter dan dat levert per extra kWh
+    // vrijwel niets op: hij raakt zijn stroom niet kwijt.
+    const maxZinvolPerDag = (jaarVerbruik / 365) * 0.7;
+    const effectieveCap = Math.min(bruikbareCap, maxZinvolPerDag);
+    const teGroot = bruikbareCap > 0 && jaarVerbruik > 0 && bruikbareCap > maxZinvolPerDag * 1.15;
 
     // 1. Zelfverbruik-opslag (alleen met PV)
     let overschot = 0, opslagJaar = 0, opbrengstZelf = 0;
     if (heeftPv && bruikbareCap > 0) {
       overschot = opwek * (1 - eigenVerbruikPct);
-      opslagJaar = Math.min(overschot, bruikbareCap * zonDagen) * mismatch;
+      opslagJaar = Math.min(overschot, effectieveCap * zonDagen) * mismatch;
       const waardePerKwh = stroomprijs * rendement - terugleverVergoeding + terugleverKosten;
       opbrengstZelf = Math.max(0, opslagJaar * waardePerKwh);
     }
@@ -88,7 +97,9 @@
     let arbDagen = 0, opbrengstArb = 0, winstPerCyclus = 0;
     if (contract === "dynamisch" && bruikbareCap > 0) {
       arbDagen = heeftPv ? Math.max(0, 365 - zonDagen) : 350;
-      winstPerCyclus = bruikbareCap * (ontlaadwaarde * rendement - laadprijs);
+      // Ook hier begrensd op wat het huishouden per dag kan opmaken: de
+      // ontlaadwaarde is immers gebaseerd op vermeden inkoop, niet op verkoop.
+      winstPerCyclus = effectieveCap * (ontlaadwaarde * rendement - laadprijs);
       opbrengstArb = Math.max(0, arbDagen * cycliPerDag * winstPerCyclus);
     }
 
@@ -105,6 +116,7 @@
       overschot, opslagJaar, opbrengstZelf,
       arbDagen, cycliPerDag, winstPerCyclus, opbrengstArb,
       extraOnbalans, standbyWatt, standbyKwh, kostenStandby, totaal, terugverdientijd,
+      jaarVerbruik, maxZinvolPerDag, effectieveCap, teGroot,
       stroomprijs, terugleverVergoeding, laadprijs, ontlaadwaarde, rendement,
     });
   }
@@ -205,6 +217,9 @@
       else if (t > 10) waarschuwingen.push('De terugverdientijd nadert de verwachte levensduur van de batterij (10 tot 15 jaar). Reken jezelf niet rijk en vergelijk meerdere scenario\'s. Lees ook: <a href="uitleg.html#waarom-toch">is een thuisbatterij het waard bij een lange terugverdientijd?</a>');
     }
 
+    if (r.teGroot) {
+      waarschuwingen.push(`<b>Deze batterij is waarschijnlijk te groot voor je verbruik.</b> Met ${numFmt.format(r.jaarVerbruik)} kWh per jaar maakt je huishouden buiten de zonuren maar zo'n ${eenDec.format(r.maxZinvolPerDag)} kWh per dag op, terwijl de batterij ${eenDec.format(r.bruikbareCap)} kWh bruikbaar heeft. De berekening telt daarom alleen de zinvol te gebruiken ${eenDec.format(r.effectieveCap)} kWh mee; een kleinere (goedkopere) batterij geeft vaak een kortere terugverdientijd.`);
+    }
     if (r.contract === "vast" && !r.heeftPv) {
       waarschuwingen.push("Zonder zonnepanelen en zonder dynamisch contract kan een thuisbatterij vrijwel niets verdienen: er valt niets op te slaan en geen prijsverschil te benutten.");
     }
