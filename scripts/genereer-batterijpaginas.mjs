@@ -291,6 +291,14 @@ ${productLd(b)}
   </ul>
   <p class="datum-stempel">Prijzen worden dagelijks automatisch gecontroleerd; de prijs op de website van de winkel is altijd leidend.${(b.aanbiedingen || []).some((a) => a.affiliate_url) ? " Sommige links zijn commissielinks: koop je via die link, dan ontvangen wij een kleine vergoeding van de winkel. Dit kost jou niets en be\u00efnvloedt onze prijzen, scores en volgorde niet." : ""}</p>` : ""}
 
+  ${VERGELIJKINGEN.filter((v) => v.a === b.id || v.b === b.id).length ? `<h2>Vergelijk met alternatieven</h2>
+  <ul>
+    ${VERGELIJKINGEN.filter((v) => v.a === b.id || v.b === b.id).map((v) => {
+      const ander = batterijById[v.a === b.id ? v.b : v.a];
+      return `<li><a href="/vergelijk/${esc(v.slug)}.html">${esc(volledigeNaam(b))} vs ${esc(volledigeNaam(ander))}</a></li>`;
+    }).join("\n    ")}
+  </ul>` : ""}
+
   <div class="waarschuwing-kader">Twijfel je of deze batterij bij je past? Doe de <a href="/advies.html">keuzehulp</a> voor een maatadvies, of <a href="/index.html">vergelijk alle thuisbatterijen</a> op prijs, capaciteit en koppelgemak.</div>
 
   ${b.product_url ? `<p>Meer informatie: <a href="${esc(b.product_url)}" target="_blank" rel="noopener">officiële productpagina van ${esc(b.merk)}</a>.</p>` : ""}
@@ -492,6 +500,195 @@ ${itemList}
 }
 
 /* ------------------------------------------------------------------
+   Vergelijkingspagina's "X vs Y" (SEO-landingspagina's voor veel
+   gezochte duels). Volledig uit de data gegenereerd en dagelijks
+   herbouwd, zodat prijzen en scores actueel blijven.
+   ------------------------------------------------------------------ */
+
+const VERGELIJKINGEN = [
+  { a: "sessy-5kwh", b: "homewizard-plug-in-battery" },
+  { a: "marstek-venus-e-3", b: "sessy-5kwh" },
+  { a: "marstek-venus-e-3", b: "homewizard-plug-in-battery" },
+  { a: "marstek-venus-e-3", b: "marstek-venus-c-768" },
+  { a: "tesla-powerwall-3", b: "sigenergy-sigenstor-8kwh" },
+  { a: "ecoflow-stream-ac-pro", b: "anker-solix-solarbank-3-pro" },
+  { a: "ecoflow-stream-ac-pro", b: "zendure-solarflow-hyper-2000" },
+  { a: "huawei-luna2000-10", b: "byd-battery-box-hvm-11" },
+].map((v) => ({ ...v, slug: `${v.a}-vs-${v.b}` }));
+
+const batterijById = Object.fromEntries(data.batterijen.map((b) => [b.id, b]));
+// "Sessy" + "Sessy 5 kWh" wordt anders "Sessy Sessy 5 kWh"
+const volledigeNaam = (b) => b.model.toLowerCase().startsWith(b.merk.toLowerCase()) ? b.model : `${b.merk} ${b.model}`;
+const perKwhVan = (b) => {
+  const beste = bestePrijs(b);
+  return beste && b.capaciteit_kwh ? Math.round(beste.prijs_eur / b.capaciteit_kwh) : null;
+};
+const buitenGeschikt = (b) => /IP6[5-7]/.test(b.ip_klasse || "");
+
+// Feitelijke pluspunten van x ten opzichte van y, alleen op basis van de data.
+function pluspunten(x, y) {
+  const p = [];
+  const px = perKwhVan(x), py = perKwhVan(y);
+  if (px && py && px < py) p.push(`is per kWh opslag goedkoper (${eur(px)} tegenover ${eur(py)} per kWh)`);
+  if (slimScore(x) > slimScore(y)) p.push(`is beter slim aan te sturen (Slim-score ${slimScore(x)}/6 tegenover ${slimScore(y)}/6)`);
+  if (vierwaardig(x.noodstroom).status === "ja" && vierwaardig(y.noodstroom).status !== "ja") p.push("heeft noodstroom bij een stroomstoring");
+  if (x.installatie === "zelf" && y.installatie !== "zelf") p.push("sluit je zelf aan op een stopcontact, zonder installateur");
+  if (buitenGeschikt(x) && !buitenGeschikt(y)) p.push(`kan ook buiten worden geplaatst (${esc(x.ip_klasse)})`);
+  if ((x.garantie_jaar || 0) > (y.garantie_jaar || 0)) p.push(`heeft langere garantie (${x.garantie_jaar} tegenover ${y.garantie_jaar || "?"} jaar)`);
+  if (x.capaciteit_kwh && y.capaciteit_kwh && x.capaciteit_kwh > y.capaciteit_kwh * 1.25) p.push(`biedt meer opslag (${nl(x.capaciteit_kwh)} tegenover ${nl(y.capaciteit_kwh)} kWh)`);
+  if (x.vermogen_kw && y.vermogen_kw && x.vermogen_kw > y.vermogen_kw * 1.25) p.push(`levert meer vermogen (${nl(x.vermogen_kw)} tegenover ${nl(y.vermogen_kw)} kW)`);
+  return p;
+}
+
+function vergelijkingsPagina(v) {
+  const A = batterijById[v.a], B = batterijById[v.b];
+  const naam = volledigeNaam;
+  const besteA = bestePrijs(A), besteB = bestePrijs(B);
+  const badgeIcoon = { ja: "✓", deels: "~", nee: "✕", onbekend: "?" };
+  const d3kort = (w) => { const d = driewaardig(w); return `${badgeIcoon[d.status]} ${d.status === "ja" ? "Ja" : d.status === "nee" ? "Nee" : esc(d.tekst)}`; };
+
+  const celStijl = 'style="padding:10px 14px;border-top:1px solid var(--kleur-rand);vertical-align:top;"';
+  const rij = (label, wa, wb, winnaar = -1) =>
+    `<tr><th style="text-align:left;padding:10px 14px;border-top:1px solid var(--kleur-rand);background:var(--kleur-achtergrond);white-space:nowrap;vertical-align:top;">${esc(label)}</th>` +
+    `<td ${celStijl}>${winnaar === 0 ? `<b>${wa}</b>` : wa}</td>` +
+    `<td ${celStijl}>${winnaar === 1 ? `<b>${wb}</b>` : wb}</td></tr>`;
+
+  const laagWint = (x, y) => (x == null || y == null || x === y) ? -1 : (x < y ? 0 : 1);
+  const hoogWint = (x, y) => (x == null || y == null || x === y) ? -1 : (x > y ? 0 : 1);
+  const perA = perKwhVan(A), perB = perKwhVan(B);
+  const typeLabelVan = (b) => ({ "plug-in": "Plug-in (stopcontact)", "ac-gekoppeld": "AC-gekoppeld", "hybride": "Hybride omvormer" }[b.type] || b.type);
+  const noodA = vierwaardig(A.noodstroom), noodB = vierwaardig(B.noodstroom);
+
+  const plusA = pluspunten(A, B), plusB = pluspunten(B, A);
+  const titel = `${naam(A)} vs ${naam(B)}: welke thuisbatterij?`;
+  const metaDesc = `${naam(A)} of ${naam(B)}? Vergelijk prijs, prijs per kWh, capaciteit, noodstroom en slimme aansturing (Homey, Home Assistant, dynamisch contract). Prijzen dagelijks gecontroleerd.`;
+
+  const itemList = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": titel,
+    "itemListElement": [A, B].map((b, i) => ({
+      "@type": "ListItem", "position": i + 1, "name": naam(b), "url": `${SITE}/batterij/${b.id}.html`,
+    })),
+  }, null, 2);
+
+  return `<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${esc(titel)} (2026) | Batterijmaatje.nl</title>
+  <meta name="description" content="${esc(metaDesc)}">
+  <link rel="canonical" href="${SITE}/vergelijk/${esc(v.slug)}.html">
+  <meta property="og:title" content="${esc(titel)}">
+  <meta property="og:description" content="${esc(metaDesc)}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="${SITE}/vergelijk/${esc(v.slug)}.html">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:image" content="${SITE}/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Batterijmaatje.nl">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+${itemList}
+  </script>
+  <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="/index.html">
+      <span class="logo-icoon">\u{1F50B}</span>
+      <span>Batterij<b>maatje</b></span>
+    </a>
+    <nav class="hoofdnav">
+      <a href="/index.html">Vergelijken</a>
+      <a href="/uitleg.html">Uitleg</a>
+      <a href="/advies.html">Keuzehulp</a>
+      <a href="/rekenmodule.html">Terugverdientijd</a>
+      <details class="nav-meer">
+        <summary>Meer ▾</summary>
+        <div class="nav-meer-paneel">
+          <a href="/regelgeving.html">Regels &amp; subsidies</a>
+          <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a>
+          <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a>
+          <a href="/over-ons.html">Over ons</a>
+        </div>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<main class="container" style="max-width:900px;">
+  <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle thuisbatterijen vergelijken</a></p>
+  <h1>${esc(naam(A))} vs ${esc(naam(B))}</h1>
+  <p class="datum-stempel">Prijzen dagelijks automatisch gecontroleerd · laatst op ${VANDAAG}</p>
+  <p>Twee veelvergeleken thuisbatterijen naast elkaar, op basis van dezelfde feiten als in onze <a href="/index.html">vergelijker</a>. Onder de tabel staan de belangrijkste verschillen op een rij. Vetgedrukt betekent: op dit punt objectief in het voordeel.</p>
+
+  <div style="overflow-x:auto;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);margin:14px 0;">
+  <table style="width:100%;border-collapse:collapse;font-size:0.93rem;min-width:560px;">
+    <thead><tr>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);"></th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);"><a href="/batterij/${esc(A.id)}.html">${esc(naam(A))}</a></th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);"><a href="/batterij/${esc(B.id)}.html">${esc(naam(B))}</a></th>
+    </tr></thead>
+    <tbody>
+      ${rij("Beste winkelprijs", besteA ? `${eur(besteA.prijs_eur)}<br><small>bij ${esc(besteA.winkel)}</small>` : "op aanvraag", besteB ? `${eur(besteB.prijs_eur)}<br><small>bij ${esc(besteB.winkel)}</small>` : "op aanvraag")}
+      ${rij("Compleet gebruiksklaar (indicatie)", totaalprijsTekst(A) || "op aanvraag", totaalprijsTekst(B) || "op aanvraag")}
+      ${rij("Prijs per kWh opslag", perA ? eur(perA) : "n.b.", perB ? eur(perB) : "n.b.", laagWint(perA, perB))}
+      ${rij("Capaciteit", `${nl(A.capaciteit_kwh)} kWh${A.uitbreidbaar_tot_kwh ? ` <small>(tot ${nl(A.uitbreidbaar_tot_kwh)})</small>` : ""}`, `${nl(B.capaciteit_kwh)} kWh${B.uitbreidbaar_tot_kwh ? ` <small>(tot ${nl(B.uitbreidbaar_tot_kwh)})</small>` : ""}`)}
+      ${rij("Vermogen", A.vermogen_kw ? `${nl(A.vermogen_kw)} kW` : "n.b.", B.vermogen_kw ? `${nl(B.vermogen_kw)} kW` : "n.b.", hoogWint(A.vermogen_kw, B.vermogen_kw))}
+      ${rij("Type en installatie", `${esc(typeLabelVan(A))}<br><small>${A.installatie === "zelf" ? "zelf aan te sluiten" : "door installateur"}</small>`, `${esc(typeLabelVan(B))}<br><small>${B.installatie === "zelf" ? "zelf aan te sluiten" : "door installateur"}</small>`)}
+      ${rij("Slim-score", `${slimScore(A)}/6`, `${slimScore(B)}/6`, hoogWint(slimScore(A), slimScore(B)))}
+      ${rij("Homey", d3kort(A.homey), d3kort(B.homey))}
+      ${rij("Home Assistant", d3kort(A.home_assistant), d3kort(B.home_assistant))}
+      ${rij("Dynamisch contract", d3kort(A.dynamisch_contract), d3kort(B.dynamisch_contract))}
+      ${rij("Noodstroom", `${badgeIcoon[noodA.status]} ${esc(noodA.status === "deels" ? noodA.tekst : noodA.status.charAt(0).toUpperCase() + noodA.status.slice(1))}`, `${badgeIcoon[noodB.status]} ${esc(noodB.status === "deels" ? noodB.tekst : noodB.status.charAt(0).toUpperCase() + noodB.status.slice(1))}`)}
+      ${rij("Beschermingsgraad (IP)", A.ip_klasse ? `${esc(A.ip_klasse)}${A.buiten_toelichting ? `<br><small>${esc(A.buiten_toelichting)}</small>` : ""}` : "onbekend", B.ip_klasse ? `${esc(B.ip_klasse)}${B.buiten_toelichting ? `<br><small>${esc(B.buiten_toelichting)}</small>` : ""}` : "onbekend")}
+      ${rij("Garantie", A.garantie_jaar ? `${A.garantie_jaar} jaar` : "n.b.", B.garantie_jaar ? `${B.garantie_jaar} jaar` : "n.b.", hoogWint(A.garantie_jaar, B.garantie_jaar))}
+      ${rij("Laadcycli", A.cycli ? esc(String(A.cycli)) : "n.b.", B.cycli ? esc(String(B.cycli)) : "n.b.")}
+      ${rij("App", esc(A.app || "n.b."), esc(B.app || "n.b."))}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>De belangrijkste verschillen</h2>
+  <ul>
+    ${plusA.length ? `<li><b>De ${esc(naam(A))}</b> ${plusA.join(", ")}.</li>` : ""}
+    ${plusB.length ? `<li><b>De ${esc(naam(B))}</b> ${plusB.join(", ")}.</li>` : ""}
+    ${!plusA.length && !plusB.length ? "<li>Op de vergeleken punten ontlopen deze batterijen elkaar weinig; kijk vooral naar prijs en beschikbaarheid.</li>" : ""}
+  </ul>
+  <p class="datum-stempel">Deze verschillen worden automatisch afgeleid uit de specificaties hierboven en veranderen mee met de dagelijkse prijscontrole.</p>
+
+  <h2>Verder kijken</h2>
+  <ul>
+    <li>Alle details, actuele aanbiedingen en winkels: <a href="/batterij/${esc(A.id)}.html">${esc(naam(A))}</a> · <a href="/batterij/${esc(B.id)}.html">${esc(naam(B))}</a></li>
+    <li>Wat leveren ze op in jouw situatie? Bereken het: <a href="/rekenmodule.html?batterij=${encodeURIComponent(A.id)}">terugverdientijd ${esc(naam(A))}</a> · <a href="/rekenmodule.html?batterij=${encodeURIComponent(B.id)}">terugverdientijd ${esc(naam(B))}</a></li>
+    <li>Twijfel je over de juiste maat? Doe de <a href="/advies.html">keuzehulp</a>.</li>
+  </ul>
+
+  <div class="waarschuwing-kader">Prijzen en specificaties veranderen regelmatig; deze pagina wordt dagelijks automatisch herbouwd. De prijs en voorwaarden op de website van de winkel zijn altijd leidend.</div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <b>\u{1F50B} Batterijmaatje</b>
+    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
+    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
+  </div>
+</footer>
+
+</body>
+</html>
+`;
+}
+
+/* ------------------------------------------------------------------
    Pagina's schrijven
    ------------------------------------------------------------------ */
 
@@ -504,6 +701,12 @@ for (const cfg of OVERZICHTEN) {
   writeFileSync(resolve(ROOT, cfg.bestand), overzichtsPagina(cfg), "utf8");
 }
 console.log(`${OVERZICHTEN.length} overzichtspagina's gegenereerd (Home Assistant, Homey)`);
+
+mkdirSync(resolve(ROOT, "vergelijk"), { recursive: true });
+for (const v of VERGELIJKINGEN) {
+  writeFileSync(resolve(ROOT, "vergelijk", `${v.slug}.html`), vergelijkingsPagina(v), "utf8");
+}
+console.log(`${VERGELIJKINGEN.length} vergelijkingspagina's gegenereerd in /vergelijk/`);
 
 /* ------------------------------------------------------------------
    Sitemap herbouwen (vaste pagina's + batterijpagina's)
@@ -524,6 +727,7 @@ const vast = [
 const urls = [
   ...vast,
   ...data.batterijen.map((b) => ({ loc: `${SITE}/batterij/${b.id}.html`, freq: "daily", prio: "0.7" })),
+  ...VERGELIJKINGEN.map((v) => ({ loc: `${SITE}/vergelijk/${v.slug}.html`, freq: "daily", prio: "0.7" })),
 ];
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
