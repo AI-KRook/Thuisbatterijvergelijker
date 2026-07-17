@@ -169,7 +169,7 @@
     } else if (b.uitbreidbaar_tot_kwh && b.capaciteit_kwh < maat.laag) {
       redenen.push("modulair uitbreidbaar tot je geadviseerde maat");
     } else if (b.capaciteit_kwh > maat.hoog) {
-      redenen.push("ruimer dan geadviseerd, handig als je verbruik groeit");
+      redenen.push("let op: ruimer dan je geadviseerde maat; alleen zinvol als je verbruik echt gaat groeien (warmtepomp, elektrische auto), anders betaal je voor capaciteit die je niet opmaakt");
     } else {
       redenen.push("de capaciteit valt binnen je bandbreedte");
     }
