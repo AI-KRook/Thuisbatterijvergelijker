@@ -204,7 +204,11 @@
     }
 
     let oordeel = "";
+    // Twee soorten meldingen: opvallende waarschuwingen die over déze invoer
+    // gaan (max 1 a 2 gele kaders), en vaste kanttekeningen die bij elke
+    // berekening gelden en compact in één inklapbaar blok staan.
     const waarschuwingen = [];
+    const kanttekeningen = [];
 
     if (r.terugverdientijd == null) {
       oordeel = "<b>Met deze invoer levert de batterij per saldo niets op.</b> Controleer of het contracttype en de prijzen kloppen.";
@@ -224,13 +228,13 @@
       waarschuwingen.push("Zonder zonnepanelen en zonder dynamisch contract kan een thuisbatterij vrijwel niets verdienen: er valt niets op te slaan en geen prijsverschil te benutten.");
     }
     if (r.contract === "dynamisch" && r.opbrengstArb > 0) {
-      waarschuwingen.push("De opbrengst uit handel op uurprijzen is een schatting op basis van een vast gemiddeld prijsverschil. Werkelijke spreads wisselen per dag en seizoen, en over stroom die je uit het net laadt betaal je energiebelasting (het bekende knelpunt van dubbele belasting bij terugleveren).");
+      kanttekeningen.push("De opbrengst uit handel op uurprijzen is een schatting op basis van een vast gemiddeld prijsverschil; werkelijke spreads wisselen per dag en seizoen, en over stroom uit het net betaal je energiebelasting.");
     }
     if (r.extraOnbalans > 0) {
-      waarschuwingen.push("Opbrengsten uit de onbalansmarkt zijn de afgelopen jaren gedaald en bieden geen garantie; TenneT waarschuwt daar expliciet voor.");
+      kanttekeningen.push("Opbrengsten uit de onbalansmarkt zijn de afgelopen jaren gedaald en bieden geen garantie; TenneT waarschuwt daar expliciet voor.");
     }
-    waarschuwingen.push("Tot en met 31 december 2026 geldt de salderingsregeling nog; het voordeel van het opslaan van eigen zonnestroom is tot die datum vrijwel nihil. Deze berekening gaat uit van de situatie vanaf 2027.");
-    waarschuwingen.push("Het model rekent niet met batterijdegradatie, rente of stijgende/dalende energieprijzen. Zie de toelichting onderaan voor alle aannames.");
+    kanttekeningen.push("Tot en met 31 december 2026 geldt de salderingsregeling nog; deze berekening gaat uit van de situatie vanaf 2027.");
+    kanttekeningen.push("Het model rekent niet met batterijdegradatie, rente of stijgende/dalende energieprijzen; zie de toelichting onderaan voor alle aannames.");
 
     const grafiek = r.terugverdientijd != null && r.terugverdientijd <= 27
       ? terugverdienGrafiek(r.investering, r.totaal, r.terugverdientijd)
@@ -261,6 +265,10 @@
       </table>
       </div>` : ""}
       ${waarschuwingen.map((w) => `<div class="waarschuwing-kader" style="margin:12px 0;">${w}</div>`).join("")}
+      ${kanttekeningen.length ? `<details class="kanttekeningen">
+        <summary>Kanttekeningen bij deze berekening (${kanttekeningen.length})</summary>
+        <ul>${kanttekeningen.map((k) => `<li>${k}</li>`).join("")}</ul>
+      </details>` : ""}
     `;
   }
 

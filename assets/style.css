@@ -779,6 +779,27 @@ table.vergelijk-tabel {
   font-size: 0.97rem;
 }
 
+/* Vaste mitsen en maren onder het rekenresultaat: één compact inklapbaar
+   blok in plaats van een stapel gele waarschuwingskaders */
+details.kanttekeningen {
+  margin: 14px 0 4px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--kleur-rand);
+  font-size: 0.85rem;
+  color: var(--kleur-tekst-licht);
+}
+details.kanttekeningen summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--kleur-primair);
+}
+details.kanttekeningen ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
 .bron-lijst { font-size: 0.88rem; color: var(--kleur-tekst-licht); }
 .bron-lijst li { margin-bottom: 6px; }
 
