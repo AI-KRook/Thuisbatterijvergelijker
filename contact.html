@@ -71,21 +71,16 @@
       <input type="text" id="ctNaam" name="naam" autocomplete="name" required>
     </div>
     <div class="veld">
-      <label for="ctEmail">Je e-mailadres (voor het antwoord)</label>
-      <input type="email" id="ctEmail" name="email" autocomplete="email" required>
-    </div>
-    <div class="veld">
       <label for="ctBericht">Je bericht</label>
       <textarea id="ctBericht" name="bericht" required></textarea>
     </div>
-    <!-- honeypot tegen spam: mensen zien dit veld niet -->
-    <input type="checkbox" name="botcheck" class="visueel-verborgen" tabindex="-1" autocomplete="off">
-    <button class="knop" type="submit" id="ctVerstuur">Verstuur bericht</button>
+    <button class="knop" type="submit" id="ctVerstuur">Open in je mailprogramma</button>
+    <button class="knop knop-secundair" type="button" id="ctKopieer" style="margin-top:16px;margin-left:8px;">Kopieer ons e-mailadres</button>
     <div id="formulierStatus" aria-live="polite"></div>
   </form>
 
   <p style="margin-top:22px;">Liever rechtstreeks mailen? Dat kan ook: <a href="mailto:info@batterijmaatje.nl">info@batterijmaatje.nl</a>. Technische meldingen mogen ook via een issue op onze <a href="https://github.com/AI-KRook/Thuisbatterijvergelijker" target="_blank" rel="noopener">GitHub-pagina</a>.</p>
-  <p class="datum-stempel">Privacy: het formulier verstuurt alleen wat je hier invult (naam, e-mailadres, bericht) via de dienst Web3Forms naar onze mailbox. Er worden geen cookies geplaatst. Zie ook onze <a href="privacy.html">privacyverklaring</a>.</p>
+  <p class="datum-stempel">Privacy: dit formulier verstuurt niets via internet en gebruikt geen externe diensten. Het opent alleen je eigen mailprogramma met het bericht alvast ingevuld; pas als jij daar op verzenden drukt, gaat het bericht weg. Zie ook onze <a href="privacy.html">privacyverklaring</a>.</p>
 
 </main>
 
@@ -101,49 +96,34 @@
 <script>
 (function () {
   "use strict";
-  // Web3Forms access key: aan te maken op https://web3forms.com met info@batterijmaatje.nl.
-  // Zolang de sleutel niet is ingevuld, verbergen we het formulier en blijft
-  // alleen de e-mailroute zichtbaar (dan staat er nooit een kapot formulier live).
-  var ACCESS_KEY = "VUL-HIER-DE-WEB3FORMS-SLEUTEL-IN";
-
+  // Dit formulier verstuurt zelf niets: het opent het mailprogramma van de
+  // bezoeker met het bericht alvast ingevuld (mailto). Zo is er geen externe
+  // formulierdienst nodig en verlaat niets de browser zonder dat de bezoeker
+  // zelf op verzenden drukt.
+  var ADRES = "info@batterijmaatje.nl";
   var formulier = document.getElementById("contactFormulier");
-  if (ACCESS_KEY.indexOf("VUL-HIER") === 0) {
-    formulier.hidden = true;
-    return;
-  }
+  var status = document.getElementById("formulierStatus");
 
   formulier.addEventListener("submit", function (e) {
     e.preventDefault();
-    var status = document.getElementById("formulierStatus");
-    var knop = document.getElementById("ctVerstuur");
     if (!formulier.checkValidity()) { formulier.reportValidity(); return; }
+    var naam = document.getElementById("ctNaam").value.trim();
+    var bericht = document.getElementById("ctBericht").value.trim();
+    var onderwerp = "Bericht via batterijmaatje.nl" + (naam ? " van " + naam : "");
+    var body = bericht + "\n\nGroet,\n" + naam;
+    location.href = "mailto:" + ADRES +
+      "?subject=" + encodeURIComponent(onderwerp) +
+      "&body=" + encodeURIComponent(body);
+    status.innerHTML = "Je mailprogramma opent nu met het bericht ingevuld; druk daar op verzenden. Opent er niets? Kopieer dan ons adres met de knop hierboven en mail vanuit je eigen mail-app of webmail.";
+  });
 
-    knop.disabled = true;
-    status.textContent = "Versturen…";
-
-    fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify({
-        access_key: ACCESS_KEY,
-        subject: "Bericht via batterijmaatje.nl",
-        from_name: document.getElementById("ctNaam").value,
-        email: document.getElementById("ctEmail").value,
-        message: document.getElementById("ctBericht").value,
-        botcheck: formulier.querySelector('[name="botcheck"]').checked
-      })
-    }).then(function (res) { return res.json(); }).then(function (data) {
-      if (data.success) {
-        formulier.reset();
-        status.innerHTML = "✅ Bericht verzonden. Je krijgt doorgaans binnen een dag antwoord.";
-      } else {
-        status.innerHTML = "⚠️ Versturen lukte niet. Mail je bericht naar <a href='mailto:info@batterijmaatje.nl'>info@batterijmaatje.nl</a>.";
-      }
-      knop.disabled = false;
-    }).catch(function () {
-      status.innerHTML = "⚠️ Versturen lukte niet. Mail je bericht naar <a href='mailto:info@batterijmaatje.nl'>info@batterijmaatje.nl</a>.";
-      knop.disabled = false;
-    });
+  document.getElementById("ctKopieer").addEventListener("click", function () {
+    var klaar = function () { status.textContent = "E-mailadres gekopieerd: " + ADRES; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(ADRES).then(klaar, function () { status.textContent = "Ons adres: " + ADRES; });
+    } else {
+      status.textContent = "Ons adres: " + ADRES;
+    }
   });
 })();
 </script>
