@@ -64,10 +64,18 @@
     return !!(beste && b.richtprijs_eur && beste.prijs_eur < b.richtprijs_eur * 0.97);
   }
 
+  // Prijzen die excl. btw gelden worden voor de kWh-vergelijking (en de
+  // sortering daarop) omgerekend naar incl. btw, anders vergelijk je kale
+  // modules met complete consumentenprijzen.
+  function exclBtw(b) {
+    return /excl\.? btw/i.test(b.prijs_omvat || "");
+  }
+
   function prijsPerKwh(b) {
     const beste = bestePrijs(b);
     if (!beste || !b.capaciteit_kwh) return null;
-    return Math.round(beste.prijs_eur / b.capaciteit_kwh);
+    const prijs = exclBtw(b) ? beste.prijs_eur * 1.21 : beste.prijs_eur;
+    return Math.round(prijs / b.capaciteit_kwh);
   }
 
   function totaalprijsTekst(b) {
@@ -285,7 +293,7 @@
         ${b.cycli ? `<dt>Laadcycli (garantie)</dt><dd>${escapeHtml(String(b.cycli))}</dd>` : ""}
         ${b.fase ? `<dt>Aansluiting</dt><dd>${escapeHtml(b.fase)}</dd>` : ""}
         ${b.app ? `<dt>App</dt><dd>${escapeHtml(b.app)}</dd>` : ""}
-        ${(b.aanbiedingen || []).length ? `<dt>Verkrijgbaar bij</dt><dd><ul class="winkel-lijst">${b.aanbiedingen.map((a) => `<li><span>${escapeHtml(a.winkel)}</span><span><b>${eurFmt.format(a.prijs_eur)}</b> &nbsp;<a href="${escapeHtml(koopUrl(a))}" target="_blank" rel="noopener sponsored">bekijk</a></span></li>`).join("")}</ul></dd>` : ""}
+        ${(b.aanbiedingen || []).length ? `<dt>Verkrijgbaar bij</dt><dd><ul class="winkel-lijst">${b.aanbiedingen.map((a) => `<li><span>${escapeHtml(a.winkel)}</span><span><b>${eurFmt.format(a.prijs_eur)}</b> &nbsp;<a href="${escapeHtml(koopUrl(a))}" target="_blank" rel="noopener${a.affiliate_url ? " sponsored" : ""}">bekijk</a></span></li>`).join("")}</ul></dd>` : ""}
         ${b.product_url ? `<dt>Fabrikant</dt><dd><a href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener">officiële productpagina</a></dd>` : ""}
         ${b.prijs_datum ? `<dd class="datum-stempel" style="margin-top:8px;">Prijs gecontroleerd: ${escapeHtml(datumNL(b.prijs_datum))}</dd>` : ""}
       </div>
@@ -293,7 +301,7 @@
         <div class="prijs-blok">
           ${korting ? `<div class="van-prijs">${eurFmt.format(b.richtprijs_eur)}</div>` : ""}
           <div class="prijs">${beste ? eurFmt.format(beste.prijs_eur) : "Prijs op aanvraag"}</div>
-          ${perKwh ? `<div class="prijs-per-kwh">${eurFmt.format(perKwh)} per kWh opslag</div>` : ""}
+          ${perKwh ? `<div class="prijs-per-kwh">${eurFmt.format(perKwh)} per kWh opslag${exclPrijs ? " <small>(omgerekend incl. btw)</small>" : ""}</div>` : ""}
           ${beste && beste.winkel ? `<div class="prijs-winkel">bij ${escapeHtml(beste.winkel)}</div>` : ""}
           ${b.prijs_omvat ? `<div class="prijs-winkel"${exclPrijs ? ' style="color:var(--kleur-accent-donker);font-weight:700;"' : ""}>${exclPrijs ? "⚠ " : ""}${escapeHtml(b.prijs_omvat)}</div>` : ""}
           <div class="prijs-winkel" style="margin-top:6px;border-top:1px dashed var(--kleur-rand);padding-top:6px;${exclPrijs ? "font-size:0.95rem;color:var(--kleur-tekst);" : ""}" title="${escapeHtml(b.totaalprijs_toelichting || "")}">
@@ -304,7 +312,7 @@
         </div>
       </div>
       <div class="kaart-acties">
-        ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener sponsored" aria-label="Bekijk de aanbieding van de ${escapeHtml(naamVan(b))} bij ${escapeHtml(beste.winkel || "de winkel")}">Bekijk aanbieding →</a>` : (b.product_url ? `<a class="knop" href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener" aria-label="Naar de aanbieder van de ${escapeHtml(naamVan(b))}">Naar aanbieder →</a>` : "")}
+        ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}" aria-label="Bekijk de aanbieding van de ${escapeHtml(naamVan(b))} bij ${escapeHtml(beste.winkel || "de winkel")}">Bekijk aanbieding →</a>` : (b.product_url ? `<a class="knop" href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener" aria-label="Naar de aanbieder van de ${escapeHtml(naamVan(b))}">Naar aanbieder →</a>` : "")}
         <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}" title="Bereken de terugverdientijd van deze batterij voor jouw situatie" aria-label="Bereken de terugverdientijd van de ${escapeHtml(naamVan(b))}">Terugverdientijd</a>
       </div>
       ${beste && beste.affiliate_url ? `<div class="datum-stempel" style="padding:0 20px 12px;">Dit is een commissielink: kost jou niets, beïnvloedt de vergelijking niet. <a href="over-ons.html">Uitleg</a></div>` : ""}
@@ -365,7 +373,7 @@
             <td title="Punten voor Homey, Home Assistant en dynamisch contract"><b>${slimScore(b)}/6</b></td>
             <td>${checkCel(b.homey)}</td>
             <td>${checkCel(b.home_assistant)}</td>
-            <td>${beste && beste.url ? `<a class="knop" style="padding:7px 12px;font-size:0.85rem;" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener sponsored" aria-label="Bekijk de aanbieding van de ${escapeHtml(naamVan(b))}">Bekijk →</a>` : ""}</td>
+            <td>${beste && beste.url ? `<a class="knop" style="padding:7px 12px;font-size:0.85rem;" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}" aria-label="Bekijk de aanbieding van de ${escapeHtml(naamVan(b))}">Bekijk →</a>` : ""}</td>
           </tr>`;
         }).join("")}
       </tbody>
@@ -400,7 +408,7 @@
         ${rij("Dynamisch contract", (b) => d3(b.dynamisch_contract))}
         ${rij("Beschermingsgraad (IP)", (b) => b.ip_klasse ? `${escapeHtml(b.ip_klasse)}${b.buiten_toelichting ? `<br><small>${escapeHtml(b.buiten_toelichting)}</small>` : ""}` : "?")}
         ${rij("Garantie", (b) => (b.garantie_jaar ? b.garantie_jaar + " jaar" : "?"))}
-        ${rij("", (b) => { const p = bestePrijs(b); return p && p.url ? `<a class="knop" href="${escapeHtml(koopUrl(p))}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : ""; })}
+        ${rij("", (b) => { const p = bestePrijs(b); return p && p.url ? `<a class="knop" href="${escapeHtml(koopUrl(p))}" target="_blank" rel="noopener${p.affiliate_url ? " sponsored" : ""}">Bekijk aanbieding →</a>` : ""; })}
       </table>
       </div>`;
   }

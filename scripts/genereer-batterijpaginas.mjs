@@ -17,7 +17,7 @@ const SITE = "https://batterijmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260718a";
+const ASSET_VERSIE = "20260719a";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/batterijen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "batterij"), { recursive: true });
@@ -35,6 +35,14 @@ const nl = (n) => String(n).replace(".", ",");
 const datumNL = (iso) => {
   const d = new Date(`${iso}T12:00:00`);
   return Number.isNaN(d.getTime()) ? String(iso) : d.toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+};
+
+// Excl-btw-prijzen worden voor kWh-vergelijkingen omgerekend naar incl. btw
+const exclBtw = (b) => /excl\.? btw/i.test(b.prijs_omvat || "");
+const perKwhInclBtw = (b) => {
+  const beste = bestePrijs(b);
+  if (!beste || !b.capaciteit_kwh) return null;
+  return Math.round((exclBtw(b) ? beste.prijs_eur * 1.21 : beste.prijs_eur) / b.capaciteit_kwh);
 };
 
 function bestePrijs(b) {
@@ -168,7 +176,7 @@ function productLd(b) {
 function pagina(b) {
   const beste = bestePrijs(b);
   const totaal = totaalprijsTekst(b);
-  const perKwh = beste && b.capaciteit_kwh ? Math.round(beste.prijs_eur / b.capaciteit_kwh) : null;
+  const perKwh = perKwhInclBtw(b);
   const homey = driewaardig(b.homey);
   const ha = driewaardig(b.home_assistant);
   const dyn = driewaardig(b.dynamisch_contract);
@@ -249,11 +257,11 @@ ${productLd(b)}
   </div>
 
   <div class="info-kader">
-    ${beste ? `<div style="font-size:1.6rem;font-weight:800;">${eur(beste.prijs_eur)} <span style="font-size:0.95rem;font-weight:400;color:var(--kleur-tekst-licht);">bij ${esc(beste.winkel)}${perKwh ? ` · ${eur(perKwh)} per kWh opslag` : ""}</span></div>` : "<div><b>Prijs op aanvraag</b></div>"}
+    ${beste ? `<div style="font-size:1.6rem;font-weight:800;">${eur(beste.prijs_eur)} <span style="font-size:0.95rem;font-weight:400;color:var(--kleur-tekst-licht);">bij ${esc(beste.winkel)}${perKwh ? ` · ${eur(perKwh)} per kWh opslag${exclBtw(b) ? " (omgerekend incl. btw)" : ""}` : ""}</span></div>` : "<div><b>Prijs op aanvraag</b></div>"}
     ${b.prijs_omvat ? `<div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">Deze prijs dekt: ${esc(b.prijs_omvat)}</div>` : ""}
     <div style="font-size:0.95rem;margin-top:6px;" title="${esc(b.totaalprijs_toelichting || "")}">Compleet gebruiksklaar (indicatie): <b>${totaal || "op aanvraag"}</b></div>
     <p style="margin:14px 0 0;">
-      ${beste && beste.url ? `<a class="knop" href="${esc(beste.affiliate_url || beste.url)}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>&nbsp;` : ""}
+      ${beste && beste.url ? `<a class="knop" href="${esc(beste.affiliate_url || beste.url)}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}">Bekijk aanbieding →</a>&nbsp;` : ""}
       <a class="knop knop-secundair" href="/rekenmodule.html?batterij=${encodeURIComponent(b.id)}">Bereken terugverdientijd</a>
     </p>
   </div>
@@ -295,7 +303,7 @@ ${productLd(b)}
 
   ${(b.aanbiedingen || []).length ? `<h2>Verkrijgbaar bij</h2>
   <ul>
-    ${b.aanbiedingen.map((a) => `<li><a href="${esc(a.affiliate_url || a.url)}" target="_blank" rel="noopener sponsored">${esc(a.winkel)}</a>: <b>${eur(a.prijs_eur)}</b> <span class="datum-stempel">${a.datum ? `(gecontroleerd ${esc(datumNL(a.datum))})` : "(prijsindicatie; klik voor de actuele prijs)"}</span></li>`).join("\n    ")}
+    ${b.aanbiedingen.map((a) => `<li><a href="${esc(a.affiliate_url || a.url)}" target="_blank" rel="noopener${a.affiliate_url ? " sponsored" : ""}">${esc(a.winkel)}</a>: <b>${eur(a.prijs_eur)}</b> <span class="datum-stempel">${a.datum ? `(gecontroleerd ${esc(datumNL(a.datum))})` : "(prijsindicatie; klik voor de actuele prijs)"}</span></li>`).join("\n    ")}
   </ul>
   <p class="datum-stempel">Prijzen worden dagelijks automatisch gecontroleerd; de prijs op de website van de winkel is altijd leidend.${(b.aanbiedingen || []).some((a) => a.affiliate_url) ? " Sommige links zijn commissielinks: koop je via die link, dan ontvangen wij een kleine vergoeding van de winkel. Dit kost jou niets en be\u00efnvloedt onze prijzen, scores en volgorde niet." : ""}</p>` : ""}
 
@@ -355,7 +363,7 @@ const OVERZICHTEN = [
 
 function overzichtRij(b) {
   const beste = bestePrijs(b);
-  const perKwh = beste && b.capaciteit_kwh ? Math.round(beste.prijs_eur / b.capaciteit_kwh) : null;
+  const perKwh = perKwhInclBtw(b);
   return { b, beste, perKwh };
 }
 
@@ -461,7 +469,7 @@ ${itemList}
 <main class="container" style="max-width:900px;">
   <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle thuisbatterijen vergelijken</a></p>
   <h1>Beste thuisbatterij voor ${esc(cfg.naam)} (2026)</h1>
-  <p class="datum-stempel">Dagelijks automatisch bijgewerkt · laatst gecontroleerd op ${datumNL(VANDAAG)}</p>
+  <p class="datum-stempel">Dagelijks automatisch bijgewerkt · laatst gecontroleerd op ${datumNL(data.laatst_bijgewerkt || VANDAAG)}</p>
   <p>${esc(cfg.intro)}</p>
   <p>Hieronder zie je alle ${data.batterijen.length} thuisbatterijen uit onze vergelijker, ingedeeld naar ${esc(cfg.naam)}-ondersteuning. De prijzen worden dagelijks automatisch gecontroleerd bij de winkels. De <a href="/uitleg.html#slim-score">Slim-score</a> (0 tot 6 punten) telt daarnaast ook de ondersteuning voor ${cfg.veld === "homey" ? "Home Assistant" : "Homey"} en een dynamisch energiecontract mee.</p>
 
@@ -529,10 +537,7 @@ const VERGELIJKINGEN = [
 const batterijById = Object.fromEntries(data.batterijen.map((b) => [b.id, b]));
 // "Sessy" + "Sessy 5 kWh" wordt anders "Sessy Sessy 5 kWh"
 const volledigeNaam = (b) => b.model.toLowerCase().startsWith(b.merk.toLowerCase()) ? b.model : `${b.merk} ${b.model}`;
-const perKwhVan = (b) => {
-  const beste = bestePrijs(b);
-  return beste && b.capaciteit_kwh ? Math.round(beste.prijs_eur / b.capaciteit_kwh) : null;
-};
+const perKwhVan = perKwhInclBtw;
 const buitenGeschikt = (b) => /IP6[5-7]/.test(b.ip_klasse || "");
 
 // Feitelijke pluspunten van x ten opzichte van y, alleen op basis van de data.
@@ -636,7 +641,7 @@ ${itemList}
 <main class="container" style="max-width:900px;">
   <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle thuisbatterijen vergelijken</a></p>
   <h1>${esc(naam(A))} vs ${esc(naam(B))}</h1>
-  <p class="datum-stempel">Prijzen dagelijks automatisch gecontroleerd · laatst op ${datumNL(VANDAAG)}</p>
+  <p class="datum-stempel">Prijzen dagelijks automatisch gecontroleerd · laatst op ${datumNL(data.laatst_bijgewerkt || VANDAAG)}</p>
   <p>Twee veelvergeleken thuisbatterijen naast elkaar, op basis van dezelfde feiten als in onze <a href="/index.html">vergelijker</a>. Onder de tabel staan de belangrijkste verschillen op een rij. Vetgedrukt betekent: op dit punt objectief in het voordeel.</p>
 
   <div style="overflow-x:auto;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);margin:14px 0;">
