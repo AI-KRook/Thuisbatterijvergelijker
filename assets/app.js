@@ -275,7 +275,7 @@
         ${badgeHtml("Dynamisch contract", b.dynamisch_contract)}
         ${noodstroomBadge(b)}
       </div>
-      <button class="details-toggle" data-id="${escapeHtml(b.id)}">Meer details</button>
+      <button class="details-toggle" data-id="${escapeHtml(b.id)}" aria-label="Meer details over de ${escapeHtml(naamVan(b))}">Meer details</button>
       <div class="kaart-details" data-details="${escapeHtml(b.id)}" hidden>
         <dt>Homey</dt><dd>${escapeHtml(driewaardig(b.homey).tekst)}</dd>
         <dt>Home Assistant</dt><dd>${escapeHtml(driewaardig(b.home_assistant).tekst)}</dd>
@@ -304,8 +304,8 @@
         </div>
       </div>
       <div class="kaart-acties">
-        ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener sponsored">Bekijk aanbieding →</a>` : (b.product_url ? `<a class="knop" href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener">Naar aanbieder →</a>` : "")}
-        <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}" title="Bereken de terugverdientijd van deze batterij voor jouw situatie">Terugverdientijd</a>
+        ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener sponsored" aria-label="Bekijk de aanbieding van de ${escapeHtml(naamVan(b))} bij ${escapeHtml(beste.winkel || "de winkel")}">Bekijk aanbieding →</a>` : (b.product_url ? `<a class="knop" href="${escapeHtml(b.product_url)}" target="_blank" rel="noopener" aria-label="Naar de aanbieder van de ${escapeHtml(naamVan(b))}">Naar aanbieder →</a>` : "")}
+        <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}" title="Bereken de terugverdientijd van deze batterij voor jouw situatie" aria-label="Bereken de terugverdientijd van de ${escapeHtml(naamVan(b))}">Terugverdientijd</a>
       </div>
       ${beste && beste.affiliate_url ? `<div class="datum-stempel" style="padding:0 20px 12px;">Dit is een commissielink: kost jou niets, beïnvloedt de vergelijking niet. <a href="over-ons.html">Uitleg</a></div>` : ""}
     </article>`;
@@ -365,7 +365,7 @@
             <td title="Punten voor Homey, Home Assistant en dynamisch contract"><b>${slimScore(b)}/6</b></td>
             <td>${checkCel(b.homey)}</td>
             <td>${checkCel(b.home_assistant)}</td>
-            <td>${beste && beste.url ? `<a class="knop" style="padding:7px 12px;font-size:0.85rem;" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener sponsored">Bekijk →</a>` : ""}</td>
+            <td>${beste && beste.url ? `<a class="knop" style="padding:7px 12px;font-size:0.85rem;" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener sponsored" aria-label="Bekijk de aanbieding van de ${escapeHtml(naamVan(b))}">Bekijk →</a>` : ""}</td>
           </tr>`;
         }).join("")}
       </tbody>
