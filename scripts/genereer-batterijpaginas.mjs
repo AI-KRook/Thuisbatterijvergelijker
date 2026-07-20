@@ -216,8 +216,8 @@ function pagina(b) {
 ${productLd(b)}
   </script>
   <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2">
 </head>
 <body>
 
@@ -438,8 +438,8 @@ function overzichtsPagina(cfg) {
 ${itemList}
   </script>
   <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2">
 </head>
 <body>
 
@@ -611,8 +611,8 @@ function vergelijkingsPagina(v) {
 ${itemList}
   </script>
   <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2">
 </head>
 <body>
 
