@@ -29,7 +29,10 @@
     .advies-paneel h2:not(:first-child) { margin-top: 22px; }
     .veld { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
     .veld label { font-size: 0.85rem; font-weight: 700; color: var(--kleur-tekst-licht); }
-    .veld input, .veld select { padding: 9px 12px; border: 1px solid var(--kleur-rand); border-radius: 8px; font-size: 0.95rem; width: 100%; min-width: 0; }
+    .veld input:not([type="checkbox"]), .veld select { padding: 9px 12px; border: 1px solid var(--kleur-rand); border-radius: 8px; font-size: 0.95rem; width: 100%; min-width: 0; }
+    /* Checkbox-chips: hokje en tekst netjes naast elkaar, chip zo breed als de tekst */
+    .veld .checkbox-groep { gap: 8px; }
+    .veld .checkbox-groep label { font-size: 0.93rem; font-weight: 400; color: var(--kleur-tekst); text-align: left; }
     /* Voorkom dat lange select-opties de layout breder maken dan het scherm */
     .advies-indeling > *, .veld-rij > *, .veld { min-width: 0; }
     .veld .hint { font-size: 0.8rem; color: var(--kleur-tekst-licht); }
