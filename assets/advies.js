@@ -77,6 +77,15 @@
      Maatadvies
      ------------------------------------------------------------------ */
 
+  // Geschatte avondpiek in kW: basislast (verlichting, tv, koelkast e.d.)
+  // plus de apparaten die de bezoeker aanvinkt als "vaak tegelijk aan".
+  // Indicatieve vermogens; bedoeld als vuistregel, geen installatieadvies.
+  function avondPiekKw() {
+    let kw = 0.4;
+    document.querySelectorAll(".avond-apparaat:checked").forEach((n) => { kw += parseFloat(n.dataset.kw) || 0; });
+    return Math.round(kw * 10) / 10;
+  }
+
   function berekenMaat() {
     const jaarverbruik = getal("advVerbruik", 2900);
     const heeftPv = el("advPv").value === "ja";
@@ -84,16 +93,17 @@
     const dynamisch = el("advContract").value === "dynamisch";
 
     const avondNacht = (jaarverbruik / 365) * 0.6;
+    const piekKw = avondPiekKw();
 
     if (heeftPv) {
       const dagOverschotZomer = ((opwek * 0.7) / 365) * 1.5;
       const kern = Math.min(dagOverschotZomer, Math.max(avondNacht, 1));
-      return { laag: kern * 0.75, hoog: kern * 1.25, kern, basis: "pv", dynamisch, avondNacht, dagOverschotZomer };
+      return { laag: kern * 0.75, hoog: kern * 1.25, kern, basis: "pv", dynamisch, avondNacht, dagOverschotZomer, piekKw };
     }
     if (dynamisch) {
-      return { laag: avondNacht * 0.75, hoog: avondNacht * 1.25, kern: avondNacht, basis: "dynamisch", dynamisch, avondNacht };
+      return { laag: avondNacht * 0.75, hoog: avondNacht * 1.25, kern: avondNacht, basis: "dynamisch", dynamisch, avondNacht, piekKw };
     }
-    return { laag: 0, hoog: 0, kern: 0, basis: "geen", dynamisch, avondNacht };
+    return { laag: 0, hoog: 0, kern: 0, basis: "geen", dynamisch, avondNacht, piekKw };
   }
 
   /* ------------------------------------------------------------------
@@ -174,10 +184,17 @@
     } else {
       redenen.push("de capaciteit valt binnen je bandbreedte");
     }
+    if (maat.piekKw > 0.4 && b.vermogen_kw) {
+      if (b.vermogen_kw >= maat.piekKw) {
+        redenen.push(`het vermogen (${String(b.vermogen_kw).replace(".", ",")} kW) dekt jouw avondgebruik (ca. ${String(maat.piekKw).replace(".", ",")} kW)`);
+      } else {
+        redenen.push(`let op: het vermogen (${String(b.vermogen_kw).replace(".", ",")} kW) ligt onder jouw geschatte avondpiek (ca. ${String(maat.piekKw).replace(".", ",")} kW); het net vult automatisch aan, maar dat deel bespaart dan niet`);
+      }
+    }
     if (b.installatie === "zelf") redenen.push("zelf aan te sluiten zonder installateur");
     if ((b.koppeling_gemak || 0) >= 4) redenen.push("koppelt makkelijk aan bestaande zonnepanelen");
     if (driewaardig(b.dynamisch_contract) !== "nee" && maat.dynamisch) redenen.push("geschikt voor je dynamische contract");
-    return redenen.slice(0, 3).join(", ");
+    return redenen.slice(0, 4).join(", ");
   }
 
   function render() {
@@ -243,6 +260,11 @@
         <div style="font-size:2rem;font-weight:800;color:var(--kleur-primair-donker);">${kwhFmt.format(maat.laag)} tot ${kwhFmt.format(maat.hoog)} kWh</div>
         <div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">${maatUitleg}</div>
       </div>
+      ${maat.piekKw > 0.4 ? `<div class="info-kader" style="text-align:center;margin-top:10px;">
+        <span style="font-size:0.85rem;font-weight:700;text-transform:uppercase;color:var(--kleur-tekst-licht);">Handig ontlaadvermogen voor jouw avondgebruik</span>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--kleur-primair-donker);">ca. ${String(maat.piekKw).replace(".", ",")} kW of meer</div>
+        <div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">Schatting op basis van de apparaten die je aanvinkte, plus ca. 0,4 kW basisverbruik. Levert een batterij minder, dan is dat geen probleem: het stroomnet vult automatisch aan, maar over dat deel bespaar je op dat moment niet. Wil je <b>noodstroom</b>, dan is voldoende vermogen wél belangrijk: bij een storing is er geen net om bij te springen.</div>
+      </div>` : ""}
       ${heeftPv ? '<div class="waarschuwing-kader">Let op: tot en met 31 december 2026 geldt de salderingsregeling nog, waardoor opslaan van eigen zonnestroom financieel weinig oplevert. Dit advies kijkt naar de situatie vanaf 2027.</div>' : ""}
       <h2 style="margin-top:26px;">Beste matches (${top.length} van ${totaal} passende batterijen)</h2>
       ${kaarten}
