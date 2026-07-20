@@ -77,7 +77,8 @@
      Maatadvies
      ------------------------------------------------------------------ */
 
-  // Geschatte avondpiek in kW: basislast (verlichting, tv, koelkast e.d.)
+  // Geschatte avondpiek in kW: basislast van 0,4 kW voor sluimerverbruik
+  // (koelkast, vriezer, modem/internetkastjes, verlichting, tv)
   // plus de apparaten die de bezoeker aanvinkt als "vaak tegelijk aan".
   // Indicatieve vermogens; bedoeld als vuistregel, geen installatieadvies.
   function avondPiekKw() {
@@ -263,7 +264,7 @@
       ${maat.piekKw > 0.4 ? `<div class="info-kader" style="text-align:center;margin-top:10px;">
         <span style="font-size:0.85rem;font-weight:700;text-transform:uppercase;color:var(--kleur-tekst-licht);">Handig ontlaadvermogen voor jouw avondgebruik</span>
         <div style="font-size:1.5rem;font-weight:800;color:var(--kleur-primair-donker);">ca. ${String(maat.piekKw).replace(".", ",")} kW of meer</div>
-        <div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">Schatting op basis van de apparaten die je aanvinkte, plus ca. 0,4 kW basisverbruik. Levert een batterij minder, dan is dat geen probleem: het stroomnet vult automatisch aan, maar over dat deel bespaar je op dat moment niet. Wil je <b>noodstroom</b>, dan is voldoende vermogen wél belangrijk: bij een storing is er geen net om bij te springen.</div>
+        <div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">Schatting op basis van de apparaten die je aanvinkte, plus ca. 0,4 kW basislast voor sluimerverbruik (koelkast, vriezer, modem, verlichting, tv). Levert een batterij minder, dan is dat geen probleem: het stroomnet vult automatisch aan, maar over dat deel bespaar je op dat moment niet. Wil je <b>noodstroom</b>, dan is voldoende vermogen wél belangrijk: bij een storing is er geen net om bij te springen.</div>
       </div>` : ""}
       ${heeftPv ? '<div class="waarschuwing-kader">Let op: tot en met 31 december 2026 geldt de salderingsregeling nog, waardoor opslaan van eigen zonnestroom financieel weinig oplevert. Dit advies kijkt naar de situatie vanaf 2027.</div>' : ""}
       <h2 style="margin-top:26px;">Beste matches (${top.length} van ${totaal} passende batterijen)</h2>
