@@ -32,12 +32,13 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="assets/style.css?v=20260721e">
+  <link rel="stylesheet" href="assets/style.css?v=20260721k">
   <script src="assets/nav.js?v=20260721b" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
   <style>
     .routes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0; }
+    .routes-grid > * { min-width: 0; }
     @media (max-width: 760px) { .routes-grid { grid-template-columns: 1fr; } }
     .route-kaart { background: var(--kleur-wit); border: 1px solid var(--kleur-rand); border-radius: var(--radius); box-shadow: var(--schaduw); padding: 20px 22px; display: flex; flex-direction: column; }
     .route-kaart h3 { margin: 10px 0 2px; font-size: 1.15rem; color: var(--kleur-primair-donker); }

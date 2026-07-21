@@ -264,10 +264,10 @@
       </ul>
 
       <h3 style="margin:18px 0 0;font-size:1rem;">Prijsopbouw met goedkoopste winkels</h3>
-      <table class="systeem-tabel">
+      <div style="overflow-x:auto;"><table class="systeem-tabel">
         ${rijen.map((r) => `<tr><td>${r.label}${r.sub ? `<br>${r.sub}` : ""}</td><td>circa <b>${eurFmt.format(r.bedrag)}</b></td></tr>`).join("")}
         <tr class="totaal-rij"><td>Totaal zonnestroomsysteem</td><td>circa ${eurFmt.format(totaal)}</td></tr>
-      </table>
+      </table></div>
       <p class="hint" style="margin:8px 0 0;">Prijzen zijn de goedkoopst gevonden winkelprijzen of richtprijzen (0% btw waar van toepassing, losse onderdelen soms exclusief btw). Klik op de winkel voor de actuele aanbieding en vraag altijd meerdere offertes aan.</p>
 
       <p style="margin:14px 0 0;display:flex;gap:8px;flex-wrap:wrap;">

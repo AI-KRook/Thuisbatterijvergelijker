@@ -18,7 +18,7 @@ const SITE = "https://zonnepaneelmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260721e";
+const ASSET_VERSIE = "20260721k";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/panelen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "paneel"), { recursive: true });
