@@ -49,11 +49,11 @@
       maxPanelen: Math.max(2, Number(el("maxPanelen").value) || 12),
       auto: el("checkAuto").checked,
       warmtepomp: el("checkWarmtepomp").checked,
-      batterij: el("checkBatterij").checked,
+      batterijPlan: el("batterijPlan") ? el("batterijPlan").value : "nee",
+      smartHome: el("smartHome") ? el("smartHome").value : "geen",
       voorkeur: el("voorkeur").value,
       fullBlack: el("checkFullBlack").checked,
       schaduw: el("schaduw") ? el("schaduw").value : "geen",
-      slim: el("checkSlim") ? el("checkSlim").checked : false,
     };
   }
 
@@ -68,8 +68,9 @@
     if (s.warmtepomp) { doelVerbruik += 2000; extras.push("warmtepomp (+2.000 kWh)"); }
 
     // Zonder batterij mikken we op ~100% van het (verwachte) verbruik; met
-    // batterij loont iets ruimer, omdat het overschot dan zelf te gebruiken is.
-    const dekkingsFactor = s.batterij ? 1.15 : 1.0;
+    // (geplande) batterij loont iets ruimer, omdat het overschot dan zelf te
+    // gebruiken is.
+    const dekkingsFactor = s.batterijPlan === "ja" ? 1.15 : s.batterijPlan === "later" ? 1.05 : 1.0;
     const benodigdWp = Math.round((doelVerbruik * dekkingsFactor) / s.factor);
     return { doelVerbruik, benodigdWp, extras };
   }
@@ -143,10 +144,13 @@
       let score = 0;
       // Schaduw: bij veel schaduw is elektronica per paneel vrijwel een vereiste
       score += punt(o.schaduw) * (s.schaduw === "veel" ? 3 : s.schaduw === "beetje" ? 1.5 : 0.5);
-      // Batterijplannen: direct koppelbaar weegt dan zwaar
-      score += punt(o.batterij) * (s.batterij ? 3 : 0.75);
-      // Slim aansturen: officiële integratie of open API weegt dan zwaar
-      score += punt(o.home_assistant) * (s.slim ? 3 : 0.75);
+      // Batterijplannen: direct koppelbaar weegt zwaarder naarmate het plan concreter is
+      score += punt(o.batterij) * (s.batterijPlan === "ja" ? 3 : s.batterijPlan === "later" ? 2 : 0.75);
+      // Smart home: weeg de koppeling met het gekozen platform
+      if (s.smartHome === "home_assistant") score += punt(o.home_assistant) * 3;
+      else if (s.smartHome === "homey") score += punt(o.homey) * 3;
+      else if (s.smartHome === "anders") score += Math.max(punt(o.home_assistant), punt(o.homey)) * 2;
+      else score += punt(o.home_assistant) * 0.75;
       // Prijs telt altijd een beetje mee (goedkoper = beter)
       if (o.richtprijs_eur) score += 2 * (maxP - o.richtprijs_eur) / (maxP - minP || 1);
       return { o, score };
@@ -157,11 +161,34 @@
   function omvormerReden(o, s) {
     const redenen = [];
     if (s.schaduw === "veel" && driewaardig(o.schaduw).status === "ja") redenen.push("elektronica per paneel: ideaal bij jouw schaduw");
-    if (s.batterij && driewaardig(o.batterij).status === "ja") redenen.push("thuisbatterij direct aan te sluiten");
-    if (s.slim && driewaardig(o.home_assistant).status === "ja") redenen.push("officiële slimme koppeling (Home Assistant)");
+    if (s.batterijPlan !== "nee" && driewaardig(o.batterij).status === "ja") redenen.push("thuisbatterij direct aan te sluiten");
+    if (s.smartHome === "home_assistant" && driewaardig(o.home_assistant).status === "ja") redenen.push("officiële Home Assistant-koppeling");
+    if (s.smartHome === "homey" && driewaardig(o.homey).status !== "nee") redenen.push(driewaardig(o.homey).status === "ja" ? "Homey-app beschikbaar" : "Homey-koppeling via community-app");
     redenen.push(`Koppel-score ${koppelScore(o)}/6`);
     if (o.garantie_jaar >= 20) redenen.push(`${o.garantie_jaar} jaar garantie`);
     return redenen.slice(0, 3).join(" · ");
+  }
+
+  /* ------------------------------------------------------------------
+     Batterij-advies: route en richtgrootte in kWh
+     Vuistregel (zelfde als Batterijmaatje): de batterij hoeft niet groter
+     dan het kleinste van je gemiddelde zomerse dagoverschot en je
+     avond-/nachtverbruik.
+     ------------------------------------------------------------------ */
+
+  function batterijAdvies(s, opwek, doelVerbruik, topOmvormer) {
+    if (s.batterijPlan === "nee") return null;
+    // Zomers dagoverschot: zomerhalfjaar levert ~65% van de jaaropbrengst;
+    // circa 65% van de opwek gebruik je overdag niet direct
+    const zomerDag = (opwek * 0.65) / 182;
+    const overschotDag = zomerDag * 0.65;
+    // Avond- en nachtverbruik: circa 40% van het dagelijkse verbruik
+    const avond = (doelVerbruik / 365) * 0.4;
+    const kwh = Math.min(overschotDag, avond);
+    const onder = Math.max(3, Math.round(kwh) - 1);
+    const boven = Math.max(onder + 2, Math.round(kwh) + 1);
+    const hybride = topOmvormer && driewaardig(topOmvormer.batterij).status === "ja" && topOmvormer.type === "hybride";
+    return { onder, boven, hybride, topOmvormer };
   }
 
   /* ------------------------------------------------------------------
@@ -187,14 +214,59 @@
     // Vuistregel omvormergrootte: circa 90% van het paneelvermogen, afgerond op halve kW
     const omvormerKw = String(Math.max(1.5, Math.round((wpGeadviseerd * 0.9) / 500) / 2)).replace(".", ",");
 
+    // Systeemoverzicht: beste paneel + beste omvormer + montage, in lijn met
+    // de schatting van de rekenmodule (die € 1.200 + € 130 per paneel rekent
+    // voor montage én omvormer samen)
+    const topPaneel = top3.length ? top3[0].p : null;
+    const topOmvormer = topOmvormers && topOmvormers.length ? topOmvormers[0].o : null;
+    const batterij = batterijAdvies(s, opbrengst, doelVerbruik, topOmvormer);
+    const panelenPrijs = topPaneel ? (topPaneel.richtprijs_eur || 0) * aantalGeadviseerd : 0;
+    const perPaneelOmvormer = topOmvormer && (topOmvormer.type === "micro" || topOmvormer.type === "optimizer");
+    const omvormerPrijs = topOmvormer
+      ? (topOmvormer.type === "micro" ? Math.ceil(aantalGeadviseerd / (topOmvormer.id === "apsystems-ds3" ? 2 : 1)) * (topOmvormer.richtprijs_eur || 0) + 250
+        // Optimizer-systeem (SolarEdge): omvormer circa € 1.100 + circa € 60 per paneel
+        : topOmvormer.type === "optimizer" ? 1100 + 60 * aantalGeadviseerd
+        : (topOmvormer.richtprijs_eur || 0))
+      : 0;
+    const montagePrijs = Math.max(800, 1200 + 130 * aantalGeadviseerd - omvormerPrijs);
+    const totaal = panelenPrijs + omvormerPrijs + montagePrijs;
+
+    const smartRegel = (() => {
+      if (!topOmvormer) return "";
+      if (s.smartHome === "home_assistant") {
+        const d = driewaardig(topOmvormer.home_assistant);
+        return `Home Assistant: ${d.status === "ja" ? "✓ officiële integratie" : d.status === "deels" ? "~ via community-integratie" : "✕ geen bekende integratie"}`;
+      }
+      if (s.smartHome === "homey") {
+        const d = driewaardig(topOmvormer.homey);
+        return `Homey: ${d.status === "ja" ? "✓ app beschikbaar" : d.status === "deels" ? "~ via community-app" : "✕ geen app; opwek wel zichtbaar via de Homey Energy Dongle (P1)"}`;
+      }
+      if (s.smartHome === "anders") return "Slim aan te sturen via de eigen app; Home Assistant en Homey blijven mogelijk";
+      return "";
+    })();
+
     el("adviesInhoud").innerHTML = `
       <div class="advies-samenvatting">
         <div class="groot">${aantalGeadviseerd} panelen (circa ${numFmt.format(wpGeadviseerd)} Wp)</div>
         <p style="margin:6px 0 0;">Verwachte opbrengst: <b>${numFmt.format(opbrengst)} kWh per jaar</b>, circa ${dekking}% van je ${extras.length ? "verwachte " : ""}verbruik van ${numFmt.format(doelVerbruik)} kWh.</p>
         ${extras.length ? `<p class="hint" style="margin:6px 0 0;">Meegerekend: ${extras.join(", ")}.</p>` : ""}
-        ${s.batterij ? '<p class="hint" style="margin:6px 0 0;">Omdat je een thuisbatterij (verwacht) hebt, adviseren wij circa 15% ruimer: het overschot gebruik je dan zelf.</p>' : ""}
+        ${s.batterijPlan !== "nee" ? '<p class="hint" style="margin:6px 0 0;">Omdat je een thuisbatterij (verwacht) hebt, adviseren wij iets ruimer: het overschot gebruik je dan zelf.</p>' : ""}
         ${dakTeKlein ? `<p style="margin:8px 0 0;background:var(--kleur-accent-licht);border-radius:8px;padding:8px 12px;font-size:0.92rem;">⚠️ Voor je volledige verbruik zouden circa ${aantal} panelen nodig zijn, meer dan er op je dak passen. Kies daarom een paneel met een hoog rendement; die wegen hieronder automatisch zwaarder.</p>` : ""}
       </div>
+
+      ${topPaneel && topOmvormer ? `
+      <div class="advies-kaart" style="border-width:2px;border-color:var(--kleur-primair);">
+        <span class="plek">📋 Jouw complete systeem in het kort</span>
+        <table style="width:100%;border-collapse:collapse;font-size:0.95rem;margin-top:8px;">
+          <tr><td style="padding:6px 8px 6px 0;">☀️ <b>${aantalGeadviseerd} ×</b> ${escapeHtml(naamVan(topPaneel))}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(panelenPrijs)}</b></td></tr>
+          <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">⚡ ${escapeHtml(topOmvormer.merk)} ${escapeHtml(topOmvormer.model)}${perPaneelOmvormer ? "" : ` (kies circa ${omvormerKw} kW)`}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(omvormerPrijs)}</b></td></tr>
+          <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">🔧 Montage, bekabeling en meterkast (indicatie)</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(montagePrijs)}</b></td></tr>
+          ${batterij ? `<tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">🔋 Thuisbatterij ${s.batterijPlan === "ja" ? `van circa ${batterij.onder} tot ${batterij.boven} kWh` : "(later bij te plaatsen)"}</td><td style="text-align:right;white-space:nowrap;">${s.batterijPlan === "ja" ? "apart budget" : "later"}</td></tr>` : ""}
+          <tr style="border-top:2px solid var(--kleur-rand);font-weight:700;"><td style="padding:8px 8px 6px 0;">Totaal zonnestroomsysteem${batterij && s.batterijPlan === "ja" ? " (excl. batterij)" : ""}</td><td style="text-align:right;white-space:nowrap;">circa ${eurFmt.format(totaal)}</td></tr>
+        </table>
+        ${smartRegel ? `<p style="margin:8px 0 0;font-size:0.92rem;">🏠 ${smartRegel}</p>` : ""}
+        <p class="hint" style="margin:8px 0 0;">Alle bedragen zijn indicaties (0% btw waar van toepassing); vraag altijd meerdere offertes aan. <a href="javascript:window.print()">🖨️ Advies afdrukken of bewaren als pdf</a></p>
+      </div>` : ""}
 
       <h2 style="margin-top:20px;">De drie best passende panelen</h2>
       ${top3.map(({ p, per }, i) => `
@@ -219,7 +291,22 @@
           <p style="margin:8px 0 0;font-size:0.95rem;">richtprijs <b>${eurFmt.format(o.richtprijs_eur || 0)}</b> (${escapeHtml(o.prijs_toelichting || "indicatie")})</p>
         </div>
       `).join("")}
-      <p class="hint" style="margin-top:10px;">Alle ${omvormers.length} omvormersystemen vergelijken op batterij, Home Assistant en schaduw? <a href="omvormers.html">Naar de omvormer-vergelijker →</a></p>` : ""}
+      <p class="hint" style="margin-top:10px;">Alle ${omvormers.length} omvormersystemen vergelijken op batterij, Home Assistant, Homey en schaduw? <a href="omvormers.html">Naar de omvormer-vergelijker →</a></p>` : ""}
+
+      ${batterij ? `
+      <h2 style="margin-top:24px;">En de thuisbatterij?</h2>
+      <div class="advies-kaart">
+        <span class="plek">🔋 ${s.batterijPlan === "ja" ? "Ons batterij-advies" : "Optie openhouden: zo doe je dat"}</span>
+        ${s.batterijPlan === "ja" ? `
+        <p style="margin:8px 0 0;font-size:0.95rem;">Richtgrootte voor jouw situatie: <b>circa ${batterij.onder} tot ${batterij.boven} kWh</b>. Vuistregel: de batterij hoeft niet groter dan het kleinste van je gemiddelde zomerse dagoverschot en je avond- en nachtverbruik.</p>
+        <p style="margin:8px 0 0;font-size:0.95rem;">${batterij.hybride
+          ? `De geadviseerde ${escapeHtml(batterij.topOmvormer.merk)}-omvormer is hybride: de batterij sluit er rechtstreeks op aan (let op de merkkeuze die daarbij hoort, zie de omvormerdetails).`
+          : `Bij dit omvormeradvies past een <b>AC-gekoppelde of plug-in batterij</b>: die meet via de slimme meter (P1) je overschot en werkt met elk merk panelen en omvormers.`}</p>` : `
+        <p style="margin:8px 0 0;font-size:0.95rem;">Verstandig: na 2027 (einde saldering) wordt een batterij interessanter. ${batterij.hybride
+          ? `De geadviseerde ${escapeHtml(batterij.topOmvormer.merk)}-omvormer is al hybride, dus een batterij is later zó bijgeplaatst.`
+          : `Een AC-gekoppelde of plug-in batterij is later altijd toe te voegen via de slimme meter (P1), ongeacht je omvormerkeuze.`} Grootte bepaal je dan op basis van je werkelijke overschot.</p>`}
+        <p style="margin:8px 0 0;font-size:0.95rem;">Batterijen vergelijken op prijs per kWh, noodstroom en slimme aansturing doe je op onze zustersite: <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl →</a></p>
+      </div>` : ""}
 
       <p class="hint" style="margin-top:14px;">Alle ${panelen.length} panelen zelf vergelijken? <a href="index.html">Naar de vergelijker →</a></p>
     `;
@@ -238,11 +325,11 @@
         if (resO.ok) omvormers = (await resO.json()).omvormers || [];
       } catch { /* zonder omvormerdata blijft het paneeladvies gewoon werken */ }
 
-      ["verbruik", "dakligging", "maxPanelen", "voorkeur", "schaduw"].forEach((id) => {
+      ["verbruik", "dakligging", "maxPanelen", "voorkeur", "schaduw", "batterijPlan", "smartHome"].forEach((id) => {
         el(id).addEventListener("input", adviseer);
         el(id).addEventListener("change", adviseer);
       });
-      ["checkAuto", "checkWarmtepomp", "checkBatterij", "checkFullBlack", "checkSlim"].forEach((id) => {
+      ["checkAuto", "checkWarmtepomp", "checkFullBlack"].forEach((id) => {
         el(id).addEventListener("change", adviseer);
       });
 

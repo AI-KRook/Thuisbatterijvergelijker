@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Keuzehulp zonnepanelen: hoeveel en welke panelen passen bij jou? | Zonnepaneelmaatje.nl</title>
-  <meta name="description" content="Gratis keuzehulp: beantwoord een paar vragen over je verbruik, dak en wensen en zie direct hoeveel wattpiek je nodig hebt en welke drie zonnepanelen het best bij je passen.">
+  <title>Keuzehulp: compleet advies voor zonnepanelen, omvormer en thuisbatterij | Zonnepaneelmaatje.nl</title>
+  <meta name="description" content="Gratis keuzehulp voor je complete zonnestroomsysteem: hoeveel panelen je nodig hebt, welke panelen en omvormer het best passen, of een thuisbatterij zinvol is en of alles koppelt met Home Assistant of Homey.">
   <link rel="canonical" href="https://zonnepaneelmaatje.nl/advies.html">
   <meta property="og:title" content="Keuzehulp zonnepanelen: hoeveel en welke panelen passen bij jou?">
   <meta property="og:description" content="Beantwoord een paar vragen en zie direct hoeveel wattpiek je nodig hebt en welke panelen het best passen.">
@@ -78,8 +78,8 @@
 
 <section class="hero">
   <div class="container">
-    <h1>Keuzehulp: hoeveel en welke zonnepanelen?</h1>
-    <p>Beantwoord een paar vragen over je verbruik, je dak en je wensen. Je ziet direct hoeveel wattpiek verstandig is voor jouw situatie en welke drie panelen uit onze vergelijker daar het best bij passen. Geen e-mailadres nodig, geen verkopers aan de telefoon.</p>
+    <h1>Keuzehulp: jouw complete zonnestroomsysteem</h1>
+    <p>Niemand koopt losse zonnepanelen: je kiest een systeem van panelen, een omvormer en misschien een thuisbatterij, dat het liefst ook nog met je smart home praat. Beantwoord een paar vragen en je krijgt één samenhangend advies: hoeveel panelen, welke panelen, welke omvormer, of een batterij zinvol is en of alles koppelt met Home Assistant of Homey. Geen e-mailadres nodig, geen verkopers aan de telefoon.</p>
   </div>
 </section>
 
@@ -128,8 +128,28 @@
         <div class="checkbox-groep">
           <label><input type="checkbox" id="checkAuto"> 🚗 Elektrische auto (± 2.000 kWh per jaar)</label>
           <label><input type="checkbox" id="checkWarmtepomp"> 🌡️ (Hybride) warmtepomp (± 2.000 kWh per jaar)</label>
-          <label><input type="checkbox" id="checkBatterij"> 🔋 Thuisbatterij (nu of later)</label>
         </div>
+      </div>
+
+      <div class="veld">
+        <label for="batterijPlan">🔋 Wil je een thuisbatterij?</label>
+        <select id="batterijPlan">
+          <option value="nee" selected>Nee (of nog niet over nagedacht)</option>
+          <option value="later">Misschien later, ik wil de optie openhouden</option>
+          <option value="ja">Ja, ik wil er (bijna) meteen een</option>
+        </select>
+        <span class="hint">Vanaf 2027 (einde saldering) wordt zelf opslaan interessanter; wij adviseren ook de grootte</span>
+      </div>
+
+      <div class="veld">
+        <label for="smartHome">🏠 Gebruik je een smart home-systeem?</label>
+        <select id="smartHome">
+          <option value="geen" selected>Nee / niet belangrijk</option>
+          <option value="home_assistant">Ja, Home Assistant</option>
+          <option value="homey">Ja, Homey</option>
+          <option value="anders">Nog niet, maar ik wil wel slim kunnen aansturen</option>
+        </select>
+        <span class="hint">Dan adviseren wij een omvormer die daarop aan te sluiten is</span>
       </div>
 
       <div class="veld">
@@ -144,7 +164,6 @@
       <div class="veld">
         <div class="checkbox-groep">
           <label title="Volledig zwarte panelen: cellen, folie en frame"><input type="checkbox" id="checkFullBlack"> ⬛ Alleen full black panelen (strak zwart dak)</label>
-          <label title="Systeem uitlezen en aansturen via Home Assistant, Modbus of een energiemanagementsysteem"><input type="checkbox" id="checkSlim"> 🏠 Ik wil mijn systeem slim aansturen (Home Assistant / EMS)</label>
         </div>
       </div>
     </form>
@@ -161,7 +180,8 @@
     <ul>
       <li><b>Aantal panelen.</b> Wij rekenen uit hoeveel wattpiek nodig is om jouw (verwachte) jaarverbruik op te wekken, op basis van de opbrengstfactor van je dakligging. Vanaf 2027 (einde saldering) loont fors overdimensioneren niet meer; daarom adviseren wij rond de 100% van je verbruik, en iets ruimer als je een thuisbatterij, elektrische auto of warmtepomp (verwacht) hebt.</li>
       <li><b>Top 3 panelen.</b> Alle panelen uit de <a href="index.html">vergelijker</a> krijgen een score op prijs per Wp, rendement en de <a href="uitleg.html#zeker-score">Zeker-score</a>. Jouw voorkeur bepaalt de weging. Past je benodigde vermogen niet op je dak, dan weegt rendement automatisch zwaarder. Bij een plat dak krijgen bifaciale panelen een kleine bonus.</li>
-      <li><b>Passende omvormer.</b> Op basis van schaduw, je batterijplannen en je wens om slim aan te sturen adviseren wij ook een omvormertype en de twee best passende systemen uit de <a href="omvormers.html">omvormer-vergelijker</a>, gewogen met de <a href="omvormers.html#koppel-score">Koppel-score</a>.</li>
+      <li><b>Passende omvormer.</b> Op basis van schaduw, je batterijplannen en je smart home-systeem (Home Assistant of Homey) adviseren wij een omvormertype en de twee best passende systemen uit de <a href="omvormers.html">omvormer-vergelijker</a>, gewogen met de <a href="omvormers.html#koppel-score">Koppel-score</a>.</li>
+      <li><b>Thuisbatterij.</b> Wil je (later) een batterij, dan adviseren wij de route (direct op een hybride omvormer of AC-gekoppeld via de slimme meter) en een richtgrootte in kWh op basis van je opwek en avondverbruik. Batterijen zelf vergelijk je op onze zustersite <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>.</li>
       <li><b>Onafhankelijk.</b> Fabrikanten en winkels hebben geen invloed op dit advies; het is een rekensom op openbare specificaties.</li>
     </ul>
     <div class="waarschuwing-kader">Dit advies is een startpunt, geen offerte. Laat een installateur altijd je dak, meterkast en omvormerkeuze beoordelen; de legplanning bepaalt uiteindelijk hoeveel panelen er echt passen.</div>

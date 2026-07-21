@@ -95,6 +95,7 @@
   function kaartHtml(o) {
     const batterij = driewaardig(o.batterij);
     const ha = driewaardig(o.home_assistant);
+    const homey = driewaardig(o.homey);
     const schaduw = driewaardig(o.schaduw);
     return `
     <article class="paneel-kaart" data-id="${escapeHtml(o.id)}">
@@ -115,12 +116,14 @@
         ${koppelScoreBadge(o)}
         ${badgeHtml("Thuisbatterij", o.batterij)}
         ${badgeHtml("Home Assistant", o.home_assistant)}
+        ${badgeHtml("Homey", o.homey)}
         ${badgeHtml("Schaduwaanpak", o.schaduw)}
       </div>
       <button class="details-toggle" data-id="${escapeHtml(o.id)}">Meer details</button>
       <div class="kaart-details" data-details="${escapeHtml(o.id)}" hidden>
         <dt>Thuisbatterij</dt><dd>${escapeHtml(batterij.tekst)}</dd>
         <dt>Home Assistant / slim uitlezen</dt><dd>${escapeHtml(ha.tekst)}</dd>
+        <dt>Homey</dt><dd>${escapeHtml(homey.tekst)}</dd>
         <dt>Schaduwaanpak</dt><dd>${escapeHtml(schaduw.tekst)}</dd>
         ${o.opmerkingen ? `<dt>Goed om te weten</dt><dd>${escapeHtml(o.opmerkingen)}</dd>` : ""}
         ${o.product_url ? `<dt>Fabrikant</dt><dd><a href="${escapeHtml(o.product_url)}" target="_blank" rel="noopener">officiële website van ${escapeHtml(o.merk)}</a></dd>` : ""}
