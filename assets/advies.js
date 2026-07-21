@@ -24,8 +24,34 @@
 
   const naamVan = (p) => p.model.toLowerCase().startsWith(p.merk.toLowerCase()) ? p.model : `${p.merk} ${p.model}`;
 
+  // Goedkoopste winkelaanbieding; zonder winkels valt hij terug op de richtprijs
+  // (winkel is dan null). Zelfde patroon als assets/app.js en assets/omvormers.js.
+  function koopUrl(a) {
+    return (a && (a.affiliate_url || a.url)) || "";
+  }
+
+  function bestePrijs(x) {
+    const aanbiedingen = (x.aanbiedingen || []).filter((a) => a && a.prijs_eur);
+    if (aanbiedingen.length) {
+      return aanbiedingen.reduce((min, a) => (a.prijs_eur < min.prijs_eur ? a : min));
+    }
+    if (x.richtprijs_eur) return { winkel: null, prijs_eur: x.richtprijs_eur, url: x.product_url };
+    return null;
+  }
+
+  // Kort "goedkoopst bij ..."-fragment met link naar de winkel
+  function winkelLink(beste) {
+    if (!beste || !beste.winkel) return "";
+    const url = koopUrl(beste);
+    const naam = escapeHtml(beste.winkel);
+    return url
+      ? `goedkoopst bij <a href="${escapeHtml(url)}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}">${naam}</a>`
+      : `goedkoopst bij ${naam}`;
+  }
+
   function prijsPerWp(p) {
-    return p.richtprijs_eur && p.vermogen_wp ? p.richtprijs_eur / p.vermogen_wp : null;
+    const beste = bestePrijs(p);
+    return beste && p.vermogen_wp ? beste.prijs_eur / p.vermogen_wp : null;
   }
 
   // Zelfde formule als assets/app.js en uitleg.html#zeker-score
@@ -137,7 +163,8 @@
   function omvormerAdvies(s) {
     if (!omvormers.length) return null;
     const punt = (v) => { const st = driewaardig(v).status; return st === "ja" ? 2 : st === "deels" ? 1 : 0; };
-    const prijzen = omvormers.map((o) => o.richtprijs_eur).filter(Boolean);
+    const prijsVan = (o) => { const b = bestePrijs(o); return b ? b.prijs_eur : null; };
+    const prijzen = omvormers.map(prijsVan).filter(Boolean);
     const minP = Math.min(...prijzen), maxP = Math.max(...prijzen);
 
     const gescoord = omvormers.map((o) => {
@@ -151,8 +178,10 @@
       else if (s.smartHome === "homey") score += punt(o.homey) * 3;
       else if (s.smartHome === "anders") score += Math.max(punt(o.home_assistant), punt(o.homey)) * 2;
       else score += punt(o.home_assistant) * 0.75;
-      // Prijs telt altijd een beetje mee (goedkoper = beter)
-      if (o.richtprijs_eur) score += 2 * (maxP - o.richtprijs_eur) / (maxP - minP || 1);
+      // Prijs telt altijd een beetje mee (goedkoper = beter), op basis van de
+      // goedkoopst gevonden winkelprijs
+      const prijs = prijsVan(o);
+      if (prijs) score += 2 * (maxP - prijs) / (maxP - minP || 1);
       return { o, score };
     }).sort((a, b) => b.score - a.score);
     return gescoord.slice(0, 2);
@@ -220,13 +249,16 @@
     const topPaneel = top3.length ? top3[0].p : null;
     const topOmvormer = topOmvormers && topOmvormers.length ? topOmvormers[0].o : null;
     const batterij = batterijAdvies(s, opbrengst, doelVerbruik, topOmvormer);
-    const panelenPrijs = topPaneel ? (topPaneel.richtprijs_eur || 0) * aantalGeadviseerd : 0;
+    const paneelBeste = topPaneel ? bestePrijs(topPaneel) : null;
+    const panelenPrijs = paneelBeste ? paneelBeste.prijs_eur * aantalGeadviseerd : 0;
     const perPaneelOmvormer = topOmvormer && (topOmvormer.type === "micro" || topOmvormer.type === "optimizer");
+    const omvormerBeste = topOmvormer ? bestePrijs(topOmvormer) : null;
+    const omvormerUnit = omvormerBeste ? omvormerBeste.prijs_eur : 0;
     const omvormerPrijs = topOmvormer
-      ? (topOmvormer.type === "micro" ? Math.ceil(aantalGeadviseerd / (topOmvormer.id === "apsystems-ds3" ? 2 : 1)) * (topOmvormer.richtprijs_eur || 0) + 250
-        // Optimizer-systeem (SolarEdge): omvormer circa € 1.100 + circa € 60 per paneel
-        : topOmvormer.type === "optimizer" ? 1100 + 60 * aantalGeadviseerd
-        : (topOmvormer.richtprijs_eur || 0))
+      ? (topOmvormer.type === "micro" ? Math.ceil(aantalGeadviseerd / (topOmvormer.id === "apsystems-ds3" ? 2 : 1)) * omvormerUnit + 250
+        // Optimizer-systeem (SolarEdge): losse omvormer + circa € 60 per paneel aan optimizers
+        : topOmvormer.type === "optimizer" ? (omvormerBeste && omvormerBeste.winkel ? omvormerUnit : 1100) + 60 * aantalGeadviseerd
+        : omvormerUnit)
       : 0;
     const montagePrijs = Math.max(800, 1200 + 130 * aantalGeadviseerd - omvormerPrijs);
     const totaal = panelenPrijs + omvormerPrijs + montagePrijs;
@@ -258,39 +290,46 @@
       <div class="advies-kaart" style="border-width:2px;border-color:var(--kleur-primair);">
         <span class="plek">📋 Jouw complete systeem in het kort</span>
         <table style="width:100%;border-collapse:collapse;font-size:0.95rem;margin-top:8px;">
-          <tr><td style="padding:6px 8px 6px 0;">☀️ <b>${aantalGeadviseerd} ×</b> ${escapeHtml(naamVan(topPaneel))}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(panelenPrijs)}</b></td></tr>
-          <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">⚡ ${escapeHtml(topOmvormer.merk)} ${escapeHtml(topOmvormer.model)}${perPaneelOmvormer ? "" : ` (kies circa ${omvormerKw} kW)`}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(omvormerPrijs)}</b></td></tr>
+          <tr><td style="padding:6px 8px 6px 0;">☀️ <b>${aantalGeadviseerd} ×</b> ${escapeHtml(naamVan(topPaneel))}${paneelBeste && paneelBeste.winkel ? `<br><small>${winkelLink(paneelBeste)} (${eurFmt.format(paneelBeste.prijs_eur)} per paneel)</small>` : ""}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(panelenPrijs)}</b></td></tr>
+          <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">⚡ ${escapeHtml(topOmvormer.merk)} ${escapeHtml(topOmvormer.model)}${perPaneelOmvormer ? "" : ` (kies circa ${omvormerKw} kW)`}${omvormerBeste && omvormerBeste.winkel ? `<br><small>${winkelLink(omvormerBeste)} (${eurFmt.format(omvormerBeste.prijs_eur)}${perPaneelOmvormer ? " per stuk" : ""})</small>` : ""}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(omvormerPrijs)}</b></td></tr>
           <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">🔧 Montage, bekabeling en meterkast (indicatie)</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(montagePrijs)}</b></td></tr>
           ${batterij ? `<tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">🔋 Thuisbatterij ${s.batterijPlan === "ja" ? `van circa ${batterij.onder} tot ${batterij.boven} kWh` : "(later bij te plaatsen)"}</td><td style="text-align:right;white-space:nowrap;">${s.batterijPlan === "ja" ? "apart budget" : "later"}</td></tr>` : ""}
           <tr style="border-top:2px solid var(--kleur-rand);font-weight:700;"><td style="padding:8px 8px 6px 0;">Totaal zonnestroomsysteem${batterij && s.batterijPlan === "ja" ? " (excl. batterij)" : ""}</td><td style="text-align:right;white-space:nowrap;">circa ${eurFmt.format(totaal)}</td></tr>
         </table>
         ${smartRegel ? `<p style="margin:8px 0 0;font-size:0.92rem;">🏠 ${smartRegel}</p>` : ""}
-        <p class="hint" style="margin:8px 0 0;">Alle bedragen zijn indicaties (0% btw waar van toepassing); vraag altijd meerdere offertes aan. <a href="javascript:window.print()">🖨️ Advies afdrukken of bewaren als pdf</a></p>
+        <p class="hint" style="margin:8px 0 0;">Paneel- en omvormerprijzen zijn de goedkoopst gevonden winkelprijzen; klik op de winkel voor de actuele aanbieding. Alle bedragen zijn indicaties (0% btw waar van toepassing, losse onderdelen soms exclusief btw); vraag altijd meerdere offertes aan. <a href="javascript:window.print()">🖨️ Advies afdrukken of bewaren als pdf</a></p>
       </div>` : ""}
 
       <h2 style="margin-top:20px;">De drie best passende panelen</h2>
-      ${top3.map(({ p, per }, i) => `
+      ${top3.map(({ p, per }, i) => {
+        const beste = bestePrijs(p);
+        const stuk = beste ? beste.prijs_eur : (p.richtprijs_eur || 0);
+        return `
         <div class="advies-kaart">
           <span class="plek">${plekken[i]}</span>
           <h3><a href="paneel/${encodeURIComponent(p.id)}.html">${escapeHtml(naamVan(p))}</a></h3>
           <div class="reden">${redenVoor(p, s, dakTeKlein)}</div>
-          <p style="margin:8px 0 0;font-size:0.95rem;">${p.vermogen_wp} Wp · richtprijs <b>${eurFmt.format(p.richtprijs_eur || 0)}</b> per paneel · ${aantalGeadviseerd} stuks: circa <b>${eurFmt.format((p.richtprijs_eur || 0) * aantalGeadviseerd)}</b> (excl. montage en omvormer)</p>
-          <p style="margin:8px 0 0;"><a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}">Bereken terugverdientijd →</a></p>
-        </div>
-      `).join("")}
+          <p style="margin:8px 0 0;font-size:0.95rem;">${p.vermogen_wp} Wp · <b>${eurFmt.format(stuk)}</b> per paneel${beste && beste.winkel ? ` (${winkelLink(beste)})` : " (richtprijs)"} · ${aantalGeadviseerd} stuks: circa <b>${eurFmt.format(stuk * aantalGeadviseerd)}</b> (excl. montage en omvormer)</p>
+          <p style="margin:8px 0 0;">${beste && beste.winkel && koopUrl(beste) ? `<a class="knop" style="padding:8px 14px;font-size:0.88rem;" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}">Bekijk aanbieding →</a> ` : ""}<a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}">Bereken terugverdientijd →</a></p>
+        </div>`;
+      }).join("")}
       ${!top3.length ? '<p class="hint">Geen panelen gevonden met deze wensen; zet bijvoorbeeld het full black-filter uit.</p>' : ""}
 
       ${topOmvormers ? `
       <h2 style="margin-top:24px;">En welke omvormer past daarbij?</h2>
-      <p class="hint" style="margin-top:0;">Op basis van je schaduw${s.batterij ? ", batterijplannen" : ""}${s.slim ? " en wens om slim aan te sturen" : ""}. Richt je op een omvormer van circa ${omvormerKw} kW bij ${aantalGeadviseerd} panelen.</p>
-      ${topOmvormers.map(({ o }, i) => `
+      <p class="hint" style="margin-top:0;">Op basis van je schaduw${s.batterijPlan !== "nee" ? ", batterijplannen" : ""}${s.smartHome !== "geen" ? " en wens om slim aan te sturen" : ""}. Richt je op een omvormer van circa ${omvormerKw} kW bij ${aantalGeadviseerd} panelen.</p>
+      ${topOmvormers.map(({ o }, i) => {
+        const beste = bestePrijs(o);
+        const uitWinkel = !!(beste && beste.winkel);
+        return `
         <div class="advies-kaart">
           <span class="plek">${["⚡ Beste match", "⚡ Ook geschikt"][i]}</span>
           <h3>${escapeHtml(o.merk)} ${escapeHtml(o.model)}</h3>
           <div class="reden">${omvormerReden(o, s)}</div>
-          <p style="margin:8px 0 0;font-size:0.95rem;">richtprijs <b>${eurFmt.format(o.richtprijs_eur || 0)}</b> (${escapeHtml(o.prijs_toelichting || "indicatie")})</p>
-        </div>
-      `).join("")}
+          <p style="margin:8px 0 0;font-size:0.95rem;">${uitWinkel ? `laagste prijs <b>${eurFmt.format(beste.prijs_eur)}</b>, ${winkelLink(beste)}` : `richtprijs <b>${eurFmt.format(o.richtprijs_eur || 0)}</b>`} (${escapeHtml(o.prijs_toelichting || "indicatie")})</p>
+          ${uitWinkel && koopUrl(beste) ? `<p style="margin:8px 0 0;"><a class="knop" style="padding:8px 14px;font-size:0.88rem;" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}">Bekijk aanbieding →</a></p>` : ""}
+        </div>`;
+      }).join("")}
       <p class="hint" style="margin-top:10px;">Alle ${omvormers.length} omvormersystemen vergelijken op batterij, Home Assistant, Homey en schaduw? <a href="omvormers.html">Naar de omvormer-vergelijker →</a></p>` : ""}
 
       ${batterij ? `

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Dagelijkse prijsupdate voor data/panelen.json.
+ * Dagelijkse prijsupdate voor data/panelen.json en data/omvormers.json.
  *
  * Voor elke aanbieding (winkel-URL) probeert dit script de actuele prijs van de
  * productpagina te lezen, in deze volgorde:
@@ -23,7 +23,14 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_PAD = resolve(__dirname, "../data/panelen.json");
+
+// Per databestand: waar de productlijst staat en welke prijzen geloofwaardig
+// zijn (panelen zijn per stuk goedkoop; omvormers lopen op tot enkele duizenden
+// euro's en worden soms exclusief btw getoond).
+const BESTANDEN = [
+  { pad: resolve(__dirname, "../data/panelen.json"), lijst: "panelen", min: 20, max: 2000 },
+  { pad: resolve(__dirname, "../data/omvormers.json"), lijst: "omvormers", min: 50, max: 3000 },
+];
 
 const VANDAAG = new Date().toISOString().slice(0, 10);
 const TIMEOUT_MS = 20000;
@@ -161,13 +168,13 @@ function prijsUitMeta(html) {
   return null;
 }
 
-function prijsUitTekst(html) {
+function prijsUitTekst(html, grenzen) {
   // Voorzichtige fallback: pak de meest voorkomende "€ x.xxx"-prijs op de pagina.
   const matches = html.match(/€\s?([\d.]{3,7}(?:,\d{2})?)/g) || [];
   const telling = new Map();
   for (const m of matches) {
     const p = parsePrijsWaarde(m);
-    if (p && p >= 20 && p <= 2000) telling.set(p, (telling.get(p) || 0) + 1);
+    if (p && p >= grenzen.min && p <= grenzen.max) telling.set(p, (telling.get(p) || 0) + 1);
   }
   let beste = null, max = 0;
   for (const [prijs, n] of telling) {
@@ -176,14 +183,14 @@ function prijsUitTekst(html) {
   return max >= 2 ? beste : null; // alleen bij herhaald voorkomen
 }
 
-function plausibel(nieuw, oud) {
-  if (!oud) return nieuw >= 20 && nieuw <= 2000;
+function plausibel(nieuw, oud, grenzen) {
+  if (!oud) return nieuw >= grenzen.min && nieuw <= grenzen.max;
   return nieuw >= oud * 0.4 && nieuw <= oud * 2.5;
 }
 
 /* ------------------------------------------------------------------ */
 
-async function updateAanbieding(paneel, aanbieding) {
+async function updateAanbieding(paneel, aanbieding, grenzen) {
   if (!aanbieding.url) return false;
   try {
     let nieuw;
@@ -191,13 +198,13 @@ async function updateAanbieding(paneel, aanbieding) {
       nieuw = await bolApiPrijs(aanbieding);
     } else {
       const html = await haalPagina(aanbieding.url);
-      nieuw = prijsUitJsonLd(html) ?? prijsUitMeta(html) ?? prijsUitTekst(html);
+      nieuw = prijsUitJsonLd(html) ?? prijsUitMeta(html) ?? prijsUitTekst(html, grenzen);
     }
     if (!nieuw) {
       console.log(`  ~ ${paneel.id} @ ${aanbieding.winkel}: geen prijs gevonden, oude prijs blijft (€${aanbieding.prijs_eur})`);
       return false;
     }
-    if (!plausibel(nieuw, aanbieding.prijs_eur)) {
+    if (!plausibel(nieuw, aanbieding.prijs_eur, grenzen)) {
       console.log(`  ! ${paneel.id} @ ${aanbieding.winkel}: gevonden prijs €${nieuw} niet plausibel t.o.v. €${aanbieding.prijs_eur}, overgeslagen`);
       return false;
     }
@@ -213,21 +220,25 @@ async function updateAanbieding(paneel, aanbieding) {
 }
 
 async function main() {
-  const data = JSON.parse(readFileSync(DATA_PAD, "utf8"));
   let wijzigingen = 0;
 
-  for (const paneel of data.panelen || []) {
-    for (const aanbieding of paneel.aanbiedingen || []) {
-      if (await updateAanbieding(paneel, aanbieding)) wijzigingen++;
-      await new Promise((r) => setTimeout(r, 1500)); // beleefde pauze tussen requests
-    }
-    // prijs_datum van het paneel = meest recente controle-datum van zijn aanbiedingen
-    const datums = (paneel.aanbiedingen || []).map((a) => a.datum).filter(Boolean).sort();
-    if (datums.length) paneel.prijs_datum = datums[datums.length - 1];
-  }
+  for (const bestand of BESTANDEN) {
+    console.log(`\n=== ${bestand.lijst} (${bestand.pad}) ===`);
+    const data = JSON.parse(readFileSync(bestand.pad, "utf8"));
 
-  data.laatst_bijgewerkt = VANDAAG;
-  writeFileSync(DATA_PAD, JSON.stringify(data, null, 2) + "\n", "utf8");
+    for (const product of data[bestand.lijst] || []) {
+      for (const aanbieding of product.aanbiedingen || []) {
+        if (await updateAanbieding(product, aanbieding, bestand)) wijzigingen++;
+        await new Promise((r) => setTimeout(r, 1500)); // beleefde pauze tussen requests
+      }
+      // prijs_datum van het product = meest recente controle-datum van zijn aanbiedingen
+      const datums = (product.aanbiedingen || []).map((a) => a.datum).filter(Boolean).sort();
+      if (datums.length) product.prijs_datum = datums[datums.length - 1];
+    }
+
+    data.laatst_bijgewerkt = VANDAAG;
+    writeFileSync(bestand.pad, JSON.stringify(data, null, 2) + "\n", "utf8");
+  }
   // De paneelpagina's en sitemap worden hierna herbouwd door
   // scripts/genereer-paneelpaginas.mjs (zie de workflow).
 
