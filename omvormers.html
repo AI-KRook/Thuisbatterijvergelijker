@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omvormers vergelijken: batterij-klaar, Home Assistant en schaduw (Koppel-score) | Zonnepaneelmaatje.nl</title>
+  <meta name="description" content="Vergelijk omvormers voor zonnepanelen op wat écht telt: is hij batterij-klaar, slim uit te lezen (Home Assistant, Modbus) en hoe gaat hij om met schaduw? Met transparante Koppel-score per systeem.">
+  <link rel="canonical" href="https://zonnepaneelmaatje.nl/omvormers.html">
+  <meta property="og:title" content="Omvormers vergelijken op de Koppel-score">
+  <meta property="og:description" content="Micro, optimizer of hybride? Vergelijk omvormers op batterij-koppeling, Home Assistant en schaduwaanpak.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zonnepaneelmaatje.nl/omvormers.html">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:image" content="https://zonnepaneelmaatje.nl/assets/og-image.png">
+  <meta property="og:site_name" content="Zonnepaneelmaatje.nl">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Welke omvormer heb ik nodig voor mijn zonnepanelen?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Dat hangt af van je dak en plannen. Zonder schaduw en zonder batterijplannen volstaat een string-omvormer. Bij schaduw of panelen in meerdere richtingen zijn micro-omvormers (Enphase, APsystems) of optimizers (SolarEdge) beter. Wil je nu of later een thuisbatterij, kies dan een hybride omvormer (zoals GoodWe, Fronius, SMA, Huawei of Sungrow), of houd de batterijkeuze vrij met een AC-gekoppelde batterij." }
+      },
+      {
+        "@type": "Question",
+        "name": "Wat is de Koppel-score voor omvormers?",
+        "acceptedAnswer": { "@type": "Answer", "text": "De Koppel-score is een transparante score van 0 tot 6 punten voor hoe goed een omvormer te koppelen is. Drie zaken tellen mee, elk 0 tot 2 punten: kan er direct een thuisbatterij aan, is hij slim uit te lezen en aan te sturen (officiële Home Assistant-integratie of open lokale API), en hoe gaat hij om met schaduw (elektronica per paneel of alleen MPPT-trackers)." }
+      },
+      {
+        "@type": "Question",
+        "name": "Hoe lang gaat een omvormer mee?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Een string- of hybride omvormer gaat gemiddeld 10 tot 15 jaar mee; reken op één vervanging tijdens de levensduur van de panelen. Micro-omvormers en optimizers krijgen vaak 25 jaar garantie, maar zitten op het dak, wat vervanging bewerkelijker maakt." }
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="assets/style.css?v=20260721b">
+  <script src="assets/omvormers.js?v=20260721b" defer></script>
+  <script src="assets/nav.js?v=20260721b" defer></script>
+  <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html">
+      <span class="logo-icoon">☀️</span>
+      <span>Zonnepaneel<b>maatje</b></span>
+    </a>
+    <nav class="hoofdnav">
+      <a href="index.html">Vergelijken</a>
+      <a href="omvormers.html" class="actief">Omvormers</a>
+      <a href="uitleg.html">Uitleg</a>
+      <a href="advies.html">Keuzehulp</a>
+      <a href="rekenmodule.html">Opbrengst</a>
+      <details class="nav-meer">
+        <summary>Meer ▾</summary>
+        <div class="nav-meer-paneel">
+          <a href="waar-zonnepanelen-kopen.html">Waar koop je panelen?</a>
+          <a href="regelgeving.html">Regels &amp; subsidies</a>
+          <a href="beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a>
+          <a href="beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a>
+          <a href="over-ons.html">Over ons</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Omvormers vergelijken op wat hem écht slim maakt</h1>
+    <p>De omvormer is het hart van je zonnestroomsysteem, en bepaalt méér dan de panelen of je systeem toekomstklaar is: kan er straks een <b>thuisbatterij</b> aan, is hij <b>slim uit te lezen en aan te sturen</b> (Home Assistant, Modbus, EMS) en hoe gaat hij om met <b>schaduw</b>? Wij vatten dat samen in de Koppel-score. Onafhankelijk en in gewone taal.</p>
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="update-info">⚡ 12 omvormersystemen</span>
+      <span class="update-info">🔄 Bijgewerkt: <b id="updateDatum">…</b></span>
+      <span class="update-info">⚖️ 100% onafhankelijk</span>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+
+  <button class="filter-toggle" id="filterToggle" onclick="document.getElementById('filterbalk').classList.toggle('ingeklapt')">🔍 Filteren en sorteren ▾</button>
+
+  <div class="filterbalk ingeklapt" id="filterbalk">
+    <div class="filter-rij">
+      <div class="filter-groep">
+        <label for="filterType">Type systeem</label>
+        <select id="filterType">
+          <option value="alle">Alle typen</option>
+          <option value="hybride">Hybride (batterij-klaar)</option>
+          <option value="micro">Micro-omvormers</option>
+          <option value="optimizer">Optimizers</option>
+          <option value="string">String</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="filterFase">Aansluiting</label>
+        <select id="filterFase">
+          <option value="alle">1- en 3-fase</option>
+          <option value="1">1-fase</option>
+          <option value="3">3-fase</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="filterMerk">Merk</label>
+        <select id="filterMerk">
+          <option value="alle">Alle merken</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label for="sorteer">Sorteren op</label>
+        <select id="sorteer">
+          <option value="koppel-score" selected>Koppel-score (best koppelbaar eerst)</option>
+          <option value="prijs-oplopend">Richtprijs (laag naar hoog)</option>
+          <option value="prijs-aflopend">Richtprijs (hoog naar laag)</option>
+          <option value="garantie">Garantie (langste eerst)</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <span class="filter-label">Toon alleen</span>
+        <div class="checkbox-groep">
+          <label title="Er kan direct een thuisbatterij op worden aangesloten"><input type="checkbox" id="checkBatterij"> 🔋 Batterij-klaar</label>
+          <label title="Officiële Home Assistant-integratie of open lokale API"><input type="checkbox" id="checkHa"> 🏠 Officiële slimme koppeling</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="legenda">
+    <summary>ℹ️ Wat betekenen de symbolen?</summary>
+    <div class="legenda-lijst">
+      <div class="legenda-rij"><span class="badge zeker-hoog">🔗 Koppel-score</span><span>Punten (0 tot 6) voor batterij-klaar, slim uitlezen en schaduwaanpak. Uitleg staat onderaan deze pagina.</span></div>
+      <div class="legenda-rij"><span class="badge ja">✓</span><span>Direct of officieel ondersteund</span></div>
+      <div class="legenda-rij"><span class="badge deels">~</span><span>Werkt via een omweg: community-integratie, extra module of meerdere MPPT's. Tik op de badge voor de uitleg.</span></div>
+      <div class="legenda-rij"><span class="badge nee">✕</span><span>Niet ondersteund</span></div>
+    </div>
+  </details>
+
+  <div class="resultaten-balk">
+    <span class="resultaten-telling" id="resultatenTelling">Laden…</span>
+  </div>
+
+  <h2 class="visueel-verborgen">Alle omvormers vergeleken</h2>
+  <div id="resultaten">
+    <div class="laad-melding">Omvormers laden…</div>
+  </div>
+
+  <section style="max-width:820px;margin:40px auto;">
+    <h2>Zo kies je een omvormer</h2>
+    <p>Panelen leveren gelijkstroom; de omvormer maakt er bruikbare wisselstroom van. Maar de omvormer bepaalt ook of je systeem <b>toekomstklaar</b> is. Drie vragen wijzen de weg:</p>
+    <ul>
+      <li><b>Wil je (ooit) een thuisbatterij?</b> Een <b>hybride omvormer</b> sluit de batterij rechtstreeks aan: efficiënt en netjes, maar vaak merkgebonden (bijvoorbeeld GoodWe met Lynx, Huawei met LUNA, Fronius en SMA met BYD). Merk-open alternatieven zijn Solis, Deye en Victron. Wil je je batterijkeuze volledig vrijhouden, dan kan later altijd nog een <a href="uitleg.html#hybride-omvormer">AC-gekoppelde batterij</a> naast elke omvormer; vergelijk die op onze zustersite <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>.</li>
+      <li><b>Heb je schaduw of meerdere dakvlakken?</b> Dan lonen <b>micro-omvormers</b> (Enphase, APsystems) of <b>optimizers</b> (SolarEdge): elk paneel presteert onafhankelijk en is per paneel te volgen. Zonder schaduw is een string- of hybride omvormer met twee MPPT's prima en goedkoper.</li>
+      <li><b>Wil je je systeem slim aansturen?</b> Voor Home Assistant en energiemanagement zijn Fronius, SMA, GoodWe, Enphase, SolarEdge en Victron het toegankelijkst (officiële integraties of open lokale API's). Bij veel andere merken werkt het prima via community-integraties of Modbus, maar zonder officiële ondersteuning. Lees ook <a href="uitleg.html#slim-koppelen">slim combineren met batterij en warmtepomp</a>.</li>
+    </ul>
+    <p>Reken op 10 tot 15 jaar levensduur voor een string- of hybride omvormer (één vervanging tijdens de levensduur van je panelen is normaal); micro's en optimizers krijgen vaak 25 jaar garantie. De richtprijzen hierboven zijn indicatief en exclusief installatie.</p>
+
+    <h2 id="koppel-score">De Koppel-score uitgelegd</h2>
+    <p>Net als de <a href="uitleg.html#zeker-score">Zeker-score</a> voor panelen is de Koppel-score een transparante rekensom op feiten, van 0 tot 6 punten:</p>
+    <ul>
+      <li><b>Thuisbatterij</b>: rechtstreeks aan te sluiten (hybride of eigen batterijlijn) = 2 punten, via een omweg of extra module = 1 punt, niet = 0 punten.</li>
+      <li><b>Slim uitlezen en aansturen</b>: officiële Home Assistant-integratie of open lokale API = 2 punten, community-integratie of alleen cloud = 1 punt, geen = 0 punten.</li>
+      <li><b>Schaduwaanpak</b>: elektronica per paneel (micro of optimizer) = 2 punten, meerdere MPPT-trackers = 1 punt.</li>
+    </ul>
+    <p class="datum-stempel">De score zegt niets over de kwaliteit van de omvormer zelf; een degelijke string-omvormer zonder batterijplannen kan voor jouw situatie de beste keus zijn. Integraties kunnen per firmwareversie veranderen; controleer de actuele status vóór aankoop.</p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <b>☀️ Zonnepaneelmaatje</b>
+    <p>Onafhankelijke vergelijking van zonnepanelen voor Nederlandse huishoudens.</p>
+    <p><a href="index.html">Vergelijken</a> · <a href="omvormers.html">Omvormers</a> · <a href="uitleg.html">Uitleg</a> · <a href="advies.html">Keuzehulp</a> · <a href="rekenmodule.html">Opbrengst &amp; terugverdientijd</a> · <a href="waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="over-ons.html">Over ons</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
+    <p class="disclaimer">Disclaimer: prijzen, specificaties en integraties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. Controleer voor aankoop de actuele datasheet en de compatibiliteit met jouw situatie.</p>
+  </div>
+</footer>
+
+</body>
+</html>

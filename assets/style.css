@@ -426,6 +426,10 @@ a.term-link:hover { color: var(--kleur-primair); }
 .type-hjt { background: var(--kleur-groen-licht); color: #166534; }
 .type-back-contact { background: #ede9fe; color: #5b21b6; }
 .type-perc { background: #f1f5f9; color: #475569; }
+.type-omv-hybride { background: var(--kleur-groen-licht); color: #166534; }
+.type-omv-micro { background: #ede9fe; color: #5b21b6; }
+.type-omv-optimizer { background: var(--kleur-blauw-licht); color: #1e40af; }
+.type-omv-string { background: #f1f5f9; color: #475569; }
 
 .kaart-specs {
   padding: 14px 20px;
