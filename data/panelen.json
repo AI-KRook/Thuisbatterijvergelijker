@@ -20,29 +20,23 @@
       "vermogen_behoud_eind_pct": 88.9,
       "vermogen_behoud_25j_pct": 90.6,
       "temp_coefficient": -0.26,
-      "richtprijs_eur": 105,
+      "richtprijs_eur": 120,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://aikosolar.com/",
       "opmerkingen": "Back-contact (ABC) cellen: alle contacten zitten aan de achterkant, dus geen zichtbare lijntjes en een strak zwart uiterlijk. Zeer hoog rendement, goede schaduwtolerantie en dubbel 2 mm glas. Productgarantie is bij registratie via erkende installateurs vaak uit te breiden tot 25 jaar.",
       "aanbiedingen": [
         {
-          "winkel": "Zonnepanelenkopen.com",
-          "prijs_eur": 105,
-          "url": "https://www.zonnepanelenkopen.com/zonnepanelen/aiko/aiko-neostar-gen-2s-455wp-glas-glas-all-black",
-          "datum": null
-        },
-        {
           "winkel": "GroothandelSolar",
-          "prijs_eur": 105,
+          "prijs_eur": 140,
           "url": "https://www.groothandelsolar.com/zonnepanelen-kopen/aiko-solar-zonnepaneel/aiko-455wp-gen2-glas-glas-all-black",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "Just Solar",
-          "prijs_eur": 109,
+          "prijs_eur": 120,
           "url": "https://justsolar.store/products/aiko-455wp-neostar-2s-gen2-glas-glas-all-black",
-          "datum": null
+          "datum": "2026-07-21"
         }
       ]
     },
@@ -55,7 +49,7 @@
       "uitvoering": "glas-folie",
       "full_black": true,
       "bifaciaal": false,
-      "rendement_pct": 22.0,
+      "rendement_pct": 22,
       "afmetingen_mm": "1762 × 1134 × 30",
       "gewicht_kg": 22,
       "garantie_product_jaar": 25,
@@ -63,7 +57,7 @@
       "vermogen_behoud_eind_pct": 87.4,
       "vermogen_behoud_25j_pct": 89.4,
       "temp_coefficient": -0.29,
-      "richtprijs_eur": 70,
+      "richtprijs_eur": 60,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.jinkosolar.com/",
@@ -71,9 +65,9 @@
       "aanbiedingen": [
         {
           "winkel": "SolarKopen",
-          "prijs_eur": 70,
+          "prijs_eur": 55,
           "url": "https://solarkopen.nl/products/jinko-440wp-mono-full-black-tiger-neo-n-type-zonnepaneel",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "GroothandelSolar",
@@ -84,7 +78,7 @@
         {
           "winkel": "Stralend Groen",
           "prijs_eur": 72,
-          "url": "https://www.stralendgroen.nl/product/jinko-solar-tiger-neo-all-black-n-type-440wp-palletkorting/",
+          "url": "https://www.stralendgroen.nl/en/product/jinko-solar-tiger-neo-all-black-n-type-440wp/",
           "datum": null
         }
       ]
@@ -98,7 +92,7 @@
       "uitvoering": "glas-glas",
       "full_black": true,
       "bifaciaal": true,
-      "rendement_pct": 22.0,
+      "rendement_pct": 22,
       "afmetingen_mm": "1762 × 1134 × 30",
       "gewicht_kg": 22,
       "garantie_product_jaar": 25,
@@ -106,7 +100,7 @@
       "vermogen_behoud_eind_pct": 87.4,
       "vermogen_behoud_25j_pct": 89.4,
       "temp_coefficient": -0.29,
-      "richtprijs_eur": 65,
+      "richtprijs_eur": 75,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.jasolar.com/",
@@ -114,9 +108,9 @@
       "aanbiedingen": [
         {
           "winkel": "SolarKopen",
-          "prijs_eur": 65,
+          "prijs_eur": 75,
           "url": "https://solarkopen.nl/products/ja-solar-440wp-n-type-glas-glas-full-black-zonnepaneel",
-          "datum": null
+          "datum": "2026-07-21"
         }
       ]
     },
@@ -137,7 +131,7 @@
       "vermogen_behoud_eind_pct": 88.9,
       "vermogen_behoud_25j_pct": 88.9,
       "temp_coefficient": -0.29,
-      "richtprijs_eur": 80,
+      "richtprijs_eur": 68,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.longi.com/",
@@ -145,9 +139,9 @@
       "aanbiedingen": [
         {
           "winkel": "Stralend Groen",
-          "prijs_eur": 80,
+          "prijs_eur": 65,
           "url": "https://www.stralendgroen.nl/en/product/longi-solar-hi-mo6-all-black-440wp/",
-          "datum": null
+          "datum": "2026-07-21"
         }
       ]
     },
@@ -168,7 +162,7 @@
       "vermogen_behoud_eind_pct": 87.4,
       "vermogen_behoud_25j_pct": 89.4,
       "temp_coefficient": -0.3,
-      "richtprijs_eur": 72,
+      "richtprijs_eur": 68,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.trinasolar.com/",
@@ -176,21 +170,21 @@
       "aanbiedingen": [
         {
           "winkel": "Energiewaaier",
-          "prijs_eur": 69,
+          "prijs_eur": 125,
           "url": "https://energiewaaier.nl/winkel/trina-solar-vertex-s-dual-glass-all-black-450wp/",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "deBaKo",
-          "prijs_eur": 74,
+          "prijs_eur": 90,
           "url": "https://debako.nl/product/trina-vertex-s-n-type-dubbel-glas-450w-triple-cut-1500v-all-black-zonnepaneel/",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "Stralend Groen",
-          "prijs_eur": 75,
+          "prijs_eur": 64,
           "url": "https://www.stralendgroen.nl/en/product/trina-solar-vertex-s-dual-glass-all-black-450wp/",
-          "datum": null
+          "datum": "2026-07-21"
         }
       ]
     },
@@ -211,7 +205,7 @@
       "vermogen_behoud_eind_pct": 87.4,
       "vermogen_behoud_25j_pct": 89.4,
       "temp_coefficient": -0.3,
-      "richtprijs_eur": 79,
+      "richtprijs_eur": 78,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.dmegcsolar.com/",
@@ -225,9 +219,9 @@
         },
         {
           "winkel": "SolarKopen",
-          "prijs_eur": 80,
+          "prijs_eur": 78,
           "url": "https://solarkopen.nl/products/dmegc-450wp-glas-glas-full-black-zonnepaneel",
-          "datum": null
+          "datum": "2026-07-21"
         }
       ]
     },
@@ -248,7 +242,7 @@
       "vermogen_behoud_eind_pct": 87.4,
       "vermogen_behoud_25j_pct": 89.4,
       "temp_coefficient": -0.29,
-      "richtprijs_eur": 68,
+      "richtprijs_eur": 119,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.csisolar.com/",
@@ -256,9 +250,9 @@
       "aanbiedingen": [
         {
           "winkel": "Off Grid Power Station",
-          "prijs_eur": 68,
+          "prijs_eur": 119,
           "url": "https://offgridpowerstation.eu/product/canadian-solar-435wp-full-black-frame/",
-          "datum": null
+          "datum": "2026-07-21"
         }
       ]
     },
@@ -276,26 +270,20 @@
       "gewicht_kg": 20.5,
       "garantie_product_jaar": 20,
       "garantie_vermogen_jaar": 25,
-      "vermogen_behoud_eind_pct": 92.0,
-      "vermogen_behoud_25j_pct": 92.0,
+      "vermogen_behoud_eind_pct": 92,
+      "vermogen_behoud_25j_pct": 92,
       "temp_coefficient": -0.24,
-      "richtprijs_eur": 110,
+      "richtprijs_eur": 120,
       "prijs_datum": "2026-07-21",
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.recgroup.com/",
       "opmerkingen": "Premium HJT-paneel uit de Alpha Pure-familie, loodvrij gebouwd en met de beste warmteprestatie van deze vergelijker (temperatuurcoëfficiënt -0,24%/°C). De 430 Wp-variant haalt tot 22,3% rendement. Productgarantie is via een REC Certified-installateur uit te breiden tot 25 jaar.",
       "aanbiedingen": [
         {
-          "winkel": "Zonnepanelen-voordelig",
-          "prijs_eur": 92,
-          "url": "https://www.zonnepanelen-voordelig.nl/contents/nl/p58871_REC-420wp-Alpha-Pure-Black-pv-paneel.html",
-          "datum": null
-        },
-        {
           "winkel": "Zonnepaneelcentrum",
-          "prijs_eur": 110,
+          "prijs_eur": 120,
           "url": "https://zonnepaneelcentrum.nl/product/rec-alpha-pure-2-400-430-w/",
-          "datum": null
+          "datum": "2026-07-21"
         }
       ]
     },
@@ -314,7 +302,7 @@
       "garantie_product_jaar": 40,
       "garantie_vermogen_jaar": 40,
       "vermogen_behoud_eind_pct": 88.3,
-      "vermogen_behoud_25j_pct": 92.0,
+      "vermogen_behoud_25j_pct": 92,
       "temp_coefficient": -0.27,
       "richtprijs_eur": 230,
       "prijs_datum": "2026-07-21",
@@ -356,7 +344,7 @@
       "uitvoering": "glas-glas",
       "full_black": true,
       "bifaciaal": true,
-      "rendement_pct": 22.0,
+      "rendement_pct": 22,
       "afmetingen_mm": "1762 × 1134 × 30",
       "gewicht_kg": 21.5,
       "garantie_product_jaar": 30,
@@ -377,12 +365,6 @@
           "datum": null
         },
         {
-          "winkel": "UwSolarInstallatieShop",
-          "prijs_eur": 88,
-          "url": "https://uwsolarinstallatieshop.nl/home/251-denim-n-type-topcon-440-wp-all-black.html",
-          "datum": null
-        },
-        {
           "winkel": "Solar-NU",
           "prijs_eur": 114,
           "url": "https://www.solar-nu-webshop.nl/webshop/zonnepanelen-pv/groot-hoogvermogen-panelen/detail/1445/denim-n-type-440w-all-black-glas-glas-bifacial-zonnepaneel-u-n3-440-bbg-108h-1762x1134x30mm-0259w.html",
@@ -399,7 +381,7 @@
       "uitvoering": "glas-folie",
       "full_black": true,
       "bifaciaal": false,
-      "rendement_pct": 22.0,
+      "rendement_pct": 22,
       "afmetingen_mm": "1762 × 1134 × 30",
       "gewicht_kg": 21.5,
       "garantie_product_jaar": 15,
@@ -467,14 +449,7 @@
       "prijs_omvat": "richtprijs per paneel, 0% btw bij levering voor een woning, excl. omvormer en installatie",
       "product_url": "https://www.ulicasolar.com/",
       "opmerkingen": "Vaak het goedkoopste glas-glas paneel bij Nederlandse webshops en groothandels. Minder bekende naam, maar al jaren breed leverbaar; ideaal als de laagste totaalprijs voorop staat.",
-      "aanbiedingen": [
-        {
-          "winkel": "Energiemagazijn",
-          "prijs_eur": 55,
-          "url": "https://energiemagazijn.nl/zonnepanelen/216-ulica-solar-ul-430m-topcon-430wp-full-black-zonnepaneel.html",
-          "datum": null
-        }
-      ]
+      "aanbiedingen": []
     }
   ]
 }
