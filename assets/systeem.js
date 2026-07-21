@@ -237,7 +237,12 @@
     syncUrl();
 
     el("paneelHint").textContent = `${p.vermogen_wp} Wp · ${p.uitvoering || ""} · rendement ${String(p.rendement_pct || "?").replace(".", ",")}%`;
-    el("omvormerHint").textContent = o.samensteller && o.samensteller.bron ? o.samensteller.bron : (o.vermogen_bereik || "");
+    const TYPE_UITLEG = {
+      micro: "Kleine omvormer per (twee) panelen: schaduwbestendig, geen kast aan de muur.",
+      optimizer: "Centrale omvormer met een kastje per paneel: schaduwbestendig en per paneel te volgen.",
+      hybride: "Eén centrale omvormer; op de hybride varianten kan een thuisbatterij rechtstreeks worden aangesloten.",
+    };
+    el("omvormerHint").textContent = `${TYPE_UITLEG[o.type] || ""} ${o.samensteller && o.samensteller.bron ? o.samensteller.bron : (o.vermogen_bereik || "")}`.trim();
 
     const s = state;
     const totWp = p.vermogen_wp * s.aantal;

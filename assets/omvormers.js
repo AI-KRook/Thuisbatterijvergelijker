@@ -23,6 +23,12 @@
   const eurFmt = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
   const datumFmt = new Intl.DateTimeFormat("nl-NL", { dateStyle: "long" });
 
+  // ISO-datum (2026-07-21) leesbaar maken als "21 juli 2026"
+  function datumNL(iso) {
+    const d = new Date(`${iso}T12:00:00`);
+    return Number.isNaN(d.getTime()) ? iso : datumFmt.format(d);
+  }
+
   const TYPE_LABEL = {
     "micro": "Micro-omvormers",
     "optimizer": "Optimizers",
@@ -189,7 +195,7 @@
         <dt>Homey</dt><dd>${escapeHtml(homey.tekst)}</dd>
         <dt>Schaduwaanpak</dt><dd>${escapeHtml(schaduw.tekst)}</dd>
         ${o.opmerkingen ? `<dt>Goed om te weten</dt><dd>${escapeHtml(o.opmerkingen)}</dd>` : ""}
-        ${(o.aanbiedingen || []).length ? `<dt>Verkrijgbaar bij</dt><dd><ul class="winkel-lijst">${o.aanbiedingen.map((a) => `<li><span>${escapeHtml(a.winkel)}</span><span><b>${eurFmt.format(a.prijs_eur)}</b> &nbsp;<a href="${escapeHtml(koopUrl(a))}" target="_blank" rel="noopener${a.affiliate_url ? " sponsored" : ""}">bekijk</a></span></li>`).join("")}</ul></dd>` : ""}
+        ${(o.aanbiedingen || []).length ? `<dt>Verkrijgbaar bij</dt><dd><ul class="winkel-lijst">${o.aanbiedingen.map((a) => `<li><span>${escapeHtml(a.winkel)}</span><span><b>${eurFmt.format(a.prijs_eur)}</b> &nbsp;<a href="${escapeHtml(koopUrl(a))}" target="_blank" rel="noopener${a.affiliate_url ? " sponsored" : ""}">bekijk</a></span></li>`).join("")}</ul>${o.prijs_datum ? `<span class="datum-stempel" style="display:block;margin-top:8px;">Prijzen gecontroleerd: ${escapeHtml(datumNL(o.prijs_datum))}. Zonder controledatum is de prijs een indicatie.</span>` : ""}</dd>` : ""}
         ${o.product_url ? `<dt>Fabrikant</dt><dd><a href="${escapeHtml(o.product_url)}" target="_blank" rel="noopener">officiële website van ${escapeHtml(o.merk)}</a></dd>` : ""}
       </div>
       <div class="kaart-prijs">
