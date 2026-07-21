@@ -59,7 +59,8 @@
   function bestePrijs(p) {
     const aanbiedingen = (p.aanbiedingen || []).filter((a) => a && a.prijs_eur);
     if (aanbiedingen.length) {
-      return aanbiedingen.reduce((min, a) => (a.prijs_eur < min.prijs_eur ? a : min));
+      // Bij gelijke prijs wint de aanbieding met controledatum (geverifieerd)
+      return aanbiedingen.reduce((min, a) => (a.prijs_eur < min.prijs_eur || (a.prijs_eur === min.prijs_eur && a.datum && !min.datum) ? a : min));
     }
     if (p.richtprijs_eur) {
       return { winkel: p.prijs_bron || "richtprijs (indicatie)", prijs_eur: p.richtprijs_eur, url: p.product_url };

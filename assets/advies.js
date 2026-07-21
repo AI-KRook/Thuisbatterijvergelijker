@@ -33,7 +33,8 @@
   function bestePrijs(x) {
     const aanbiedingen = (x.aanbiedingen || []).filter((a) => a && a.prijs_eur);
     if (aanbiedingen.length) {
-      return aanbiedingen.reduce((min, a) => (a.prijs_eur < min.prijs_eur ? a : min));
+      // Bij gelijke prijs wint de aanbieding met controledatum (geverifieerd)
+      return aanbiedingen.reduce((min, a) => (a.prijs_eur < min.prijs_eur || (a.prijs_eur === min.prijs_eur && a.datum && !min.datum) ? a : min));
     }
     if (x.richtprijs_eur) return { winkel: null, prijs_eur: x.richtprijs_eur, url: x.product_url };
     return null;
@@ -283,6 +284,7 @@
         <p style="margin:6px 0 0;">Verwachte opbrengst: <b>${numFmt.format(opbrengst)} kWh per jaar</b>, circa ${dekking}% van je ${extras.length ? "verwachte " : ""}verbruik van ${numFmt.format(doelVerbruik)} kWh.</p>
         ${extras.length ? `<p class="hint" style="margin:6px 0 0;">Meegerekend: ${extras.join(", ")}.</p>` : ""}
         ${s.batterijPlan !== "nee" ? '<p class="hint" style="margin:6px 0 0;">Omdat je een thuisbatterij (verwacht) hebt, adviseren wij iets ruimer: het overschot gebruik je dan zelf.</p>' : ""}
+        ${s.factor <= 0.65 ? '<p class="hint" style="margin:6px 0 0;">Let op: een noorddak levert circa een derde minder op dan een zuiddak. Vraag een installateur of het bij jouw dak uit kan; vaak is een oost-westdak of een kleiner systeem verstandiger.</p>' : ""}
         ${dakTeKlein ? `<p style="margin:8px 0 0;background:var(--kleur-accent-licht);border-radius:8px;padding:8px 12px;font-size:0.92rem;">⚠️ Voor je volledige verbruik zouden circa ${aantal} panelen nodig zijn, meer dan er op je dak passen. Kies daarom een paneel met een hoog rendement; die wegen hieronder automatisch zwaarder.</p>` : ""}
       </div>
 
@@ -291,7 +293,7 @@
         <span class="plek">📋 Jouw complete systeem in het kort</span>
         <table style="width:100%;border-collapse:collapse;font-size:0.95rem;margin-top:8px;">
           <tr><td style="padding:6px 8px 6px 0;">☀️ <b>${aantalGeadviseerd} ×</b> ${escapeHtml(naamVan(topPaneel))}${paneelBeste && paneelBeste.winkel ? `<br><small>${winkelLink(paneelBeste)} (${eurFmt.format(paneelBeste.prijs_eur)} per paneel)</small>` : ""}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(panelenPrijs)}</b></td></tr>
-          <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">⚡ ${escapeHtml(topOmvormer.merk)} ${escapeHtml(topOmvormer.model)}${perPaneelOmvormer ? "" : ` (kies circa ${omvormerKw} kW)`}${omvormerBeste && omvormerBeste.winkel ? `<br><small>${winkelLink(omvormerBeste)} (${eurFmt.format(omvormerBeste.prijs_eur)}${perPaneelOmvormer ? " per stuk" : ""})</small>` : ""}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(omvormerPrijs)}</b></td></tr>
+          <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">⚡ ${escapeHtml(topOmvormer.merk)} ${escapeHtml(topOmvormer.model)}${perPaneelOmvormer ? "" : ` (kies circa ${omvormerKw} kW)`}${omvormerBeste && omvormerBeste.winkel ? `<br><small>${winkelLink(omvormerBeste)} (${eurFmt.format(omvormerBeste.prijs_eur)}${topOmvormer.type === "micro" ? " per stuk" : topOmvormer.type === "optimizer" ? " voor de losse omvormer" : ""})</small>` : ""}</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(omvormerPrijs)}</b></td></tr>
           <tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">🔧 Montage, bekabeling en meterkast (indicatie)</td><td style="text-align:right;white-space:nowrap;">circa <b>${eurFmt.format(montagePrijs)}</b></td></tr>
           ${batterij ? `<tr style="border-top:1px dotted var(--kleur-rand);"><td style="padding:6px 8px 6px 0;">🔋 Thuisbatterij ${s.batterijPlan === "ja" ? `van circa ${batterij.onder} tot ${batterij.boven} kWh` : "(later bij te plaatsen)"}</td><td style="text-align:right;white-space:nowrap;">${s.batterijPlan === "ja" ? "apart budget" : "later"}</td></tr>` : ""}
           <tr style="border-top:2px solid var(--kleur-rand);font-weight:700;"><td style="padding:8px 8px 6px 0;">Totaal zonnestroomsysteem${batterij && s.batterijPlan === "ja" ? " (excl. batterij)" : ""}</td><td style="text-align:right;white-space:nowrap;">circa ${eurFmt.format(totaal)}</td></tr>
