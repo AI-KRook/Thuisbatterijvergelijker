@@ -297,6 +297,7 @@
           <tr style="border-top:2px solid var(--kleur-rand);font-weight:700;"><td style="padding:8px 8px 6px 0;">Totaal zonnestroomsysteem${batterij && s.batterijPlan === "ja" ? " (excl. batterij)" : ""}</td><td style="text-align:right;white-space:nowrap;">circa ${eurFmt.format(totaal)}</td></tr>
         </table>
         ${smartRegel ? `<p style="margin:8px 0 0;font-size:0.92rem;">🏠 ${smartRegel}</p>` : ""}
+        <p style="margin:10px 0 0;"><a class="knop" style="padding:8px 14px;font-size:0.88rem;" href="systeem.html?paneel=${encodeURIComponent(topPaneel.id)}&omvormer=${encodeURIComponent(topOmvormer.id)}&aantal=${aantalGeadviseerd}&schaduw=${encodeURIComponent(s.schaduw)}&batterij=${encodeURIComponent(s.batterijPlan)}&smart=${encodeURIComponent(s.smartHome === "anders" ? "geen" : s.smartHome)}">🔧 Pas dit systeem aan in de samensteller →</a></p>
         <p class="hint" style="margin:8px 0 0;">Paneel- en omvormerprijzen zijn de goedkoopst gevonden winkelprijzen; klik op de winkel voor de actuele aanbieding. Alle bedragen zijn indicaties (0% btw waar van toepassing, losse onderdelen soms exclusief btw); vraag altijd meerdere offertes aan. <a href="javascript:window.print()">🖨️ Advies afdrukken of bewaren als pdf</a></p>
       </div>` : ""}
 

@@ -150,9 +150,13 @@
         `<option value="${escapeHtml(p.id)}">${escapeHtml(naamVan(p))} — ${p.vermogen_wp} Wp, ${eurFmt.format(p.richtprijs_eur || 0)}</option>`
       ).join("");
 
-      // Voorselectie via ?paneel=<id> (vanuit de vergelijker en paneelpagina's)
-      const gevraagd = new URLSearchParams(location.search).get("paneel");
+      // Voorselectie via ?paneel=<id>&aantal=<n> (vanuit de vergelijker,
+      // paneelpagina's en de systeem-samensteller)
+      const params = new URLSearchParams(location.search);
+      const gevraagd = params.get("paneel");
       if (gevraagd && panelen.some((p) => p.id === gevraagd)) select.value = gevraagd;
+      const gevraagdAantal = Number(params.get("aantal"));
+      if (gevraagdAantal >= 1 && gevraagdAantal <= 60) el("aantalPanelen").value = gevraagdAantal;
 
       ["keuzePaneel", "aantalPanelen", "jaarverbruik", "dakligging", "schaduw",
        "stroomprijs", "vergoeding", "terugleverkosten", "eigenverbruik", "systeemprijs"].forEach((id) => {

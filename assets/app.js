@@ -309,6 +309,7 @@
       <div class="kaart-acties">
         ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}" aria-label="Bekijk de ${escapeHtml(naamVan(p))} bij ${escapeHtml(beste.winkel || "de aanbieder")}">${beste.winkel && !beste.winkel.startsWith("richtprijs") ? "Bekijk aanbieding →" : "Naar fabrikant →"}</a>` : ""}
         <a class="knop knop-secundair" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}" title="Bereken de terugverdientijd van dit paneel voor jouw dak" aria-label="Bereken de terugverdientijd van de ${escapeHtml(naamVan(p))}">Terugverdientijd</a>
+        <a class="knop knop-secundair" href="systeem.html?paneel=${encodeURIComponent(p.id)}" title="Combineer dit paneel met een omvormer en zie de systeemprijs" aria-label="Stel een systeem samen met de ${escapeHtml(naamVan(p))}">In systeem →</a>
       </div>
       ${beste && beste.affiliate_url ? `<div class="datum-stempel" style="padding:0 20px 12px;">Dit is een commissielink: kost jou niets, beïnvloedt de vergelijking niet. <a href="over-ons.html">Uitleg</a></div>` : ""}
     </article>`;

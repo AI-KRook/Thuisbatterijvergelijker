@@ -202,6 +202,7 @@
       </div>
       <div class="kaart-acties">
         ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}" aria-label="Bekijk de ${escapeHtml(o.merk)} ${escapeHtml(o.model)} bij ${escapeHtml(uitWinkel ? beste.winkel : "de fabrikant")}">${uitWinkel ? "Bekijk aanbieding →" : "Naar fabrikant →"}</a>` : ""}
+        <a class="knop knop-secundair" href="systeem.html?omvormer=${encodeURIComponent(o.id)}" title="Combineer deze omvormer met panelen en zie de systeemprijs" aria-label="Stel een systeem samen met de ${escapeHtml(o.merk)} ${escapeHtml(o.model)}">In systeem →</a>
         <a class="knop knop-secundair" href="advies.html" title="Welke omvormer past bij jouw systeem? Doe de keuzehulp">Keuzehulp</a>
       </div>
     </article>`;

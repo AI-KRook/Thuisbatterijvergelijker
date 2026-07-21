@@ -52,7 +52,16 @@
           "datum": "2026-07-21"
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "per_paneel",
+        "max_wp_per_paneel": 560,
+        "extra_per_systeem": {
+          "label": "IQ Gateway",
+          "prijs_eur": 250
+        },
+        "bron": "Enphase IQ8HC datasheet: aanbevolen paneelvermogen tot 560 Wp"
+      }
     },
     {
       "id": "apsystems-ds3",
@@ -98,7 +107,16 @@
           "datum": "2026-07-21"
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "per_2_panelen",
+        "max_wp_per_paneel": 550,
+        "extra_per_systeem": {
+          "label": "ECU-communicatiemodule",
+          "prijs_eur": 230
+        },
+        "bron": "APsystems DS3 datasheet: 300-660 Wp+ aanbevolen, tot 550 Wp per ingang gangbaar"
+      }
     },
     {
       "id": "solaredge-home-wave",
@@ -137,7 +155,28 @@
           "url": "https://zonnigewinkel.nl/product/solaredge-home-wave-omvormer-se5000h/",
           "datum": null
         }
-      ]
+      ],
+      "samensteller": {
+        "soort": "centraal_optimizer",
+        "max_wp_per_paneel": 500,
+        "optimizer": {
+          "label": "S500-optimizer per paneel",
+          "prijs_eur": 60
+        },
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          2.2,
+          3,
+          3.68,
+          4,
+          5,
+          6,
+          8,
+          10
+        ],
+        "max_dc_ac": 1.5,
+        "bron": "SolarEdge S500-datasheet (tot 500 Wp per optimizer); SolarEdge staat 135-155% overdimensionering toe"
+      }
     },
     {
       "id": "sma-tripower-smart-energy",
@@ -182,7 +221,19 @@
           "url": "https://volt-shop.nl/product/sma-sunny-tripower-5-0-wifi-smart-energy-hybride-omvormer/",
           "datum": null
         }
-      ]
+      ],
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          5,
+          6,
+          8,
+          10
+        ],
+        "max_dc_ac": 1.5,
+        "bron": "SMA: hybride 5-10 kW; SMA staat ruime overdimensionering toe"
+      }
     },
     {
       "id": "fronius-gen24",
@@ -222,7 +273,23 @@
           "datum": "2026-07-21"
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          3,
+          3.6,
+          4,
+          4.6,
+          5,
+          6,
+          8,
+          10
+        ],
+        "max_dc_ac": 1.35,
+        "bron": "Fronius GEN24: Primo 3-6 kW (1-fase), Symo 6-10 kW (3-fase)"
+      }
     },
     {
       "id": "goodwe-et",
@@ -261,7 +328,20 @@
           "url": "https://zonnigewinkel.nl/product/goodwe-5kn-et-hybride/",
           "datum": null
         }
-      ]
+      ],
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          5,
+          6.5,
+          8,
+          10,
+          15
+        ],
+        "max_dc_ac": 1.35,
+        "bron": "GoodWe ET-serie: 5-15 kW, 3-fase"
+      }
     },
     {
       "id": "huawei-sun2000",
@@ -313,7 +393,21 @@
           "datum": "2026-07-21"
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          2,
+          3,
+          3.68,
+          4.6,
+          5,
+          6
+        ],
+        "max_dc_ac": 1.35,
+        "bron": "Huawei SUN2000 L1: 2-6 kW, 1-fase"
+      }
     },
     {
       "id": "growatt-min-xh",
@@ -365,7 +459,22 @@
           "datum": "2026-07-21"
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          2.5,
+          3,
+          3.6,
+          4.2,
+          4.6,
+          5,
+          6
+        ],
+        "max_dc_ac": 1.35,
+        "bron": "Growatt MIN TL-XH: 2,5-6 kW, 1-fase"
+      }
     },
     {
       "id": "solis-s6-hybride",
@@ -411,7 +520,21 @@
           "datum": null
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          3,
+          3.6,
+          4.6,
+          5,
+          6,
+          8
+        ],
+        "max_dc_ac": 1.35,
+        "bron": "Solis S6 hybride: 3-10 kW in 1- en 3-fase varianten"
+      }
     },
     {
       "id": "sungrow-sh",
@@ -457,7 +580,22 @@
           "datum": null
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          3.6,
+          4,
+          4.6,
+          5,
+          6,
+          8,
+          10
+        ],
+        "max_dc_ac": 1.35,
+        "bron": "Sungrow SH-serie: 3,6-10 kW (RS 1-fase, RT 3-fase)"
+      }
     },
     {
       "id": "deye-sg04lp1",
@@ -497,7 +635,21 @@
           "datum": "2026-07-21"
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "centraal",
+        "voorbeeld_ac_kw": 5,
+        "ac_kw_bereik": [
+          3.6,
+          5,
+          6,
+          8,
+          10,
+          12
+        ],
+        "max_dc_ac": 1.35,
+        "bron": "Deye SG04LP1: 3,6-12 kW, 1-fase"
+      }
     },
     {
       "id": "victron-multiplus2",
@@ -537,7 +689,12 @@
           "datum": "2026-07-21"
         }
       ],
-      "prijs_datum": "2026-07-21"
+      "prijs_datum": "2026-07-21",
+      "samensteller": {
+        "soort": "maatwerk",
+        "voorbeeld_ac_kw": 4,
+        "bron": "Victron MultiPlus-II 48/5000: 4.000 W continu; panelen via aparte MPPT-laadregelaars (ontwerp door specialist)"
+      }
     }
   ]
 }
