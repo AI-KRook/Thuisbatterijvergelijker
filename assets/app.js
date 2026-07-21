@@ -309,8 +309,8 @@
       </div>
       <div class="kaart-acties">
         ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}" aria-label="Bekijk de ${escapeHtml(naamVan(p))} bij ${escapeHtml(beste.winkel || "de aanbieder")}">${beste.winkel && !beste.winkel.startsWith("richtprijs") ? "Bekijk aanbieding →" : "Naar fabrikant →"}</a>` : ""}
-        <a class="knop knop-secundair" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}" title="Bereken de terugverdientijd van dit paneel voor jouw dak" aria-label="Bereken de terugverdientijd van de ${escapeHtml(naamVan(p))}">Terugverdientijd</a>
         <a class="knop knop-secundair" href="systeem.html?paneel=${encodeURIComponent(p.id)}" title="Combineer dit paneel met een omvormer en zie de systeemprijs" aria-label="Stel een systeem samen met de ${escapeHtml(naamVan(p))}">In systeem →</a>
+        <a class="knop knop-secundair" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}" title="Bereken de terugverdientijd van dit paneel voor jouw dak" aria-label="Bereken de terugverdientijd van de ${escapeHtml(naamVan(p))}">Terugverdientijd</a>
       </div>
       ${beste && beste.affiliate_url ? `<div class="datum-stempel" style="padding:0 20px 12px;">Dit is een commissielink: kost jou niets, beïnvloedt de vergelijking niet. <a href="over-ons.html">Uitleg</a></div>` : ""}
     </article>`;
@@ -325,7 +325,7 @@
     { key: "wp", label: "Wp", get: (p) => p.vermogen_wp || 0 },
     { key: "rendement", label: "Rendement", get: (p) => p.rendement_pct || 0 },
     { key: "celtype", label: "Celtype", get: (p) => p.celtype },
-    { key: "prijs", label: "Richtprijs", get: (p) => { const b = bestePrijs(p); return b ? b.prijs_eur : Infinity; } },
+    { key: "prijs", label: "Prijs", get: (p) => { const b = bestePrijs(p); return b ? b.prijs_eur : Infinity; } },
     { key: "perwp", label: "€/Wp", get: (p) => prijsPerWp(p) || Infinity },
     { key: "uitvoering", label: "Glas-glas", get: (p) => (p.uitvoering === "glas-glas" ? 1 : 0) },
     { key: "garantie", label: "Garantie", get: (p) => p.garantie_product_jaar || 0 },
@@ -383,7 +383,7 @@
         ${rij("Celtype", (p) => escapeHtml(celtypeLabel(p)))}
         ${rij("Vermogen", (p) => (p.vermogen_wp ? p.vermogen_wp + " Wp" : "?"))}
         ${rij("Rendement", (p) => (p.rendement_pct ? nl(p.rendement_pct) + "%" : "?"))}
-        ${rij("Richtprijs", (p) => { const b = bestePrijs(p); return b ? `<b>${eurFmt.format(b.prijs_eur)}</b>` : "n.b."; })}
+        ${rij("Prijs", (p) => { const b = bestePrijs(p); return b ? `<b>${eurFmt.format(b.prijs_eur)}</b>` : "n.b."; })}
         ${rij("Prijs per Wp", (p) => { const w = prijsPerWp(p); return w ? eurWpFmt.format(w) : "n.b."; })}
         ${rij("Uitvoering", (p) => escapeHtml(p.uitvoering || "?"))}
         ${rij("Full black", (p) => jaNee(p.full_black))}

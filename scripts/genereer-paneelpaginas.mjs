@@ -206,7 +206,7 @@ const FOOTER = `
   <div class="container">
     <b>☀️ Zonnepaneelmaatje</b>
     <p>Onafhankelijke vergelijking van zonnepanelen voor Nederlandse huishoudens.</p>
-    <p><a href="/index.html">Zonnepanelen</a> · <a href="/omvormers.html">Omvormers</a> · <a href="/systeem.html">Samenstellen</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="/beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Zonnepanelen</a> · <a href="/omvormers.html">Omvormers</a> · <a href="/systeem.html">Samenstellen</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="/beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. Prijzen zijn indicatief; de prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>`;
@@ -275,7 +275,7 @@ function pagina(p) {
 
 <main class="content-pagina">
 
-  <p class="datum-stempel"><a href="/index.html">Vergelijker</a> › ${esc(volledigeNaam(p))}</p>
+  <p class="datum-stempel"><a href="/index.html">Zonnepanelen</a> › ${esc(volledigeNaam(p))}</p>
   <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
     <div style="flex:1;min-width:250px;">
       <h1>${merkLogoHtml(p.merk)}${esc(volledigeNaam(p))}</h1>
@@ -378,7 +378,7 @@ function overzichtTabel(lijst) {
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);position:sticky;left:0;z-index:1;box-shadow:2px 0 0 var(--kleur-rand);">Paneel</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Wp</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Rendement</th>
-      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Richtprijs</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Prijs</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">€/Wp</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Uitvoering</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Zeker-score</th>
@@ -504,7 +504,7 @@ function vergelijkingsPagina(v) {
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);"><a href="/paneel/${esc(B.id)}.html">${esc(naam(B))}</a></th>
     </tr></thead>
     <tbody>
-      ${rij("Richtprijs", besteA ? eur(besteA.prijs_eur) : "op aanvraag", besteB ? eur(besteB.prijs_eur) : "op aanvraag")}
+      ${rij("Prijs", besteA ? eur(besteA.prijs_eur) : "op aanvraag", besteB ? eur(besteB.prijs_eur) : "op aanvraag")}
       ${rij("Prijs per Wp", perA ? eurWp(perA) : "n.b.", perB ? eurWp(perB) : "n.b.", laagWint(perA, perB))}
       ${rij("Vermogen", `${A.vermogen_wp} Wp`, `${B.vermogen_wp} Wp`, hoogWint(A.vermogen_wp, B.vermogen_wp))}
       ${rij("Rendement", `${nl(A.rendement_pct)}%`, `${nl(B.rendement_pct)}%`, hoogWint(A.rendement_pct, B.rendement_pct))}
