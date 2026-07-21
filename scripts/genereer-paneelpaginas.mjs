@@ -18,7 +18,7 @@ const SITE = "https://zonnepaneelmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260721a";
+const ASSET_VERSIE = "20260721d";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/panelen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "paneel"), { recursive: true });
@@ -102,14 +102,14 @@ function merkLogoHtml(merk) {
   return logo ? `<img class="merk-logo" src="/${esc(logo)}" alt="" loading="lazy"> ` : "";
 }
 
-// Mini-illustraties per celtype, in de huisstijl (nachtblauw, lucht, amber).
+// Mini-illustraties per celtype, in de huisstijl (inkt-teal, teal, amber), zoals Batterijmaatje.
 // Eigen tekeningen, dus geen rechtenkwesties.
 function typeIllustratie(celtype) {
   const paneel = (x, y, extra = "") => `
-      <rect x="${x}" y="${y}" width="64" height="44" rx="4" fill="#0b3a5c" ${extra}/>
-      <line x1="${x + 21}" y1="${y + 2}" x2="${x + 21}" y2="${y + 42}" stroke="#7dd3fc" stroke-width="2"/>
-      <line x1="${x + 43}" y1="${y + 2}" x2="${x + 43}" y2="${y + 42}" stroke="#7dd3fc" stroke-width="2"/>
-      <line x1="${x + 2}" y1="${y + 22}" x2="${x + 62}" y2="${y + 22}" stroke="#7dd3fc" stroke-width="2"/>`;
+      <rect x="${x}" y="${y}" width="64" height="44" rx="4" fill="#0e4f49" ${extra}/>
+      <line x1="${x + 21}" y1="${y + 2}" x2="${x + 21}" y2="${y + 42}" stroke="#2dd4bf" stroke-width="2"/>
+      <line x1="${x + 43}" y1="${y + 2}" x2="${x + 43}" y2="${y + 42}" stroke="#2dd4bf" stroke-width="2"/>
+      <line x1="${x + 2}" y1="${y + 22}" x2="${x + 62}" y2="${y + 22}" stroke="#2dd4bf" stroke-width="2"/>`;
   const zon = `
       <circle cx="34" cy="30" r="13" fill="#fbbf24"/>
       <g stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round">
@@ -120,22 +120,22 @@ function typeIllustratie(celtype) {
   const svgs = {
     "topcon": `<svg viewBox="0 0 170 120" role="img" aria-label="TOPCon-paneel: de huidige standaard met hoog rendement" class="type-illustratie">
       ${zon}${paneel(70, 55)}
-      <text x="14" y="110" font-size="11" font-weight="700" fill="#0b3a5c">TOPCon: de standaard</text>
+      <text x="14" y="110" font-size="11" font-weight="700" fill="#0a3733">TOPCon: de standaard</text>
     </svg>`,
     "hjt": `<svg viewBox="0 0 170 120" role="img" aria-label="HJT-paneel: presteert het best bij warmte" class="type-illustratie">
       ${zon}${paneel(70, 55)}
       <path d="M 96 40 q 4 -8 0 -14 M 106 42 q 4 -8 0 -14 M 116 40 q 4 -8 0 -14" fill="none" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-      <text x="14" y="110" font-size="11" font-weight="700" fill="#0b3a5c">HJT: sterk bij warmte</text>
+      <text x="14" y="110" font-size="11" font-weight="700" fill="#0a3733">HJT: sterk bij warmte</text>
     </svg>`,
     "back-contact": `<svg viewBox="0 0 170 120" role="img" aria-label="Back-contact paneel: contacten aan de achterkant, egaal zwart en hoogste rendement" class="type-illustratie">
       ${zon}
       <rect x="70" y="55" width="64" height="44" rx="4" fill="#111827"/>
       <rect x="70" y="55" width="64" height="44" rx="4" fill="none" stroke="#374151" stroke-width="2"/>
-      <text x="14" y="110" font-size="11" font-weight="700" fill="#0b3a5c">strak, egaal zwart</text>
+      <text x="14" y="110" font-size="11" font-weight="700" fill="#0a3733">strak, egaal zwart</text>
     </svg>`,
     "perc": `<svg viewBox="0 0 170 120" role="img" aria-label="PERC-paneel: de vorige generatie" class="type-illustratie">
       ${zon}${paneel(70, 55)}
-      <text x="14" y="110" font-size="11" font-weight="700" fill="#0b3a5c">PERC: vorige generatie</text>
+      <text x="14" y="110" font-size="11" font-weight="700" fill="#0a3733">PERC: vorige generatie</text>
     </svg>`,
   };
   return svgs[celtype] || "";
@@ -231,8 +231,8 @@ function kop(titel, metaDesc, canoniek, ld = "") {
   <meta name="twitter:card" content="summary_large_image">
   ${ld ? `<script type="application/ld+json">\n${ld}\n  </script>` : ""}
   <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
-  <link rel="icon" href="/assets/favicon.svg?v=1" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
+  <link rel="icon" href="/assets/favicon.svg?v=3" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=3">
 </head>
 <body>
 ${NAV}`;
