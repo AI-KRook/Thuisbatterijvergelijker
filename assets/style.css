@@ -3,10 +3,10 @@
    ========================================================================== */
 
 :root {
-  --kleur-primair: #0f766e;
-  --kleur-primair-donker: #0b4f4a;
-  --kleur-primair-licht: #d7f0ea;
-  --kleur-inkt: #0a3733; /* diepe inkt-teal voor hero en footer, zoals Batterijmaatje */
+  --kleur-primair: #0369a1;
+  --kleur-primair-donker: #075985;
+  --kleur-primair-licht: #dbeffc;
+  --kleur-inkt: #0b3a5c; /* diep nachtblauw voor hero en footer */
   --kleur-accent: #f59e0b;
   --kleur-accent-donker: #b45309;
   --kleur-accent-licht: #fdf0d2;
@@ -169,7 +169,7 @@ a { color: var(--kleur-primair); }
   background:
     radial-gradient(circle 220px at 88% 8%, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.12) 55%, transparent 75%),
     radial-gradient(circle 420px at -5% 110%, rgba(45, 212, 191, 0.22), transparent 70%),
-    linear-gradient(140deg, #0a3733 0%, #0e4f49 55%, #0f766e 100%);
+    linear-gradient(140deg, #0b3a5c 0%, #0c4f7d 55%, #0369a1 100%);
   color: var(--kleur-wit);
   padding: 56px 0 46px;
   position: relative;
@@ -385,11 +385,11 @@ a { color: var(--kleur-primair); }
   position: absolute;
   inset: 0 0 auto 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--kleur-primair), #2dd4bf 55%, var(--kleur-accent));
+  background: linear-gradient(90deg, var(--kleur-primair), #38bdf8 55%, var(--kleur-accent));
   opacity: 0.9;
 }
 
-.paneel-kaart:hover { box-shadow: var(--schaduw-hover); transform: translateY(-3px); border-color: #cfe8e2; }
+.paneel-kaart:hover { box-shadow: var(--schaduw-hover); transform: translateY(-3px); border-color: #cfe2f0; }
 
 .kaart-kop {
   padding: 18px 20px 0;
@@ -577,7 +577,7 @@ details.lees-meer[open] summary::after { content: " ▴"; }
 
 /* Zeker-score: eigen Zonnepaneelmaatje-score voor degelijkheid (0-6 punten) */
 .badge.zeker-score { font-weight: 700; }
-.badge.zeker-hoog { background: #ccfbf1; border-color: #99f6e4; color: #0f766e; }
+.badge.zeker-hoog { background: #e0f2fe; border-color: #bae6fd; color: #0369a1; }
 .badge.zeker-midden { background: var(--kleur-accent-licht); border-color: #fde68a; color: #92400e; }
 .badge.zeker-laag { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
 .badge.nee { background: var(--kleur-achtergrond); color: var(--kleur-tekst-licht); text-decoration: line-through; opacity: 0.7; }
@@ -697,7 +697,7 @@ table.vergelijk-tabel {
 
 .vergelijk-tabel th .sorteer-pijl { opacity: 0.5; }
 .vergelijk-tabel td { padding: 12px 14px; border-bottom: 1px solid var(--kleur-rand); vertical-align: top; }
-.vergelijk-tabel tr:hover td { background: #f0fdfa; }
+.vergelijk-tabel tr:hover td { background: #f0f8ff; }
 .vergelijk-tabel .tabel-prijs { font-weight: 700; white-space: nowrap; }
 .vergelijk-tabel .check-ja { color: var(--kleur-groen); font-weight: 700; }
 .vergelijk-tabel .check-deels { color: #92400e; font-weight: 700; cursor: help; }
