@@ -25,6 +25,14 @@ mkdirSync(resolve(ROOT, "paneel"), { recursive: true });
 
 /* ------------------------------------------------------------------ */
 
+// Interne links worden relatief gemaakt aan de hand van de map-diepte van de
+// pagina. Zo werkt de site zowel op een eigen domein (zonnepaneelmaatje.nl)
+// als in een submap zoals gebruiker.github.io/Zonnepaneelmaatje/.
+const relativeer = (html, diepte) => {
+  const prefix = diepte > 0 ? "../".repeat(diepte) : "";
+  return html.replaceAll('href="/', `href="${prefix}`).replaceAll('src="/', `src="${prefix}`);
+};
+
 const esc = (s) => String(s == null ? "" : s)
   .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
@@ -536,18 +544,18 @@ ${staart}`;
    ------------------------------------------------------------------ */
 
 for (const p of data.panelen) {
-  writeFileSync(resolve(ROOT, "paneel", `${p.id}.html`), pagina(p), "utf8");
+  writeFileSync(resolve(ROOT, "paneel", `${p.id}.html`), relativeer(pagina(p), 1), "utf8");
 }
 console.log(`${data.panelen.length} paneelpagina's gegenereerd in /paneel/`);
 
 for (const cfg of OVERZICHTEN) {
-  writeFileSync(resolve(ROOT, cfg.bestand), overzichtsPagina(cfg), "utf8");
+  writeFileSync(resolve(ROOT, cfg.bestand), relativeer(overzichtsPagina(cfg), 0), "utf8");
 }
 console.log(`${OVERZICHTEN.length} overzichtspagina's gegenereerd (klein dak, glas-glas)`);
 
 mkdirSync(resolve(ROOT, "vergelijk"), { recursive: true });
 for (const v of VERGELIJKINGEN) {
-  writeFileSync(resolve(ROOT, "vergelijk", `${v.slug}.html`), vergelijkingsPagina(v), "utf8");
+  writeFileSync(resolve(ROOT, "vergelijk", `${v.slug}.html`), relativeer(vergelijkingsPagina(v), 1), "utf8");
 }
 console.log(`${VERGELIJKINGEN.length} vergelijkingspagina's gegenereerd in /vergelijk/`);
 
