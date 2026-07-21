@@ -41,17 +41,18 @@
         },
         {
           "winkel": "Winkelman Zonnepanelen",
-          "prijs_eur": 133,
+          "prijs_eur": 109,
           "url": "https://www.winkelman-zonnepanelen.nl/enphase-iq8-hc-micro-omvormer.html",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "Solar Bouwmarkt",
-          "prijs_eur": 150,
+          "prijs_eur": 119,
           "url": "https://www.solar-bouwmarkt.nl/iq8hc-micro-omvormer.html",
-          "datum": null
+          "datum": "2026-07-21"
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     },
     {
       "id": "apsystems-ds3",
@@ -86,23 +87,18 @@
       "aanbiedingen": [
         {
           "winkel": "Simply Solar",
-          "prijs_eur": 146,
+          "prijs_eur": 149,
           "url": "https://www.simply-solar.nl/products/aps-ds3-microinverter",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "J en M Zonnepanelen",
-          "prijs_eur": 159,
+          "prijs_eur": 145,
           "url": "https://www.jenm-zonnepanelen.nl/nl/apsystems-ds3-micro-omvormer.html",
-          "datum": null
-        },
-        {
-          "winkel": "Elektrototaalmarkt",
-          "prijs_eur": 165,
-          "url": "https://www.elektrototaalmarkt.nl/apsystems-ds3-micro-omvormer-4179909",
-          "datum": null
+          "datum": "2026-07-21"
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     },
     {
       "id": "solaredge-home-wave",
@@ -139,18 +135,6 @@
           "winkel": "Zonnige Winkel",
           "prijs_eur": 1050,
           "url": "https://zonnigewinkel.nl/product/solaredge-home-wave-omvormer-se5000h/",
-          "datum": null
-        },
-        {
-          "winkel": "Solar Outlet",
-          "prijs_eur": 1100,
-          "url": "https://www.solar-outlet.nl/solar-edge-se5000h-home-wave-hybride-omvormer.html",
-          "datum": null
-        },
-        {
-          "winkel": "Mijn Alius",
-          "prijs_eur": 1100,
-          "url": "https://mijnalius.nl/solaredge-se5000h-omvormer",
           "datum": null
         }
       ]
@@ -197,12 +181,6 @@
           "prijs_eur": 1800,
           "url": "https://volt-shop.nl/product/sma-sunny-tripower-5-0-wifi-smart-energy-hybride-omvormer/",
           "datum": null
-        },
-        {
-          "winkel": "Solar Outlet",
-          "prijs_eur": 1900,
-          "url": "https://www.solar-outlet.nl/sma-sunny-tripower-50-smart-energy-hybride-omvorme.html",
-          "datum": null
         }
       ]
     },
@@ -238,24 +216,13 @@
       },
       "aanbiedingen": [
         {
-          "winkel": "SmartEnergyDeals",
-          "prijs_eur": 1500,
-          "url": "https://smartenergydeals.nl/products/fronius-primo-gen24-5-0-plus",
-          "datum": null
-        },
-        {
           "winkel": "Zonnepanelen-voordelig",
-          "prijs_eur": 1520,
+          "prijs_eur": 1415,
           "url": "https://www.zonnepanelen-voordelig.nl/contents/nl/p58724_Fronius-Primo-GEN24-Plus-5.0-omvormer.html",
-          "datum": null
-        },
-        {
-          "winkel": "Alma Solarshop",
-          "prijs_eur": 1550,
-          "url": "https://www.alma-solarshop.nl/fronius-omvormer/1286-hybrid-fronius-omvormer-primo-gen24-50-plus.html",
-          "datum": null
+          "datum": "2026-07-21"
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     },
     {
       "id": "goodwe-et",
@@ -289,21 +256,15 @@
       },
       "aanbiedingen": [
         {
-          "winkel": "Zonnepanelen-voordelig",
-          "prijs_eur": 869,
-          "url": "https://www.zonnepanelen-voordelig.nl/contents/nl/p72205_GoodWe-GW5K-ET-Plus-incl.-Smart-Meter-and-10-years-warranty.html",
+          "winkel": "Zonnige Winkel",
+          "prijs_eur": 1100,
+          "url": "https://zonnigewinkel.nl/product/goodwe-5kn-et-hybride/",
           "datum": null
         },
         {
-          "winkel": "Zonnepanelenkopen.com",
-          "prijs_eur": 1000,
-          "url": "https://www.zonnepanelenkopen.com/omvormers/gw5k-et-3-fase-hybride",
-          "datum": null
-        },
-        {
-          "winkel": "Duurzameboer",
-          "prijs_eur": 1050,
-          "url": "https://duurzameboer.nl/product/goodwe-gw5k-et-3-fase/",
+          "winkel": "Accuoutlet",
+          "prijs_eur": 1650,
+          "url": "https://www.accuoutlet.nl/goodwe-gw5k-et-3-fase-hybride-omvormer",
           "datum": null
         }
       ]
@@ -341,23 +302,24 @@
       "aanbiedingen": [
         {
           "winkel": "Stralend Groen",
-          "prijs_eur": 900,
+          "prijs_eur": 625,
           "url": "https://www.stralendgroen.nl/product/huawei-sun2000-5ktl-l1/",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "Groothandel Solar",
-          "prijs_eur": 920,
+          "prijs_eur": 1000,
           "url": "https://www.groothandelsolar.com/omvormers/string-omvormers/huawei/huawai-sun2000-5ktl-l1",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "SolarNRG",
-          "prijs_eur": 950,
+          "prijs_eur": 842,
           "url": "https://solarnrg.shop/omvormers/huawei-sun2000-5ktl-l1/",
-          "datum": null
+          "datum": "2026-07-21"
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     },
     {
       "id": "growatt-min-xh",
@@ -394,21 +356,22 @@
           "winkel": "Stralend Groen",
           "prijs_eur": 540,
           "url": "https://www.stralendgroen.nl/en/product/growatt-min-5000tl-xh-hybrid/",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "Winkelman Zonnepanelen",
-          "prijs_eur": 600,
+          "prijs_eur": 546,
           "url": "https://www.winkelman-zonnepanelen.nl/growatt-min-5000tl-xh-1-fase-omvormer-hybride.html",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "WarmteBeheer",
-          "prijs_eur": 650,
+          "prijs_eur": 620,
           "url": "https://www.warmtebeheer.nl/growatt-min-5000tl-xh-hybrid-ready-omvormer-5000w-2mppt-gratis-wifi-module.html",
-          "datum": null
+          "datum": "2026-07-21"
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     },
     {
       "id": "solis-s6-hybride",
@@ -490,13 +453,7 @@
           "winkel": "CV Totaal",
           "prijs_eur": 950,
           "url": "https://www.cvtotaal.nl/sungrow-sh5-0rt-v112-3-fase-hybride-omvormer-5000w.html",
-          "datum": null
-        },
-        {
-          "winkel": "Ecotec World",
-          "prijs_eur": 1000,
-          "url": "https://ecotecworld.nl/sungrow-sh5-0rt-v112/",
-          "datum": null
+          "datum": "2026-07-21"
         },
         {
           "winkel": "Pavento Solar",
@@ -504,7 +461,8 @@
           "url": "https://paventosolar.nl/product/sungrow-sh5-0rt/",
           "datum": null
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     },
     {
       "id": "deye-sg04lp1",
@@ -539,11 +497,12 @@
       "aanbiedingen": [
         {
           "winkel": "Eigen Stroom Opslaan",
-          "prijs_eur": 800,
+          "prijs_eur": 1295,
           "url": "https://eigenstroomopslaan.nl/product/deye-inverter-sun-5k-sg03-lp1eu/",
-          "datum": null
+          "datum": "2026-07-21"
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     },
     {
       "id": "victron-multiplus2",
@@ -577,18 +536,13 @@
       },
       "aanbiedingen": [
         {
-          "winkel": "Bluepowershop",
-          "prijs_eur": 1150,
-          "url": "https://www.bluepowershop.nl/lader-omvormer/victron-multiplus-ii-48-5000-70-50.html",
-          "datum": null
-        },
-        {
           "winkel": "Acculaders.nl",
-          "prijs_eur": 1200,
+          "prijs_eur": 670,
           "url": "https://www.acculaders.nl/victron-multiplus-ii-48-5000-70-50-230v.html",
-          "datum": null
+          "datum": "2026-07-21"
         }
-      ]
+      ],
+      "prijs_datum": "2026-07-21"
     }
   ]
 }

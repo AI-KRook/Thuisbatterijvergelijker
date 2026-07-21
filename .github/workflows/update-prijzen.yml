@@ -39,7 +39,7 @@ jobs:
         run: |
           git config user.name "prijsupdate-bot"
           git config user.email "actions@github.com"
-          git add data/panelen.json sitemap.xml paneel/ vergelijk/ beste-zonnepanelen-klein-dak.html beste-glas-glas-zonnepanelen.html
+          git add data/panelen.json data/omvormers.json sitemap.xml paneel/ vergelijk/ beste-zonnepanelen-klein-dak.html beste-glas-glas-zonnepanelen.html
           if git diff --cached --quiet; then
             echo "Geen prijswijzigingen vandaag."
             echo "gewijzigd=false" >> "$GITHUB_OUTPUT"
