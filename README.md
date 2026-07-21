@@ -1,58 +1,71 @@
-# 🔋 Batterijmaatje.nl
+# ☀️ Zonnepaneelmaatje.nl
 
-Een gebruiksvriendelijke, statische vergelijkingssite voor thuisbatterijen op de Nederlandse markt. Gebouwd voor GitHub Pages: geen build-stap, geen server nodig.
+Een gebruiksvriendelijke, statische vergelijkingssite voor zonnepanelen op de Nederlandse markt. Gebouwd voor GitHub Pages: geen build-stap, geen server nodig. De zustersite van [Batterijmaatje.nl](https://batterijmaatje.nl/) (thuisbatterijen), met dezelfde opzet en huisstijl.
 
 ## Wat kan de site?
 
-- **Vergelijken** van de populairste thuisbatterijen op capaciteit, vermogen, prijs en prijs per kWh opslag.
-- **Filteren** op type (plug-in, AC-gekoppeld, hybride), capaciteit, installatiegemak, merk, Homey, Home Assistant, dynamisch energiecontract en actuele aanbiedingen.
-- **Koppelgemak-score** (1 tot 5 sterren) die laat zien hoe makkelijk een batterij aan een bestaand zonnepanelensysteem te koppelen is.
-- **Kaart- en tabelweergave**, plus zij-aan-zij vergelijken van maximaal 3 batterijen.
-- **Directe links** naar de winkel of aanbieder met de beste prijs ("Bekijk aanbieding").
-- **Rekenmodule terugverdientijd** (`rekenmodule.html`): berekent per batterij en per situatie (met of zonder zonnepanelen, vast of dynamisch contract, slim laden en ontladen op uurprijzen) de jaarlijkse opbrengst en terugverdientijd, met instelbare en gedocumenteerde aannames.
-- **Keuzehulp** (`advies.html`): adviseert op basis van verbruik, zonnepanelen, contract en wensen de juiste accugrootte (bandbreedte in kWh) en de drie best passende batterijen uit de vergelijker.
-- **Uitlegpagina** over de actuele overheidsregels: einde salderingsregeling per 2027, terugleverkosten, btw en subsidies, met bronvermelding.
+- **Vergelijken** van populaire zonnepanelen op prijs per paneel, prijs per wattpiek, rendement, vermogen en garanties.
+- **Filteren** op celtype (TOPCon, HJT, back-contact), vermogen, glas-glas of glas-folie, merk, full black, bifaciaal en lange productgarantie.
+- **Zeker-score** (0 tot 6 punten): transparante degelijkheidsscore op basis van productgarantie, vermogensbehoud na 25 jaar en glas-glas uitvoering.
+- **Sterrenscore "opbrengst per m² dak"** op basis van het rendement, voor wie weinig dakruimte heeft.
+- **Kaart- en tabelweergave**, plus zij-aan-zij vergelijken van maximaal 3 panelen.
+- **Rekenmodule** (`rekenmodule.html`): berekent per paneel en per situatie (dakligging, schaduw, verbruik, met en zonder saldering) de jaaropbrengst, besparing en terugverdientijd, met instelbare en gedocumenteerde aannames.
+- **Keuzehulp** (`advies.html`): adviseert op basis van verbruik, dak en wensen het aantal wattpiek en de drie best passende panelen.
+- **Uitlegpagina's** over celtypen, glas-glas, garanties en de actuele regels: einde salderingsregeling per 2027, 0% btw en terugleverkosten, met bronvermelding.
+- **Detailpagina per paneel** (`paneel/<id>.html`), overzichtspagina's (klein dak, glas-glas) en "X vs Y"-vergelijkingen, allemaal gegenereerd uit de data.
 
 ## Structuur
 
 ```
 index.html                      De vergelijker
-rekenmodule.html                Rekenmodule terugverdientijd
-regelgeving.html                Uitleg regels en subsidies
+rekenmodule.html                Opbrengst en terugverdientijd
+advies.html                     Keuzehulp
+uitleg.html                     Uitleg en woordenlijst
+regelgeving.html                Regels en subsidies
+paneel/<id>.html                Detailpagina per paneel (gegenereerd)
+vergelijk/<a>-vs-<b>.html       Vergelijkingspagina's (gegenereerd)
+beste-*.html                    Overzichtspagina's (gegenereerd)
 assets/style.css                Vormgeving
 assets/app.js                   Filter-, sorteer- en renderlogica
-assets/rekenmodule.js           Rekenlogica terugverdientijd
-data/batterijen.json            Alle batterijgegevens, prijzen en aanbiedingen
-scripts/update-prices.mjs       Dagelijks prijsupdate-script (Node.js)
+assets/rekenmodule.js           Rekenlogica opbrengst en terugverdientijd
+assets/advies.js                Advieslogica keuzehulp
+data/panelen.json               Alle paneelgegevens en richtprijzen
+scripts/genereer-paneelpaginas.mjs   Genereert paneel-, overzichts- en vs-pagina's + sitemap
+scripts/update-prices.mjs       Prijsupdate-script (Node.js), voor gekoppelde winkels
 .github/workflows/
   update-prijzen.yml            Dagelijkse GitHub Action die prijzen ververst
   deploy-pages.yml              Publicatie naar GitHub Pages
 ```
 
-## GitHub Pages activeren
+## Live zetten (eigen repository aanbevolen)
 
-1. Ga in de repository naar **Settings → Pages**.
-2. Kies bij **Build and deployment** de bron **GitHub Actions**.
-3. Merge deze branch naar `main` (of pas de branchnaam in `deploy-pages.yml` aan).
-4. Na de eerste run van de workflow "Publiceren naar GitHub Pages" staat de site live op `https://batterijmaatje.nl/`.
+Deze code is ontwikkeld op een branch van de Thuisbatterijvergelijker-repository. Eén repository kan maar één GitHub Pages-site hosten, dus voor zonnepaneelmaatje.nl is een eigen repository nodig:
 
-## Dagelijkse prijsupdate
+1. Maak een nieuwe repository aan (bijvoorbeeld `Zonnepaneelmaatje`).
+2. Push deze branch daarheen als `main`:
+   ```bash
+   git clone -b claude/zonnepaneelmaatje-website-cl6974 <url-van-deze-repo> zonnepaneelmaatje
+   cd zonnepaneelmaatje
+   git remote set-url origin <url-van-de-nieuwe-repo>
+   git push -u origin HEAD:main
+   ```
+3. Ga in de nieuwe repository naar **Settings → Pages** en kies bij **Build and deployment** de bron **GitHub Actions**.
+4. Na de eerste run van de workflow "Publiceren naar GitHub Pages" staat de site live. Koppel het domein `zonnepaneelmaatje.nl` via **Settings → Pages → Custom domain** (het `CNAME`-bestand staat al klaar) en verwijs bij je domeinregistrar de DNS naar GitHub Pages.
 
-De workflow `update-prijzen.yml` draait elke ochtend en:
+De deploy-workflow staat bewust alleen op `main` + handmatig starten, zodat er vanuit deze branch nooit per ongeluk over batterijmaatje.nl heen wordt gepubliceerd.
 
-1. bezoekt de winkel-URL's uit `data/batterijen.json`;
-2. leest de actuele prijs uit structured data (schema.org JSON-LD), meta-tags of als laatste redmiddel de paginatekst;
-3. accepteert een nieuwe prijs alleen als die plausibel is ten opzichte van de vorige prijs (tussen 40% en 250%);
-4. commit de wijzigingen, waarna de site opnieuw wordt gepubliceerd.
+## Prijzen en data bijwerken
 
-Winkels die zich niet automatisch laten uitlezen behouden de laatst bekende prijs. De datum van de laatste succesvolle controle staat per aanbieding in het databestand en per batterij zichtbaar op de site.
+Alle inhoud staat in `data/panelen.json`. Voeg een object toe aan de `panelen`-array met dezelfde velden als de bestaande items en draai daarna:
 
-Handmatig draaien kan ook: `node scripts/update-prices.mjs` (Node.js 18 of hoger) of via **Actions → Dagelijkse prijsupdate → Run workflow**.
+```bash
+node scripts/genereer-paneelpaginas.mjs
+```
 
-## Data bijwerken of batterijen toevoegen
+Dat herbouwt de paneelpagina's, de overzichtspagina's, de vs-pagina's en `sitemap.xml`.
 
-Alle inhoud staat in `data/batterijen.json`. Voeg een object toe aan de `batterijen`-array met dezelfde velden als de bestaande items. De site pikt nieuwe items automatisch op; er is geen build-stap.
+De prijzen zijn nu indicatieve richtprijzen (`richtprijs_eur`). Wil je automatische prijscontrole per winkel, voeg dan per paneel `aanbiedingen` toe met winkel-URL's (zelfde formaat als bij Batterijmaatje); de dagelijkse workflow `update-prijzen.yml` leest die pagina's dan uit via structured data en werkt de prijzen bij.
 
 ## Disclaimer
 
-Prijzen, specificaties en regelgeving veranderen regelmatig. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.
+Prijzen, specificaties en regelgeving veranderen regelmatig. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend; specificaties komen uit fabrikantendatasheets en moeten vóór aankoop gecontroleerd worden.

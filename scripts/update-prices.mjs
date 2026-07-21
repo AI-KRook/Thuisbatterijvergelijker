@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Dagelijkse prijsupdate voor data/batterijen.json.
+ * Dagelijkse prijsupdate voor data/panelen.json.
  *
  * Voor elke aanbieding (winkel-URL) probeert dit script de actuele prijs van de
  * productpagina te lezen, in deze volgorde:
@@ -23,12 +23,12 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_PAD = resolve(__dirname, "../data/batterijen.json");
+const DATA_PAD = resolve(__dirname, "../data/panelen.json");
 
 const VANDAAG = new Date().toISOString().slice(0, 10);
 const TIMEOUT_MS = 20000;
 const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 ThuisbatterijVergelijker-prijscheck/1.0";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 Zonnepaneelmaatje-prijscheck/1.0";
 
 /* ------------------------------------------------------------------
    Bol.com Marketing Catalog API (officiële partnerroute).
@@ -65,7 +65,7 @@ function zoekPrijsInRespons(obj) {
     for (const x of obj) { const p = zoekPrijsInRespons(x); if (p) return p; }
     return null;
   }
-  if (typeof obj.price === "number" && obj.price >= 50 && obj.price <= 30000) return obj.price;
+  if (typeof obj.price === "number" && obj.price >= 20 && obj.price <= 2000) return obj.price;
   for (const k of Object.keys(obj)) {
     const p = zoekPrijsInRespons(obj[k]);
     if (p) return p;
@@ -167,7 +167,7 @@ function prijsUitTekst(html) {
   const telling = new Map();
   for (const m of matches) {
     const p = parsePrijsWaarde(m);
-    if (p && p >= 100 && p <= 30000) telling.set(p, (telling.get(p) || 0) + 1);
+    if (p && p >= 20 && p <= 2000) telling.set(p, (telling.get(p) || 0) + 1);
   }
   let beste = null, max = 0;
   for (const [prijs, n] of telling) {
@@ -177,13 +177,13 @@ function prijsUitTekst(html) {
 }
 
 function plausibel(nieuw, oud) {
-  if (!oud) return nieuw >= 100 && nieuw <= 30000;
+  if (!oud) return nieuw >= 20 && nieuw <= 2000;
   return nieuw >= oud * 0.4 && nieuw <= oud * 2.5;
 }
 
 /* ------------------------------------------------------------------ */
 
-async function updateAanbieding(batterij, aanbieding) {
+async function updateAanbieding(paneel, aanbieding) {
   if (!aanbieding.url) return false;
   try {
     let nieuw;
@@ -194,20 +194,20 @@ async function updateAanbieding(batterij, aanbieding) {
       nieuw = prijsUitJsonLd(html) ?? prijsUitMeta(html) ?? prijsUitTekst(html);
     }
     if (!nieuw) {
-      console.log(`  ~ ${batterij.id} @ ${aanbieding.winkel}: geen prijs gevonden, oude prijs blijft (€${aanbieding.prijs_eur})`);
+      console.log(`  ~ ${paneel.id} @ ${aanbieding.winkel}: geen prijs gevonden, oude prijs blijft (€${aanbieding.prijs_eur})`);
       return false;
     }
     if (!plausibel(nieuw, aanbieding.prijs_eur)) {
-      console.log(`  ! ${batterij.id} @ ${aanbieding.winkel}: gevonden prijs €${nieuw} niet plausibel t.o.v. €${aanbieding.prijs_eur}, overgeslagen`);
+      console.log(`  ! ${paneel.id} @ ${aanbieding.winkel}: gevonden prijs €${nieuw} niet plausibel t.o.v. €${aanbieding.prijs_eur}, overgeslagen`);
       return false;
     }
     const veranderd = nieuw !== aanbieding.prijs_eur;
     aanbieding.prijs_eur = nieuw;
     aanbieding.datum = VANDAAG;
-    console.log(`  ${veranderd ? "✓ NIEUW" : "= gelijk"} ${batterij.id} @ ${aanbieding.winkel}: €${nieuw}`);
+    console.log(`  ${veranderd ? "✓ NIEUW" : "= gelijk"} ${paneel.id} @ ${aanbieding.winkel}: €${nieuw}`);
     return veranderd;
   } catch (err) {
-    console.log(`  x ${batterij.id} @ ${aanbieding.winkel}: ${err.message} (oude prijs blijft staan)`);
+    console.log(`  x ${paneel.id} @ ${aanbieding.winkel}: ${err.message} (oude prijs blijft staan)`);
     return false;
   }
 }
@@ -216,20 +216,20 @@ async function main() {
   const data = JSON.parse(readFileSync(DATA_PAD, "utf8"));
   let wijzigingen = 0;
 
-  for (const batterij of data.batterijen || []) {
-    for (const aanbieding of batterij.aanbiedingen || []) {
-      if (await updateAanbieding(batterij, aanbieding)) wijzigingen++;
+  for (const paneel of data.panelen || []) {
+    for (const aanbieding of paneel.aanbiedingen || []) {
+      if (await updateAanbieding(paneel, aanbieding)) wijzigingen++;
       await new Promise((r) => setTimeout(r, 1500)); // beleefde pauze tussen requests
     }
-    // prijs_datum van de batterij = meest recente controle-datum van zijn aanbiedingen
-    const datums = (batterij.aanbiedingen || []).map((a) => a.datum).filter(Boolean).sort();
-    if (datums.length) batterij.prijs_datum = datums[datums.length - 1];
+    // prijs_datum van het paneel = meest recente controle-datum van zijn aanbiedingen
+    const datums = (paneel.aanbiedingen || []).map((a) => a.datum).filter(Boolean).sort();
+    if (datums.length) paneel.prijs_datum = datums[datums.length - 1];
   }
 
   data.laatst_bijgewerkt = VANDAAG;
   writeFileSync(DATA_PAD, JSON.stringify(data, null, 2) + "\n", "utf8");
-  // De batterijpagina's en sitemap worden hierna herbouwd door
-  // scripts/genereer-batterijpaginas.mjs (zie de workflow).
+  // De paneelpagina's en sitemap worden hierna herbouwd door
+  // scripts/genereer-paneelpaginas.mjs (zie de workflow).
 
   console.log(`\nKlaar. ${wijzigingen} prijswijziging(en). laatst_bijgewerkt = ${VANDAAG}`);
 }

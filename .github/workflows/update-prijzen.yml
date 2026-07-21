@@ -2,8 +2,8 @@ name: Dagelijkse prijsupdate
 
 on:
   schedule:
-    # Elke dag om 05:30 UTC (07:30 Nederlandse zomertijd)
-    - cron: "30 5 * * *"
+    # Elke dag om 05:45 UTC (07:45 Nederlandse zomertijd)
+    - cron: "45 5 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -31,15 +31,15 @@ jobs:
           BOL_CLIENT_SECRET: ${{ secrets.BOL_CLIENT_SECRET }}
         run: node scripts/update-prices.mjs
 
-      - name: Batterijpagina's en sitemap herbouwen
-        run: node scripts/genereer-batterijpaginas.mjs
+      - name: Paneelpagina's en sitemap herbouwen
+        run: node scripts/genereer-paneelpaginas.mjs
 
       - name: Wijzigingen committen en pushen
         id: commit
         run: |
           git config user.name "prijsupdate-bot"
           git config user.email "actions@github.com"
-          git add data/batterijen.json sitemap.xml batterij/ vergelijk/ beste-thuisbatterij-home-assistant.html beste-thuisbatterij-homey.html
+          git add data/panelen.json sitemap.xml paneel/ vergelijk/ beste-zonnepanelen-klein-dak.html beste-glas-glas-zonnepanelen.html
           if git diff --cached --quiet; then
             echo "Geen prijswijzigingen vandaag."
             echo "gewijzigd=false" >> "$GITHUB_OUTPUT"

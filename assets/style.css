@@ -1,12 +1,12 @@
 /* ==========================================================================
-   Thuisbatterijvergelijker.nl - stijlen
+   Zonnepaneelmaatje.nl - stijlen
    ========================================================================== */
 
 :root {
-  --kleur-primair: #0f766e;
-  --kleur-primair-donker: #0b4f4a;
-  --kleur-primair-licht: #d7f0ea;
-  --kleur-inkt: #0a3733; /* diepe inkt-teal voor hero en footer */
+  --kleur-primair: #0369a1;
+  --kleur-primair-donker: #075985;
+  --kleur-primair-licht: #dbeffc;
+  --kleur-inkt: #0b3a5c; /* diep nachtblauw voor hero en footer */
   --kleur-accent: #f59e0b;
   --kleur-accent-donker: #b45309;
   --kleur-accent-licht: #fdf0d2;
@@ -169,7 +169,7 @@ a { color: var(--kleur-primair); }
   background:
     radial-gradient(circle 220px at 88% 8%, rgba(245, 158, 11, 0.55), rgba(245, 158, 11, 0.12) 55%, transparent 75%),
     radial-gradient(circle 420px at -5% 110%, rgba(45, 212, 191, 0.22), transparent 70%),
-    linear-gradient(140deg, #0a3733 0%, #0e4f49 55%, #0f766e 100%);
+    linear-gradient(140deg, #0b3a5c 0%, #0c4f7d 55%, #0369a1 100%);
   color: var(--kleur-wit);
   padding: 56px 0 46px;
   position: relative;
@@ -225,7 +225,7 @@ a { color: var(--kleur-primair); }
    Filters
    -------------------------------------------------------------------------- */
 
-/* Op mobiel zijn de filters standaard ingeklapt zodat de batterijen snel in beeld komen */
+/* Op mobiel zijn de filters standaard ingeklapt zodat de panelen snel in beeld komen */
 .filter-toggle {
   display: none;
   width: 100%;
@@ -365,7 +365,7 @@ a { color: var(--kleur-primair); }
   margin-bottom: 40px;
 }
 
-.batterij-kaart {
+.paneel-kaart {
   background: var(--kleur-wit);
   border: 1px solid var(--kleur-rand);
   border-radius: var(--radius);
@@ -377,17 +377,17 @@ a { color: var(--kleur-primair); }
   position: relative;
 }
 
-.batterij-kaart::before {
+.paneel-kaart::before {
   /* Teal-naar-amber hairline bovenlangs geeft de kaarten een eigen gezicht */
   content: "";
   position: absolute;
   inset: 0 0 auto 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--kleur-primair), #2dd4bf 55%, var(--kleur-accent));
+  background: linear-gradient(90deg, var(--kleur-primair), #38bdf8 55%, var(--kleur-accent));
   opacity: 0.9;
 }
 
-.batterij-kaart:hover { box-shadow: var(--schaduw-hover); transform: translateY(-3px); border-color: #cfe8e2; }
+.paneel-kaart:hover { box-shadow: var(--schaduw-hover); transform: translateY(-3px); border-color: #cfe2f0; }
 
 .kaart-kop {
   padding: 18px 20px 0;
@@ -422,9 +422,10 @@ a { color: var(--kleur-primair); }
 a.term-link { color: inherit; text-decoration: underline dotted; text-underline-offset: 3px; }
 a.term-link:hover { color: var(--kleur-primair); }
 
-.type-plug-in { background: var(--kleur-groen-licht); color: #166534; }
-.type-ac-gekoppeld { background: var(--kleur-blauw-licht); color: #1e40af; }
-.type-hybride { background: #ede9fe; color: #5b21b6; }
+.type-topcon { background: var(--kleur-blauw-licht); color: #1e40af; }
+.type-hjt { background: var(--kleur-groen-licht); color: #166534; }
+.type-back-contact { background: #ede9fe; color: #5b21b6; }
+.type-perc { background: #f1f5f9; color: #475569; }
 
 .kaart-specs {
   padding: 14px 20px;
@@ -475,11 +476,11 @@ a.term-link:hover { color: var(--kleur-primair); }
 }
 
 /* Merklogo's: klein, uitgelijnd met de tekst; alleen zichtbaar als het
-   logobestand in assets/logos/ staat en in data/batterijen.json is geregistreerd */
+   logobestand in assets/logos/ staat en in data/panelen.json is geregistreerd */
 .merk-logo { height: 16px; width: auto; max-width: 90px; vertical-align: -3px; }
 h1 .merk-logo { height: 28px; vertical-align: -4px; }
 
-/* Mini-illustraties per batterijtype (eigen tekeningen in de huisstijl) */
+/* Mini-illustraties per celtype (eigen tekeningen in de huisstijl) */
 .type-illustratie {
   width: 170px;
   height: auto;
@@ -568,11 +569,11 @@ details.lees-meer[open] summary::after { content: " ▴"; }
 .legenda .legenda-rij > span:first-child { flex-shrink: 0; }
 .legenda .legenda-rij > span:last-child { color: var(--kleur-tekst-licht); }
 
-/* Slim-score: eigen Batterijmaatje-score voor slim aansturen (0-6 punten) */
-.badge.slim-score { font-weight: 700; }
-.badge.slim-hoog { background: #ccfbf1; border-color: #99f6e4; color: #0f766e; }
-.badge.slim-midden { background: var(--kleur-accent-licht); border-color: #fde68a; color: #92400e; }
-.badge.slim-laag { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
+/* Zeker-score: eigen Zonnepaneelmaatje-score voor degelijkheid (0-6 punten) */
+.badge.zeker-score { font-weight: 700; }
+.badge.zeker-hoog { background: #e0f2fe; border-color: #bae6fd; color: #0369a1; }
+.badge.zeker-midden { background: var(--kleur-accent-licht); border-color: #fde68a; color: #92400e; }
+.badge.zeker-laag { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
 .badge.nee { background: var(--kleur-achtergrond); color: var(--kleur-tekst-licht); text-decoration: line-through; opacity: 0.7; }
 .badge.onbekend { background: var(--kleur-achtergrond); border-style: dashed; color: var(--kleur-tekst-licht); }
 
@@ -690,7 +691,7 @@ table.vergelijk-tabel {
 
 .vergelijk-tabel th .sorteer-pijl { opacity: 0.5; }
 .vergelijk-tabel td { padding: 12px 14px; border-bottom: 1px solid var(--kleur-rand); vertical-align: top; }
-.vergelijk-tabel tr:hover td { background: #f0fdfa; }
+.vergelijk-tabel tr:hover td { background: #f0f8ff; }
 .vergelijk-tabel .tabel-prijs { font-weight: 700; white-space: nowrap; }
 .vergelijk-tabel .check-ja { color: var(--kleur-groen); font-weight: 700; }
 .vergelijk-tabel .check-deels { color: #92400e; font-weight: 700; cursor: help; }

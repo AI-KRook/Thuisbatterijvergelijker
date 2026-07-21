@@ -1,10 +1,13 @@
 name: Publiceren naar GitHub Pages
 
+# Let op: Zonnepaneelmaatje hoort in een eigen repository te draaien (zie
+# README), met deze branch of main als standaardbranch. De trigger staat
+# bewust alleen op main + handmatig, zodat deze site nooit per ongeluk over
+# batterijmaatje.nl heen wordt gepubliceerd zolang de code nog in de
+# Thuisbatterijvergelijker-repository staat.
 on:
   push:
-    # De github-pages omgeving staat alleen deployments vanaf de standaardbranch toe.
-    # Beide branches triggeren, zodat het blijft werken als de standaardbranch wijzigt.
-    branches: [main, claude/home-battery-comparison-nl-qxolhe]
+    branches: [main]
   workflow_dispatch: {}
 
 permissions:

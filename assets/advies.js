@@ -1,71 +1,19 @@
 /* ==========================================================================
-   Keuzehulp: adviseert een accugrootte (kWh) en de best passende batterijen.
-
-   Maatadvies (vuistregels, bewust als bandbreedte gepresenteerd):
-   - Met zonnepanelen: je slaat het dagelijkse zomeroverschot op, maar meer
-     opslaan dan je 's avonds en 's nachts verbruikt is zinloos.
-       dagoverschot_zomer  = (opwek x (1 - direct eigen verbruik)) / 365 x 1,5
-       avondnachtverbruik  = jaarverbruik / 365 x 0,6
-       advies              = min(dagoverschot_zomer, avondnachtverbruik), bandbreedte +/- 25%
-   - Zonder zonnepanelen, met dynamisch contract: je verschuift het deel van
-     je dagverbruik dat flexibel is naar goedkope uren.
-       advies = jaarverbruik / 365 x 0,6, bandbreedte +/- 25%
-   - Zonder zonnepanelen en zonder dynamisch contract: een batterij kan dan
-     vrijwel niets verdienen; dat zeggen we eerlijk.
-
-   Matching: filtert data/batterijen.json op fase, installatievoorkeur,
-   smart home-eisen, dynamisch contract en budget, en rangschikt op
-   (1) hoe goed de capaciteit past, (2) prijs per kWh, (3) koppelgemak.
+   Zonnepaneelmaatje - keuzehulp
+   Adviseert op basis van verbruik, dak en wensen het aantal wattpiek en de
+   drie best passende panelen uit data/panelen.json.
    ========================================================================== */
 
 (function () {
   "use strict";
 
   const el = (id) => document.getElementById(id);
+
   const eurFmt = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
-  const kwhFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 1 });
+  const eurWpFmt = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const numFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 0 });
 
-  let batterijen = [];
-  let merkLogos = {};
-  let gestart = false; // pas advies tonen nadat de bezoeker er zelf om vraagt
-
-  /* ------------------------------------------------------------------ */
-
-  function bestePrijs(b) {
-    const a = (b.aanbiedingen || []).filter((x) => x && x.prijs_eur);
-    if (a.length) return a.reduce((m, x) => (x.prijs_eur < m.prijs_eur ? x : m));
-    if (b.richtprijs_eur) return { winkel: b.prijs_bron || "richtprijs", prijs_eur: b.richtprijs_eur, url: b.product_url };
-    return null;
-  }
-
-  function driewaardig(v) {
-    if (v && typeof v === "object") return v.status || "deels";
-    if (v === true) return "ja";
-    if (typeof v === "string" && v.trim()) return "deels";
-    return "nee";
-  }
-
-  function vierwaardig(v) {
-    if (v === undefined || v === null) return "onbekend";
-    return driewaardig(v);
-  }
-
-  // Slim-score: zelfde formule als de vergelijker (assets/app.js) en uitleg.html#slim-score
-  function slimScore(b) {
-    const punt = (v) => { const s = driewaardig(v); return s === "ja" ? 2 : s === "deels" ? 1 : 0; };
-    return punt(b.homey) + punt(b.home_assistant) + punt(b.dynamisch_contract);
-  }
-
-  function slimScoreBadge(b) {
-    const score = slimScore(b);
-    const klasse = score >= 5 ? "slim-hoog" : score >= 3 ? "slim-midden" : "slim-laag";
-    return `<span class="badge slim-score ${klasse}" title="Punten voor Homey, Home Assistant en dynamisch contract (2 per volledige, 1 per gedeeltelijke ondersteuning)">\u{1F3E0} Slim-score ${score}/6</span>`;
-  }
-
-  function getal(id, fallback) {
-    const v = parseFloat(String(el(id).value).replace(",", "."));
-    return Number.isFinite(v) ? v : fallback;
-  }
+  let panelen = [];
 
   function escapeHtml(str) {
     return String(str == null ? "" : str)
@@ -73,251 +21,162 @@
       .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
   }
 
-  /* ------------------------------------------------------------------
-     Maatadvies
-     ------------------------------------------------------------------ */
+  const naamVan = (p) => p.model.toLowerCase().startsWith(p.merk.toLowerCase()) ? p.model : `${p.merk} ${p.model}`;
 
-  // Geschatte avondpiek in kW: basislast van 0,4 kW voor sluimerverbruik
-  // (koelkast, vriezer, modem/internetkastjes, verlichting, tv)
-  // plus de apparaten die de bezoeker aanvinkt als "vaak tegelijk aan".
-  // Indicatieve vermogens; bedoeld als vuistregel, geen installatieadvies.
-  function avondPiekKw() {
-    let kw = 0.4;
-    document.querySelectorAll(".avond-apparaat:checked").forEach((n) => { kw += parseFloat(n.dataset.kw) || 0; });
-    return Math.round(kw * 10) / 10;
+  function prijsPerWp(p) {
+    return p.richtprijs_eur && p.vermogen_wp ? p.richtprijs_eur / p.vermogen_wp : null;
   }
 
-  function berekenMaat() {
-    const jaarverbruik = getal("advVerbruik", 2900);
-    const heeftPv = el("advPv").value === "ja";
-    const opwek = heeftPv ? getal("advOpwek", 3500) : 0;
-    const dynamisch = el("advContract").value === "dynamisch";
-
-    const avondNacht = (jaarverbruik / 365) * 0.6;
-    const piekKw = avondPiekKw();
-
-    if (heeftPv) {
-      const dagOverschotZomer = ((opwek * 0.7) / 365) * 1.5;
-      const kern = Math.min(dagOverschotZomer, Math.max(avondNacht, 1));
-      return { laag: kern * 0.75, hoog: kern * 1.25, kern, basis: "pv", dynamisch, avondNacht, dagOverschotZomer, piekKw };
-    }
-    if (dynamisch) {
-      return { laag: avondNacht * 0.75, hoog: avondNacht * 1.25, kern: avondNacht, basis: "dynamisch", dynamisch, avondNacht, piekKw };
-    }
-    return { laag: 0, hoog: 0, kern: 0, basis: "geen", dynamisch, avondNacht, piekKw };
+  // Zelfde formule als assets/app.js en uitleg.html#zeker-score
+  function zekerScore(p) {
+    let score = 0;
+    const g = p.garantie_product_jaar || 0;
+    score += g >= 25 ? 2 : g >= 20 ? 1 : 0;
+    const b = p.vermogen_behoud_25j_pct || 0;
+    score += b >= 90 ? 2 : b >= 88.5 ? 1 : 0;
+    score += p.uitvoering === "glas-glas" ? 2 : 0;
+    return score;
   }
 
-  /* ------------------------------------------------------------------
-     Batterijen matchen
-     ------------------------------------------------------------------ */
-
-  function match(maat) {
-    const fase = el("advFase").value;           // "1" | "3" | "weet-niet"
-    const installatie = el("advInstallatie").value; // "zelf" | "installateur" | "beide"
-    const homey = el("advHomey").checked;
-    const ha = el("advHA").checked;
-    const noodstroom = el("advNoodstroom").checked;
-    const budget = getal("advBudget", 0);
-
-    const redenenAfgevallen = [];
-
-    const kandidaten = batterijen.filter((b) => {
-      const prijs = bestePrijs(b);
-      if (!b.capaciteit_kwh) return false;
-
-      // Fase: bij een 1-fase aansluiting vallen 3-fase-only systemen af
-      if (fase === "1" && b.fase === "3-fase") return false;
-
-      // Installatievoorkeur
-      if (installatie === "zelf" && b.installatie !== "zelf") return false;
-      if (installatie === "installateur" && b.installatie !== "installateur") return false;
-
-      // Smart home-eisen
-      if (homey && driewaardig(b.homey) === "nee") return false;
-      if (ha && driewaardig(b.home_assistant) === "nee") return false;
-
-      // Noodstroom: alleen batterijen waarvan bevestigd is dat het kan
-      if (noodstroom && !["ja", "deels"].includes(vierwaardig(b.noodstroom))) return false;
-
-      // Dynamisch contract als dat het (enige) verdienmodel is
-      if (maat.basis === "dynamisch" && driewaardig(b.dynamisch_contract) === "nee") return false;
-
-      // Budget (alleen als ingevuld)
-      if (budget > 0 && prijs && prijs.prijs_eur > budget) return false;
-
-      // Capaciteit: past binnen ruime marge rond het advies,
-      // of is modulair uitbreidbaar tot binnen de bandbreedte
-      const past = b.capaciteit_kwh >= maat.laag * 0.6 && b.capaciteit_kwh <= maat.hoog * 1.8;
-      const uitbreidbaar = b.uitbreidbaar_tot_kwh && b.capaciteit_kwh <= maat.hoog && b.uitbreidbaar_tot_kwh >= maat.laag;
-      if (!past && !uitbreidbaar) return false;
-
-      return true;
-    });
-
-    // Score: capaciteitspassing (belangrijkst), dan prijs per kWh, dan koppelgemak
-    const scored = kandidaten.map((b) => {
-      const prijs = bestePrijs(b);
-      const perKwh = prijs ? prijs.prijs_eur / b.capaciteit_kwh : 9999;
-      const afwijking = Math.abs(b.capaciteit_kwh - maat.kern) / Math.max(maat.kern, 1);
-      const capScore = Math.max(0, 1 - afwijking);                    // 0..1
-      const prijsScore = Math.max(0, 1 - (perKwh - 150) / 850);       // ~150 euro/kWh = top
-      const koppelScore = (b.koppeling_gemak || 0) / 5;
-      const score = capScore * 0.5 + prijsScore * 0.3 + koppelScore * 0.2;
-      return { b, prijs, perKwh, score };
-    });
-
-    scored.sort((a, z) => z.score - a.score);
-    return { top: scored.slice(0, 3), totaal: kandidaten.length, redenenAfgevallen };
+  function invoer() {
+    const liggingRaw = el("dakligging").value;
+    const platDak = liggingRaw.includes("plat");
+    return {
+      verbruik: Math.max(500, Number(el("verbruik").value) || 2900),
+      factor: parseFloat(liggingRaw) || 0.9,
+      platDak,
+      maxPanelen: Math.max(2, Number(el("maxPanelen").value) || 12),
+      auto: el("checkAuto").checked,
+      warmtepomp: el("checkWarmtepomp").checked,
+      batterij: el("checkBatterij").checked,
+      voorkeur: el("voorkeur").value,
+      fullBlack: el("checkFullBlack").checked,
+    };
   }
 
   /* ------------------------------------------------------------------
-     Rendering
+     Advies: benodigd vermogen
      ------------------------------------------------------------------ */
 
-  function waaromTekst(b, maat) {
+  function vermogenAdvies(s) {
+    let doelVerbruik = s.verbruik;
+    const extras = [];
+    if (s.auto) { doelVerbruik += 2000; extras.push("elektrische auto (+2.000 kWh)"); }
+    if (s.warmtepomp) { doelVerbruik += 2000; extras.push("warmtepomp (+2.000 kWh)"); }
+
+    // Zonder batterij mikken we op ~100% van het (verwachte) verbruik; met
+    // batterij loont iets ruimer, omdat het overschot dan zelf te gebruiken is.
+    const dekkingsFactor = s.batterij ? 1.15 : 1.0;
+    const benodigdWp = Math.round((doelVerbruik * dekkingsFactor) / s.factor);
+    return { doelVerbruik, benodigdWp, extras };
+  }
+
+  /* ------------------------------------------------------------------
+     Advies: top 3 panelen
+     ------------------------------------------------------------------ */
+
+  function scorePanelen(s, dakTeKlein) {
+    // Normaliseren per criterium over de hele dataset (0 = slechtst, 1 = best)
+    const prijzen = panelen.map(prijsPerWp).filter(Boolean);
+    const minPrijs = Math.min(...prijzen), maxPrijs = Math.max(...prijzen);
+    const rendementen = panelen.map((p) => p.rendement_pct || 0);
+    const minRend = Math.min(...rendementen), maxRend = Math.max(...rendementen);
+
+    // Weging op basis van voorkeur; bij een te klein dak telt rendement zwaarder
+    let w = { prijs: 0.45, rendement: 0.2, zeker: 0.35 };
+    if (s.voorkeur === "rendement") w = { prijs: 0.2, rendement: 0.55, zeker: 0.25 };
+    if (s.voorkeur === "zekerheid") w = { prijs: 0.2, rendement: 0.15, zeker: 0.65 };
+    if (dakTeKlein && s.voorkeur !== "rendement") { w.rendement += 0.2; w.prijs = Math.max(0.1, w.prijs - 0.2); }
+
+    const kandidaten = panelen.filter((p) => !s.fullBlack || p.full_black);
+    return kandidaten.map((p) => {
+      const per = prijsPerWp(p);
+      const prijsScore = per ? (maxPrijs - per) / (maxPrijs - minPrijs || 1) : 0;
+      const rendScore = ((p.rendement_pct || minRend) - minRend) / (maxRend - minRend || 1);
+      const zekerNorm = zekerScore(p) / 6;
+      let score = w.prijs * prijsScore + w.rendement * rendScore + w.zeker * zekerNorm;
+      if (s.platDak && p.bifaciaal) score += 0.05; // bifaciaal vangt bij een plat dak ook licht via de achterkant
+      return { p, score, per };
+    }).sort((a, b) => b.score - a.score).slice(0, 3);
+  }
+
+  function redenVoor(p, s, dakTeKlein) {
     const redenen = [];
-    if (Math.abs(b.capaciteit_kwh - maat.kern) / Math.max(maat.kern, 1) <= 0.3) {
-      redenen.push("de capaciteit sluit goed aan op je geadviseerde maat");
-    } else if (b.uitbreidbaar_tot_kwh && b.capaciteit_kwh < maat.laag) {
-      redenen.push("modulair uitbreidbaar tot je geadviseerde maat");
-    } else if (b.capaciteit_kwh > maat.hoog) {
-      redenen.push("let op: ruimer dan je geadviseerde maat; alleen zinvol als je verbruik echt gaat groeien (warmtepomp, elektrische auto), anders betaal je voor capaciteit die je niet opmaakt");
-    } else {
-      redenen.push("de capaciteit valt binnen je bandbreedte");
-    }
-    if (maat.piekKw > 0.4 && b.vermogen_kw) {
-      if (b.vermogen_kw >= maat.piekKw) {
-        redenen.push(`het vermogen (${String(b.vermogen_kw).replace(".", ",")} kW) dekt jouw avondgebruik (ca. ${String(maat.piekKw).replace(".", ",")} kW)`);
-      } else {
-        redenen.push(`let op: het vermogen (${String(b.vermogen_kw).replace(".", ",")} kW) ligt onder jouw geschatte avondpiek (ca. ${String(maat.piekKw).replace(".", ",")} kW); het net vult automatisch aan, maar dat deel bespaart dan niet`);
-      }
-    }
-    if (b.installatie === "zelf") redenen.push("zelf aan te sluiten zonder installateur");
-    if ((b.koppeling_gemak || 0) >= 4) redenen.push("koppelt makkelijk aan bestaande zonnepanelen");
-    if (driewaardig(b.dynamisch_contract) !== "nee" && maat.dynamisch) redenen.push("geschikt voor je dynamische contract");
-    return redenen.slice(0, 4).join(", ");
-  }
-
-  function render() {
-    const doel = el("adviesResultaat");
-
-    if (!gestart) {
-      doel.innerHTML = `
-        <p class="datum-stempel">Nog geen advies: dat komt er pas als jij erom vraagt.</p>
-        <p>Vul je gegevens in en klik op <b>"Geef mij advies"</b>. De vooringevulde getallen zijn gemiddelden om je op weg te helpen; pas ze gerust aan naar je eigen situatie (je jaarnota is de beste bron).</p>`;
-      return;
-    }
-
-    const maat = berekenMaat();
-    const heeftPv = el("advPv").value === "ja";
-
-    if (maat.basis === "geen") {
-      doel.innerHTML = `
-        <div class="waarschuwing-kader"><b>Eerlijk advies: wacht nog even met een batterij.</b>
-        Zonder zonnepanelen en zonder dynamisch energiecontract valt er niets op te slaan en geen prijsverschil te benutten; een thuisbatterij verdient zich dan vrijwel zeker niet terug.
-        Overweeg eerst een dynamisch contract of zonnepanelen, en kom daarna terug. Lees ook <a href="regelgeving.html">wat de regels betekenen</a>.</div>`;
-      return;
-    }
-
-    const { top, totaal } = match(maat);
-
-    const maatUitleg = maat.basis === "pv"
-      ? `Gebaseerd op je zomerse zonnestroom-overschot (ca. ${kwhFmt.format(maat.dagOverschotZomer)} kWh per dag) en je avond- en nachtverbruik (ca. ${kwhFmt.format(maat.avondNacht)} kWh per dag): meer opslaan dan je 's avonds gebruikt heeft geen zin.`
-      : `Gebaseerd op het deel van je dagverbruik dat je naar goedkope uren kunt verschuiven (ca. ${kwhFmt.format(maat.avondNacht)} kWh per dag).`;
-
-    let kaarten = "";
-    if (!top.length) {
-      kaarten = '<div class="leeg-melding">Geen batterijen gevonden die aan al je eisen voldoen. Verruim je budget of laat een smart home-eis los; of bekijk <a href="index.html">de volledige vergelijker</a>.</div>';
-    } else {
-      kaarten = `<div class="kaarten-grid" style="margin-top:18px;">` + top.map(({ b, prijs, perKwh }, i) => `
-        <article class="batterij-kaart">
-          <div class="kaart-kop">
-            <div>
-              <div class="merk">${i === 0 ? "🏆 Beste match · " : ""}${merkLogos[b.merk] ? `<img class="merk-logo" src="${escapeHtml(merkLogos[b.merk])}" alt="" loading="lazy"> ` : ""}${escapeHtml(b.merk)}</div>
-              <h3><a href="batterij/${encodeURIComponent(b.id)}.html" style="color:inherit;text-decoration:none;" title="Alle details van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">${escapeHtml(b.model)}</a></h3>
-              <span class="type-badge type-${escapeHtml(b.type)}">${escapeHtml({ "plug-in": "Plug-in (stopcontact)", "ac-gekoppeld": "AC-gekoppeld", "hybride": "Hybride omvormer" }[b.type] || b.type)}</span>
-              <div style="margin-top:6px;">${slimScoreBadge(b)}</div>
-            </div>
-          </div>
-          <div class="kaart-specs">
-            <div class="spec"><span class="spec-label">Capaciteit</span><span class="spec-waarde">${String(b.capaciteit_kwh).replace(".", ",")} kWh${b.uitbreidbaar_tot_kwh ? ` <small>(tot ${String(b.uitbreidbaar_tot_kwh).replace(".", ",")})</small>` : ""}</span></div>
-            <div class="spec"><span class="spec-label">Prijs</span><span class="spec-waarde">${prijs ? eurFmt.format(prijs.prijs_eur) : "op aanvraag"}</span></div>
-            <div class="spec"><span class="spec-label">Per kWh</span><span class="spec-waarde">${prijs ? eurFmt.format(perKwh) : "n.b."}</span></div>
-            <div class="spec"><span class="spec-label">Installatie</span><span class="spec-waarde">${b.installatie === "zelf" ? "Zelf" : "Installateur"}</span></div>
-          </div>
-          <div class="koppelgemak"><span class="uitleg"><b>Waarom deze past:</b> ${escapeHtml(waaromTekst(b, maat))}.</span></div>
-          <div class="koppelgemak"><span class="uitleg">Compleet gebruiksklaar (indicatie): <b>${b.totaalprijs_van_eur ? eurFmt.format(b.totaalprijs_van_eur) + (b.totaalprijs_tot_eur ? " tot " + eurFmt.format(b.totaalprijs_tot_eur) : "") : "op aanvraag"}</b></span></div>
-          ${b.prijs_omvat ? `<div class="koppelgemak"><span class="uitleg">Winkelprijs dekt: ${escapeHtml(b.prijs_omvat)}</span></div>` : ""}
-          <div class="kaart-acties" style="margin-top:auto;">
-            ${prijs && prijs.url ? `<a class="knop" href="${escapeHtml(prijs.affiliate_url || prijs.url)}" target="_blank" rel="noopener${prijs.affiliate_url ? " sponsored" : ""}" aria-label="Bekijk de aanbieding van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">Bekijk aanbieding →</a>` : ""}
-            <a class="knop knop-secundair" href="rekenmodule.html?batterij=${encodeURIComponent(b.id)}" aria-label="Bereken de terugverdientijd van de ${escapeHtml(b.merk)} ${escapeHtml(b.model)}">Terugverdientijd</a>
-          </div>
-        </article>`).join("") + "</div>";
-    }
-
-    doel.innerHTML = `
-      <div class="info-kader" style="text-align:center;">
-        <span style="font-size:0.85rem;font-weight:700;text-transform:uppercase;color:var(--kleur-tekst-licht);">Geadviseerde accugrootte</span>
-        <div style="font-size:2rem;font-weight:800;color:var(--kleur-primair-donker);">${kwhFmt.format(maat.laag)} tot ${kwhFmt.format(maat.hoog)} kWh</div>
-        <div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">${maatUitleg}</div>
-      </div>
-      ${maat.piekKw > 0.4 ? `<div class="info-kader" style="text-align:center;margin-top:10px;">
-        <span style="font-size:0.85rem;font-weight:700;text-transform:uppercase;color:var(--kleur-tekst-licht);">Handig ontlaadvermogen voor jouw avondgebruik</span>
-        <div style="font-size:1.5rem;font-weight:800;color:var(--kleur-primair-donker);">ca. ${String(maat.piekKw).replace(".", ",")} kW of meer</div>
-        <div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">Schatting op basis van de apparaten die je aanvinkte, plus ca. 0,4 kW basislast voor sluimerverbruik (koelkast, vriezer, modem, verlichting, tv). Levert een batterij minder, dan is dat geen probleem: het stroomnet vult automatisch aan, maar over dat deel bespaar je op dat moment niet. Wil je <b>noodstroom</b>, dan is voldoende vermogen wél belangrijk: bij een storing is er geen net om bij te springen.</div>
-      </div>` : ""}
-      ${heeftPv ? '<div class="waarschuwing-kader">Let op: tot en met 31 december 2026 geldt de salderingsregeling nog, waardoor opslaan van eigen zonnestroom financieel weinig oplevert. Dit advies kijkt naar de situatie vanaf 2027.</div>' : ""}
-      <h2 style="margin-top:26px;">Beste matches (${top.length} van ${totaal} passende batterijen)</h2>
-      ${kaarten}
-      <p style="margin-top:14px;"><a href="index.html">Bekijk alle batterijen in de vergelijker →</a></p>
-    `;
+    const per = prijsPerWp(p);
+    if (per) redenen.push(`${eurWpFmt.format(per)} per Wp`);
+    if ((p.rendement_pct || 0) >= 22.4) redenen.push(`hoog rendement (${String(p.rendement_pct).replace(".", ",")}%), veel opbrengst per m²`);
+    if (zekerScore(p) >= 5) redenen.push(`Zeker-score ${zekerScore(p)}/6`);
+    if (p.uitvoering === "glas-glas") redenen.push("glas-glas uitvoering");
+    if ((p.garantie_product_jaar || 0) >= 25) redenen.push(`${p.garantie_product_jaar} jaar productgarantie`);
+    if (s.platDak && p.bifaciaal) redenen.push("bifaciaal: extra opbrengst bij een plat dak");
+    if (s.fullBlack && p.full_black) redenen.push("full black");
+    return redenen.slice(0, 4).join(" · ");
   }
 
   /* ------------------------------------------------------------------
-     Events en init
+     Renderen
      ------------------------------------------------------------------ */
 
-  function koppelPresets() {
-    el("advPersonen").addEventListener("change", (e) => {
-      const presets = { "1": 1800, "2": 2700, "3": 3300, "4": 3900, "5": 4400 };
-      if (presets[e.target.value]) { el("advVerbruik").value = presets[e.target.value]; }
-      render();
-    });
-    el("advPanelen").addEventListener("input", (e) => {
-      const n = parseInt(e.target.value, 10);
-      if (Number.isFinite(n) && n > 0) { el("advOpwek").value = n * 350; }
-      render();
-    });
-    el("advPv").addEventListener("change", () => {
-      el("pvVragen").style.display = el("advPv").value === "ja" ? "" : "none";
-      render();
-    });
+  function adviseer() {
+    const s = invoer();
+    const { doelVerbruik, benodigdWp, extras } = vermogenAdvies(s);
+
+    // Vertaal naar panelen op basis van een gangbaar paneel van ~440 Wp
+    const refWp = 440;
+    let aantal = Math.max(2, Math.round(benodigdWp / refWp));
+    const dakTeKlein = aantal > s.maxPanelen;
+    const aantalGeadviseerd = Math.min(aantal, s.maxPanelen);
+    const wpGeadviseerd = aantalGeadviseerd * refWp;
+    const opbrengst = Math.round(wpGeadviseerd * s.factor);
+    const dekking = Math.round((opbrengst / doelVerbruik) * 100);
+
+    const top3 = scorePanelen(s, dakTeKlein);
+    const plekken = ["🥇 Beste match", "🥈 Tweede keus", "🥉 Derde keus"];
+
+    el("adviesInhoud").innerHTML = `
+      <div class="advies-samenvatting">
+        <div class="groot">${aantalGeadviseerd} panelen (circa ${numFmt.format(wpGeadviseerd)} Wp)</div>
+        <p style="margin:6px 0 0;">Verwachte opbrengst: <b>${numFmt.format(opbrengst)} kWh per jaar</b>, circa ${dekking}% van je ${extras.length ? "verwachte " : ""}verbruik van ${numFmt.format(doelVerbruik)} kWh.</p>
+        ${extras.length ? `<p class="hint" style="margin:6px 0 0;">Meegerekend: ${extras.join(", ")}.</p>` : ""}
+        ${s.batterij ? '<p class="hint" style="margin:6px 0 0;">Omdat je een thuisbatterij (verwacht) hebt, adviseren wij circa 15% ruimer: het overschot gebruik je dan zelf.</p>' : ""}
+        ${dakTeKlein ? `<p style="margin:8px 0 0;background:var(--kleur-accent-licht);border-radius:8px;padding:8px 12px;font-size:0.92rem;">⚠️ Voor je volledige verbruik zouden circa ${aantal} panelen nodig zijn, meer dan er op je dak passen. Kies daarom een paneel met een hoog rendement; die wegen hieronder automatisch zwaarder.</p>` : ""}
+      </div>
+
+      <h2 style="margin-top:20px;">De drie best passende panelen</h2>
+      ${top3.map(({ p, per }, i) => `
+        <div class="advies-kaart">
+          <span class="plek">${plekken[i]}</span>
+          <h3><a href="paneel/${encodeURIComponent(p.id)}.html">${escapeHtml(naamVan(p))}</a></h3>
+          <div class="reden">${redenVoor(p, s, dakTeKlein)}</div>
+          <p style="margin:8px 0 0;font-size:0.95rem;">${p.vermogen_wp} Wp · richtprijs <b>${eurFmt.format(p.richtprijs_eur || 0)}</b> per paneel · ${aantalGeadviseerd} stuks: circa <b>${eurFmt.format((p.richtprijs_eur || 0) * aantalGeadviseerd)}</b> (excl. montage en omvormer)</p>
+          <p style="margin:8px 0 0;"><a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}">Bereken opbrengst en terugverdientijd →</a></p>
+        </div>
+      `).join("")}
+      ${!top3.length ? '<p class="hint">Geen panelen gevonden met deze wensen; zet bijvoorbeeld het full black-filter uit.</p>' : ""}
+      <p class="hint" style="margin-top:14px;">Alle 14 panelen zelf vergelijken? <a href="index.html">Naar de vergelijker →</a></p>
+    `;
   }
 
   async function init() {
     try {
-      const res = await fetch("data/batterijen.json", { cache: "no-cache" });
+      const res = await fetch("data/panelen.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
-      batterijen = data.batterijen || [];
-      merkLogos = data.merk_logos || {};
-    } catch (err) {
-      console.error("Batterijen konden niet geladen worden:", err);
-    }
-    koppelPresets();
-    document.querySelectorAll("#adviesFormulier input, #adviesFormulier select").forEach((inp) => {
-      inp.addEventListener("input", render);
-      inp.addEventListener("change", render);
-    });
+      panelen = data.panelen || [];
 
-    el("advStart").addEventListener("click", () => {
-      gestart = true;
-      render();
-      // Op smalle schermen staat het resultaat onder het formulier: scroll ernaartoe
-      if (window.innerWidth < 900) {
-        el("adviesResultaat").scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-    render();
+      ["verbruik", "dakligging", "maxPanelen", "voorkeur"].forEach((id) => {
+        el(id).addEventListener("input", adviseer);
+        el(id).addEventListener("change", adviseer);
+      });
+      ["checkAuto", "checkWarmtepomp", "checkBatterij", "checkFullBlack"].forEach((id) => {
+        el(id).addEventListener("change", adviseer);
+      });
+
+      adviseer();
+    } catch (err) {
+      el("adviesInhoud").innerHTML = '<p class="hint">De paneelgegevens konden niet worden geladen. Vernieuw de pagina of probeer het later opnieuw.</p>';
+      console.error("Fout bij laden panelen.json:", err);
+    }
   }
 
   document.addEventListener("DOMContentLoaded", init);
