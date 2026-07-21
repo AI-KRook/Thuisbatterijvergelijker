@@ -37,22 +37,13 @@ scripts/update-prices.mjs       Prijsupdate-script (Node.js), voor gekoppelde wi
   deploy-pages.yml              Publicatie naar GitHub Pages
 ```
 
-## Live zetten (eigen repository aanbevolen)
+## Hosting
 
-Deze code is ontwikkeld op een branch van de Thuisbatterijvergelijker-repository. Eén repository kan maar één GitHub Pages-site hosten, dus voor zonnepaneelmaatje.nl is een eigen repository nodig:
+Deze site draait in de repository [AI-KRook/Zonnemaatje](https://github.com/AI-KRook/Zonnemaatje) op GitHub Pages (bron: GitHub Actions, workflow `deploy-pages.yml`, branch `main`). Zonder gekoppeld domein staat hij op `https://ai-krook.github.io/Zonnemaatje/`; alle interne links zijn relatief, dus de site werkt zowel in die submap als op een eigen domein.
 
-1. Maak een nieuwe repository aan (bijvoorbeeld `Zonnepaneelmaatje`).
-2. Push deze branch daarheen als `main`:
-   ```bash
-   git clone -b claude/zonnepaneelmaatje-website-cl6974 <url-van-deze-repo> zonnepaneelmaatje
-   cd zonnepaneelmaatje
-   git remote set-url origin <url-van-de-nieuwe-repo>
-   git push -u origin HEAD:main
-   ```
-3. Ga in de nieuwe repository naar **Settings → Pages** en kies bij **Build and deployment** de bron **GitHub Actions**.
-4. Na de eerste run van de workflow "Publiceren naar GitHub Pages" staat de site live. Koppel het domein `zonnepaneelmaatje.nl` via **Settings → Pages → Custom domain** (het `CNAME`-bestand staat al klaar) en verwijs bij je domeinregistrar de DNS naar GitHub Pages.
+Het domein `zonnepaneelmaatje.nl` koppelen: vul het in bij **Settings → Pages → Custom domain** en verwijs bij je domeinregistrar de DNS naar GitHub Pages (CNAME `www` → `ai-krook.github.io`, en voor het apex-domein de A-records van GitHub Pages). Het `CNAME`-bestand staat al in de repository.
 
-De deploy-workflow staat bewust alleen op `main` + handmatig starten, zodat er vanuit deze branch nooit per ongeluk over batterijmaatje.nl heen wordt gepubliceerd.
+De site is ontwikkeld op de branch `claude/zonnepaneelmaatje-website-cl6974` van de Thuisbatterijvergelijker-repository; de deploy-workflow staat bewust alleen op `main` + handmatig starten, zodat er vanaf die branch nooit per ongeluk over batterijmaatje.nl heen wordt gepubliceerd.
 
 ## Prijzen en data bijwerken
 
