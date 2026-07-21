@@ -14,9 +14,9 @@
   <meta property="og:image" content="https://zonnepaneelmaatje.nl/assets/og-image.png">
   <meta property="og:site_name" content="Zonnepaneelmaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="assets/style.css?v=20260721a">
-  <script src="assets/advies.js?v=20260721a" defer></script>
-  <script src="assets/nav.js?v=20260721a" defer></script>
+  <link rel="stylesheet" href="assets/style.css?v=20260721c">
+  <script src="assets/advies.js?v=20260721c" defer></script>
+  <script src="assets/nav.js?v=20260721c" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
   <style>
@@ -57,6 +57,7 @@
     </a>
     <nav class="hoofdnav">
       <a href="index.html">Vergelijken</a>
+      <a href="omvormers.html">Omvormers</a>
       <a href="uitleg.html">Uitleg</a>
       <a href="advies.html" class="actief">Keuzehulp</a>
       <a href="rekenmodule.html">Opbrengst</a>
@@ -107,6 +108,16 @@
       </div>
 
       <div class="veld">
+        <label for="schaduw">Schaduw op het dak</label>
+        <select id="schaduw">
+          <option value="geen" selected>Geen of nauwelijks schaduw</option>
+          <option value="beetje">Een beetje (schoorsteen, boom in de ochtend)</option>
+          <option value="veel">Veel (gebouwen of bomen, deel van de dag)</option>
+        </select>
+        <span class="hint">Bepaalt mede welk type omvormer wij adviseren</span>
+      </div>
+
+      <div class="veld">
         <label for="maxPanelen">Hoeveel panelen passen er maximaal op je dak?</label>
         <input type="number" id="maxPanelen" min="2" max="60" step="1" value="12">
         <span class="hint">Vuistregel: een paneel is circa 1,8 bij 1,1 meter (2 m²). Weet je het niet? Laat de schatting staan.</span>
@@ -133,6 +144,7 @@
       <div class="veld">
         <div class="checkbox-groep">
           <label title="Volledig zwarte panelen: cellen, folie en frame"><input type="checkbox" id="checkFullBlack"> ⬛ Alleen full black panelen (strak zwart dak)</label>
+          <label title="Systeem uitlezen en aansturen via Home Assistant, Modbus of een energiemanagementsysteem"><input type="checkbox" id="checkSlim"> 🏠 Ik wil mijn systeem slim aansturen (Home Assistant / EMS)</label>
         </div>
       </div>
     </form>
@@ -149,6 +161,7 @@
     <ul>
       <li><b>Aantal panelen.</b> Wij rekenen uit hoeveel wattpiek nodig is om jouw (verwachte) jaarverbruik op te wekken, op basis van de opbrengstfactor van je dakligging. Vanaf 2027 (einde saldering) loont fors overdimensioneren niet meer; daarom adviseren wij rond de 100% van je verbruik, en iets ruimer als je een thuisbatterij, elektrische auto of warmtepomp (verwacht) hebt.</li>
       <li><b>Top 3 panelen.</b> Alle panelen uit de <a href="index.html">vergelijker</a> krijgen een score op prijs per Wp, rendement en de <a href="uitleg.html#zeker-score">Zeker-score</a>. Jouw voorkeur bepaalt de weging. Past je benodigde vermogen niet op je dak, dan weegt rendement automatisch zwaarder. Bij een plat dak krijgen bifaciale panelen een kleine bonus.</li>
+      <li><b>Passende omvormer.</b> Op basis van schaduw, je batterijplannen en je wens om slim aan te sturen adviseren wij ook een omvormertype en de twee best passende systemen uit de <a href="omvormers.html">omvormer-vergelijker</a>, gewogen met de <a href="omvormers.html#koppel-score">Koppel-score</a>.</li>
       <li><b>Onafhankelijk.</b> Fabrikanten en winkels hebben geen invloed op dit advies; het is een rekensom op openbare specificaties.</li>
     </ul>
     <div class="waarschuwing-kader">Dit advies is een startpunt, geen offerte. Laat een installateur altijd je dak, meterkast en omvormerkeuze beoordelen; de legplanning bepaalt uiteindelijk hoeveel panelen er echt passen.</div>

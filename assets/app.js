@@ -8,6 +8,7 @@
 
   const state = {
     panelen: [],
+    omvormers: [],
     meta: {},
     weergave: "kaarten", // of "tabel"
     sortering: "prijs-per-wp",
@@ -15,6 +16,7 @@
     tabelSortRichting: 1,
     vergelijkSelectie: [],
     filters: {
+      zoek: "",
       celtype: "alle",
       vermogen: "alle",
       uitvoering: "alle",
@@ -172,6 +174,7 @@
     const f = state.filters;
     const p = new URLSearchParams();
     FILTER_KEYS.forEach((k) => { if (f[k] !== "alle") p.set(k, f[k]); });
+    if (f.zoek) p.set("zoek", f.zoek);
     CHECK_KEYS.forEach(([k, kort]) => { if (f[k]) p.set(kort, "1"); });
     if (state.sortering !== "prijs-per-wp") p.set("sorteer", state.sortering);
     const qs = p.toString();
@@ -181,6 +184,7 @@
   function leesUrl() {
     const p = new URLSearchParams(location.search);
     FILTER_KEYS.forEach((k) => { if (p.get(k)) state.filters[k] = p.get(k); });
+    if (p.get("zoek")) { state.filters.zoek = p.get("zoek"); const zv = el("zoekVeld"); if (zv) zv.value = state.filters.zoek; }
     CHECK_KEYS.forEach(([k, kort]) => { if (p.get(kort) === "1") state.filters[k] = true; });
     if (p.get("sorteer")) state.sortering = p.get("sorteer");
     // Formulier gelijkzetten met de ingelezen status
@@ -195,9 +199,14 @@
     vink("checkAanbieding", state.filters.aanbieding);
   }
 
+  function zoekMatch(tekst, zoek) {
+    return tekst.toLowerCase().includes(zoek.trim().toLowerCase());
+  }
+
   function gefilterd() {
     const f = state.filters;
     return state.panelen.filter((p) => {
+      if (f.zoek && !zoekMatch(`${p.merk} ${p.model}`, f.zoek)) return false;
       if (f.celtype !== "alle" && p.celtype !== f.celtype) return false;
       if (f.merk !== "alle" && p.merk !== f.merk) return false;
       if (f.uitvoering !== "alle" && p.uitvoering !== f.uitvoering) return false;
@@ -393,8 +402,23 @@
      Hoofd-render
      ------------------------------------------------------------------ */
 
+  // Dezelfde zoekterm ook door de omvormer-vergelijker halen, zodat zoeken
+  // op bijvoorbeeld "SMA" of "Enphase" je naar de juiste pagina wijst.
+  function kruisHint() {
+    const doel = el("kruisHint");
+    if (!doel) return;
+    const zoek = state.filters.zoek.trim();
+    if (!zoek || zoek.length < 2) { doel.hidden = true; return; }
+    const matches = state.omvormers.filter((o) => zoekMatch(`${o.merk} ${o.model}`, zoek)).slice(0, 3);
+    if (!matches.length) { doel.hidden = true; return; }
+    doel.hidden = false;
+    doel.innerHTML = `⚡ Ook gevonden in de <b>omvormer-vergelijker</b>: ` +
+      matches.map((o) => `<a href="omvormers.html?zoek=${encodeURIComponent(zoek)}">${escapeHtml(o.merk)} ${escapeHtml(o.model)}</a>`).join(" · ");
+  }
+
   function render() {
     syncUrl();
+    kruisHint();
     const lijst = gesorteerd(gefilterd());
     el("resultatenTelling").textContent = `${lijst.length} van ${state.panelen.length} zonnepanelen`;
 
@@ -438,6 +462,9 @@
 
     el("sorteer").addEventListener("change", (e) => { state.sortering = e.target.value; render(); });
 
+    const zoekVeld = el("zoekVeld");
+    if (zoekVeld) zoekVeld.addEventListener("input", (e) => { state.filters.zoek = e.target.value; render(); });
+
     // Mobiel: filters in- en uitklappen
     const filterToggle = el("filterToggle");
     if (filterToggle) {
@@ -449,7 +476,8 @@
     }
 
     el("resetFilters").addEventListener("click", () => {
-      state.filters = { celtype: "alle", vermogen: "alle", uitvoering: "alle", merk: "alle", fullBlack: false, bifaciaal: false, langeGarantie: false, aanbieding: false };
+      state.filters = { zoek: "", celtype: "alle", vermogen: "alle", uitvoering: "alle", merk: "alle", fullBlack: false, bifaciaal: false, langeGarantie: false, aanbieding: false };
+      const zv = el("zoekVeld"); if (zv) zv.value = "";
       el("filterCeltype").value = "alle"; el("filterVermogen").value = "alle";
       el("filterUitvoering").value = "alle"; el("filterMerk").value = "alle";
       ["checkFullBlack", "checkBifaciaal", "checkGarantie", "checkAanbieding"].forEach((id) => { el(id).checked = false; });
@@ -559,6 +587,12 @@
       // Merkenfilter vullen
       const merken = [...new Set(state.panelen.map((p) => p.merk))].sort((a, b) => a.localeCompare(b, "nl"));
       el("filterMerk").innerHTML = '<option value="alle">Alle merken</option>' + merken.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");
+
+      // Omvormers meladen voor de gezamenlijke zoekfunctie (best effort)
+      try {
+        const resO = await fetch("data/omvormers.json", { cache: "no-cache" });
+        if (resO.ok) state.omvormers = (await resO.json()).omvormers || [];
+      } catch { /* zoekfunctie werkt dan alleen binnen panelen */ }
 
       koppelEvents();
       leesUrl(); // na het vullen van het merkenfilter, zodat ?merk=... aankomt

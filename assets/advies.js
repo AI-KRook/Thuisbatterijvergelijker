@@ -14,6 +14,7 @@
   const numFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 0 });
 
   let panelen = [];
+  let omvormers = [];
 
   function escapeHtml(str) {
     return String(str == null ? "" : str)
@@ -51,6 +52,8 @@
       batterij: el("checkBatterij").checked,
       voorkeur: el("voorkeur").value,
       fullBlack: el("checkFullBlack").checked,
+      schaduw: el("schaduw") ? el("schaduw").value : "geen",
+      slim: el("checkSlim") ? el("checkSlim").checked : false,
     };
   }
 
@@ -114,6 +117,54 @@
   }
 
   /* ------------------------------------------------------------------
+     Omvormeradvies: zelfde Koppel-score als assets/omvormers.js
+     ------------------------------------------------------------------ */
+
+  function driewaardig(v) {
+    if (v && typeof v === "object") return { status: v.status || "deels", tekst: v.tekst || "" };
+    if (v === true) return { status: "ja", tekst: "Ja" };
+    if (typeof v === "string" && v.trim()) return { status: "deels", tekst: v };
+    return { status: "nee", tekst: "Nee" };
+  }
+
+  function koppelScore(o) {
+    const punt = (v) => { const st = driewaardig(v).status; return st === "ja" ? 2 : st === "deels" ? 1 : 0; };
+    return punt(o.batterij) + punt(o.home_assistant) + punt(o.schaduw);
+  }
+
+  // Kies de twee best passende omvormers bij deze situatie
+  function omvormerAdvies(s) {
+    if (!omvormers.length) return null;
+    const punt = (v) => { const st = driewaardig(v).status; return st === "ja" ? 2 : st === "deels" ? 1 : 0; };
+    const prijzen = omvormers.map((o) => o.richtprijs_eur).filter(Boolean);
+    const minP = Math.min(...prijzen), maxP = Math.max(...prijzen);
+
+    const gescoord = omvormers.map((o) => {
+      let score = 0;
+      // Schaduw: bij veel schaduw is elektronica per paneel vrijwel een vereiste
+      score += punt(o.schaduw) * (s.schaduw === "veel" ? 3 : s.schaduw === "beetje" ? 1.5 : 0.5);
+      // Batterijplannen: direct koppelbaar weegt dan zwaar
+      score += punt(o.batterij) * (s.batterij ? 3 : 0.75);
+      // Slim aansturen: officiële integratie of open API weegt dan zwaar
+      score += punt(o.home_assistant) * (s.slim ? 3 : 0.75);
+      // Prijs telt altijd een beetje mee (goedkoper = beter)
+      if (o.richtprijs_eur) score += 2 * (maxP - o.richtprijs_eur) / (maxP - minP || 1);
+      return { o, score };
+    }).sort((a, b) => b.score - a.score);
+    return gescoord.slice(0, 2);
+  }
+
+  function omvormerReden(o, s) {
+    const redenen = [];
+    if (s.schaduw === "veel" && driewaardig(o.schaduw).status === "ja") redenen.push("elektronica per paneel: ideaal bij jouw schaduw");
+    if (s.batterij && driewaardig(o.batterij).status === "ja") redenen.push("thuisbatterij direct aan te sluiten");
+    if (s.slim && driewaardig(o.home_assistant).status === "ja") redenen.push("officiële slimme koppeling (Home Assistant)");
+    redenen.push(`Koppel-score ${koppelScore(o)}/6`);
+    if (o.garantie_jaar >= 20) redenen.push(`${o.garantie_jaar} jaar garantie`);
+    return redenen.slice(0, 3).join(" · ");
+  }
+
+  /* ------------------------------------------------------------------
      Renderen
      ------------------------------------------------------------------ */
 
@@ -132,6 +183,9 @@
 
     const top3 = scorePanelen(s, dakTeKlein);
     const plekken = ["🥇 Beste match", "🥈 Tweede keus", "🥉 Derde keus"];
+    const topOmvormers = omvormerAdvies(s);
+    // Vuistregel omvormergrootte: circa 90% van het paneelvermogen, afgerond op halve kW
+    const omvormerKw = String(Math.max(1.5, Math.round((wpGeadviseerd * 0.9) / 500) / 2)).replace(".", ",");
 
     el("adviesInhoud").innerHTML = `
       <div class="advies-samenvatting">
@@ -153,6 +207,20 @@
         </div>
       `).join("")}
       ${!top3.length ? '<p class="hint">Geen panelen gevonden met deze wensen; zet bijvoorbeeld het full black-filter uit.</p>' : ""}
+
+      ${topOmvormers ? `
+      <h2 style="margin-top:24px;">En welke omvormer past daarbij?</h2>
+      <p class="hint" style="margin-top:0;">Op basis van je schaduw${s.batterij ? ", batterijplannen" : ""}${s.slim ? " en wens om slim aan te sturen" : ""}. Richt je op een omvormer van circa ${omvormerKw} kW bij ${aantalGeadviseerd} panelen.</p>
+      ${topOmvormers.map(({ o }, i) => `
+        <div class="advies-kaart">
+          <span class="plek">${["⚡ Beste match", "⚡ Ook geschikt"][i]}</span>
+          <h3>${escapeHtml(o.merk)} ${escapeHtml(o.model)}</h3>
+          <div class="reden">${omvormerReden(o, s)}</div>
+          <p style="margin:8px 0 0;font-size:0.95rem;">richtprijs <b>${eurFmt.format(o.richtprijs_eur || 0)}</b> (${escapeHtml(o.prijs_toelichting || "indicatie")})</p>
+        </div>
+      `).join("")}
+      <p class="hint" style="margin-top:10px;">Alle 12 omvormersystemen vergelijken op batterij, Home Assistant en schaduw? <a href="omvormers.html">Naar de omvormer-vergelijker →</a></p>` : ""}
+
       <p class="hint" style="margin-top:14px;">Alle 14 panelen zelf vergelijken? <a href="index.html">Naar de vergelijker →</a></p>
     `;
   }
@@ -164,11 +232,17 @@
       const data = await res.json();
       panelen = data.panelen || [];
 
-      ["verbruik", "dakligging", "maxPanelen", "voorkeur"].forEach((id) => {
+      // Omvormers meladen voor het omvormeradvies (best effort)
+      try {
+        const resO = await fetch("data/omvormers.json", { cache: "no-cache" });
+        if (resO.ok) omvormers = (await resO.json()).omvormers || [];
+      } catch { /* zonder omvormerdata blijft het paneeladvies gewoon werken */ }
+
+      ["verbruik", "dakligging", "maxPanelen", "voorkeur", "schaduw"].forEach((id) => {
         el(id).addEventListener("input", adviseer);
         el(id).addEventListener("change", adviseer);
       });
-      ["checkAuto", "checkWarmtepomp", "checkBatterij", "checkFullBlack"].forEach((id) => {
+      ["checkAuto", "checkWarmtepomp", "checkBatterij", "checkFullBlack", "checkSlim"].forEach((id) => {
         el(id).addEventListener("change", adviseer);
       });
 

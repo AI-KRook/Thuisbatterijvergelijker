@@ -9,8 +9,9 @@
 
   const state = {
     omvormers: [],
+    panelen: [],
     sortering: "koppel-score",
-    filters: { type: "alle", fase: "alle", merk: "alle", batterij: false, officieelHa: false },
+    filters: { zoek: "", type: "alle", fase: "alle", merk: "alle", batterij: false, officieelHa: false },
   };
 
   const el = (id) => document.getElementById(id);
@@ -62,9 +63,14 @@
     return `<span class="badge ${d.status}" data-uitleg="${escapeHtml(label)}" title="${escapeHtml(d.tekst)}">${icoon} ${escapeHtml(label)}</span>`;
   }
 
+  function zoekMatch(tekst, zoek) {
+    return tekst.toLowerCase().includes(zoek.trim().toLowerCase());
+  }
+
   function gefilterd() {
     const f = state.filters;
     return state.omvormers.filter((o) => {
+      if (f.zoek && !zoekMatch(`${o.merk} ${o.model}`, f.zoek)) return false;
       if (f.type !== "alle" && o.type !== f.type) return false;
       if (f.merk !== "alle" && o.merk !== f.merk) return false;
       if (f.fase === "1" && !/1-fase/i.test(o.fase || "")) return false;
@@ -129,7 +135,21 @@
     </article>`;
   }
 
+  // Zelfde zoekterm ook door de panelen-vergelijker halen
+  function kruisHint() {
+    const doel = el("kruisHint");
+    if (!doel) return;
+    const zoek = state.filters.zoek.trim();
+    if (!zoek || zoek.length < 2) { doel.hidden = true; return; }
+    const matches = state.panelen.filter((p) => zoekMatch(`${p.merk} ${p.model}`, zoek)).slice(0, 3);
+    if (!matches.length) { doel.hidden = true; return; }
+    doel.hidden = false;
+    doel.innerHTML = `☀️ Ook gevonden in de <b>panelen-vergelijker</b>: ` +
+      matches.map((p) => `<a href="index.html?zoek=${encodeURIComponent(zoek)}">${escapeHtml(p.merk)} ${escapeHtml(p.model)}</a>`).join(" · ");
+  }
+
   function render() {
+    kruisHint();
     const lijst = gesorteerd(gefilterd());
     el("resultatenTelling").textContent = `${lijst.length} van ${state.omvormers.length} omvormersystemen`;
     el("resultaten").innerHTML = lijst.length
@@ -145,6 +165,9 @@
       el(id).addEventListener("change", (e) => { state.filters[key] = e.target.checked; render(); });
     });
     el("sorteer").addEventListener("change", (e) => { state.sortering = e.target.value; render(); });
+
+    const zoekVeld = el("zoekVeld");
+    if (zoekVeld) zoekVeld.addEventListener("input", (e) => { state.filters.zoek = e.target.value; render(); });
 
     // Details en badge-tik: zelfde gedrag als de panelenvergelijker
     el("resultaten").addEventListener("click", (e) => {
@@ -189,6 +212,16 @@
         const doel = el("updateDatum");
         if (doel) doel.textContent = datumFmt.format(d);
       }
+
+      // Zoekterm uit de URL (bijv. via de kruisverwijzing op de panelenpagina)
+      const gevraagd = new URLSearchParams(location.search).get("zoek");
+      if (gevraagd) { state.filters.zoek = gevraagd; const zv = el("zoekVeld"); if (zv) zv.value = gevraagd; }
+
+      // Panelen meladen voor de gezamenlijke zoekfunctie (best effort)
+      try {
+        const resP = await fetch("data/panelen.json", { cache: "no-cache" });
+        if (resP.ok) state.panelen = (await resP.json()).panelen || [];
+      } catch { /* zoekfunctie werkt dan alleen binnen omvormers */ }
 
       const merken = [...new Set(state.omvormers.map((o) => o.merk))].sort((a, b) => a.localeCompare(b, "nl"));
       el("filterMerk").innerHTML = '<option value="alle">Alle merken</option>' + merken.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");

@@ -37,9 +37,9 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="assets/style.css?v=20260721b">
-  <script src="assets/omvormers.js?v=20260721b" defer></script>
-  <script src="assets/nav.js?v=20260721b" defer></script>
+  <link rel="stylesheet" href="assets/style.css?v=20260721c">
+  <script src="assets/omvormers.js?v=20260721c" defer></script>
+  <script src="assets/nav.js?v=20260721c" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=1">
 </head>
@@ -90,6 +90,10 @@
 
   <div class="filterbalk ingeklapt" id="filterbalk">
     <div class="filter-rij">
+      <div class="filter-groep" style="flex:1;min-width:200px;">
+        <label for="zoekVeld">Zoeken (omvormers én panelen)</label>
+        <input type="search" id="zoekVeld" placeholder="Zoek op merk of model, bijv. Enphase of GoodWe…" style="padding:9px 12px;border:1px solid var(--kleur-rand);border-radius:8px;font-size:0.95rem;width:100%;">
+      </div>
       <div class="filter-groep">
         <label for="filterType">Type systeem</label>
         <select id="filterType">
@@ -142,6 +146,8 @@
       <div class="legenda-rij"><span class="badge nee">✕</span><span>Niet ondersteund</span></div>
     </div>
   </details>
+
+  <div class="regel-banner" id="kruisHint" hidden style="background:var(--kleur-primair-licht);border-color:var(--kleur-primair);"></div>
 
   <div class="resultaten-balk">
     <span class="resultaten-telling" id="resultatenTelling">Laden…</span>
