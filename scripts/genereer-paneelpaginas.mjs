@@ -18,7 +18,7 @@ const SITE = "https://zonnepaneelmaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260721a";
+const ASSET_VERSIE = "20260721e";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/panelen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "paneel"), { recursive: true });
@@ -184,7 +184,7 @@ const NAV = `
       <a href="/omvormers.html">Omvormers</a>
       <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
-      <a href="/rekenmodule.html">Opbrengst</a>
+      <a href="/rekenmodule.html">Terugverdientijd</a>
       <details class="nav-meer">
         <summary>Meer ▾</summary>
         <div class="nav-meer-paneel">
@@ -205,7 +205,7 @@ const FOOTER = `
   <div class="container">
     <b>☀️ Zonnepaneelmaatje</b>
     <p>Onafhankelijke vergelijking van zonnepanelen voor Nederlandse huishoudens.</p>
-    <p><a href="/index.html">Vergelijken</a> · <a href="/omvormers.html">Omvormers</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Opbrengst &amp; terugverdientijd</a> · <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="/beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Vergelijken</a> · <a href="/omvormers.html">Omvormers</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="/beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. Prijzen zijn indicatief; de prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>`;
@@ -288,7 +288,7 @@ function pagina(p) {
     ${p.prijs_omvat ? `<div style="font-size:0.9rem;color:var(--kleur-tekst-licht);">${esc(p.prijs_omvat)}</div>` : ""}
     <p style="margin:14px 0 0;">
       ${beste && beste.url && !String(beste.winkel || "").startsWith("richtprijs") ? `<a class="knop" href="${esc(beste.affiliate_url || beste.url)}" target="_blank" rel="noopener${beste.affiliate_url ? " sponsored" : ""}">Bekijk bij ${esc(beste.winkel)} →</a>&nbsp;` : ""}
-      <a class="knop knop-secundair" href="/rekenmodule.html?paneel=${encodeURIComponent(p.id)}">Bereken opbrengst en terugverdientijd</a>
+      <a class="knop knop-secundair" href="/rekenmodule.html?paneel=${encodeURIComponent(p.id)}">Bereken terugverdientijd</a>
     </p>
   </div>
 

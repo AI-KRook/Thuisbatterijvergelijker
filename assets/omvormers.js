@@ -1,7 +1,7 @@
 /* ==========================================================================
    Zonnepaneelmaatje - omvormer-vergelijker
-   Laadt data/omvormers.json en rendert kaarten met de Koppel-score:
-   batterij-klaar, slim uitlezen (Home Assistant/Modbus) en schaduwaanpak.
+   Laadt data/omvormers.json en rendert kaarten, tabel en vergelijk-modal,
+   met dezelfde logica als de panelen-vergelijker (assets/app.js).
    ========================================================================== */
 
 (function () {
@@ -10,7 +10,11 @@
   const state = {
     omvormers: [],
     panelen: [],
+    weergave: "kaarten", // of "tabel"
     sortering: "koppel-score",
+    tabelSortKolom: null,
+    tabelSortRichting: 1,
+    vergelijkSelectie: [],
     filters: { zoek: "", type: "alle", fase: "alle", merk: "alle", batterij: false, officieelHa: false },
   };
 
@@ -67,6 +71,37 @@
     return tekst.toLowerCase().includes(zoek.trim().toLowerCase());
   }
 
+  /* ------------------------------------------------------------------
+     Filteren, sorteren en URL-status (deelbare links, net als app.js)
+     ------------------------------------------------------------------ */
+
+  const FILTER_KEYS = ["type", "fase", "merk"];
+  const CHECK_KEYS = [["batterij", "batterij"], ["officieelHa", "ha"]];
+
+  function syncUrl() {
+    const f = state.filters;
+    const p = new URLSearchParams();
+    FILTER_KEYS.forEach((k) => { if (f[k] !== "alle") p.set(k, f[k]); });
+    if (f.zoek) p.set("zoek", f.zoek);
+    CHECK_KEYS.forEach(([k, kort]) => { if (f[k]) p.set(kort, "1"); });
+    if (state.sortering !== "koppel-score") p.set("sorteer", state.sortering);
+    const qs = p.toString();
+    history.replaceState(null, "", qs ? `?${qs}` : location.pathname);
+  }
+
+  function leesUrl() {
+    const p = new URLSearchParams(location.search);
+    FILTER_KEYS.forEach((k) => { if (p.get(k)) state.filters[k] = p.get(k); });
+    if (p.get("zoek")) { state.filters.zoek = p.get("zoek"); const zv = el("zoekVeld"); if (zv) zv.value = state.filters.zoek; }
+    CHECK_KEYS.forEach(([k, kort]) => { if (p.get(kort) === "1") state.filters[k] = true; });
+    if (p.get("sorteer")) state.sortering = p.get("sorteer");
+    const zet = (id, w) => { const n = el(id); if (n) n.value = w; };
+    zet("filterType", state.filters.type); zet("filterFase", state.filters.fase);
+    zet("filterMerk", state.filters.merk); zet("sorteer", state.sortering);
+    const vink = (id, w) => { const n = el(id); if (n) n.checked = w; };
+    vink("checkBatterij", state.filters.batterij); vink("checkHa", state.filters.officieelHa);
+  }
+
   function gefilterd() {
     const f = state.filters;
     return state.omvormers.filter((o) => {
@@ -92,13 +127,23 @@
     return kopie;
   }
 
+  /* ------------------------------------------------------------------
+     Rendering: kaarten
+     ------------------------------------------------------------------ */
+
   function kaartHtml(o) {
     const batterij = driewaardig(o.batterij);
     const ha = driewaardig(o.home_assistant);
     const homey = driewaardig(o.homey);
     const schaduw = driewaardig(o.schaduw);
+    const geselecteerd = state.vergelijkSelectie.includes(o.id);
     return `
     <article class="paneel-kaart" data-id="${escapeHtml(o.id)}">
+      <div class="vergelijk-checkbox-wrap">
+        <label class="badge" title="Selecteer om te vergelijken (max. 3)">
+          <input type="checkbox" class="vergelijk-check" data-id="${escapeHtml(o.id)}" ${geselecteerd ? "checked" : ""}> vergelijk
+        </label>
+      </div>
       <div class="kaart-kop">
         <div>
           <div class="merk">${escapeHtml(o.merk)}</div>
@@ -135,8 +180,97 @@
           ${o.prijs_toelichting ? `<div class="prijs-winkel">${escapeHtml(o.prijs_toelichting)}</div>` : ""}
         </div>
       </div>
+      <div class="kaart-acties">
+        ${o.product_url ? `<a class="knop" href="${escapeHtml(o.product_url)}" target="_blank" rel="noopener" aria-label="Naar de fabrikant van de ${escapeHtml(o.merk)} ${escapeHtml(o.model)}">Naar fabrikant →</a>` : ""}
+        <a class="knop knop-secundair" href="advies.html" title="Welke omvormer past bij jouw systeem? Doe de keuzehulp">Keuzehulp</a>
+      </div>
     </article>`;
   }
+
+  /* ------------------------------------------------------------------
+     Rendering: tabel (zelfde opzet als de panelen-vergelijker)
+     ------------------------------------------------------------------ */
+
+  const tabelKolommen = [
+    { key: "model", label: "Model", get: (o) => `${o.merk} ${o.model}` },
+    { key: "type", label: "Type", get: (o) => o.type },
+    { key: "vermogen", label: "Vermogen", get: (o) => o.vermogen_bereik || "" },
+    { key: "prijs", label: "Richtprijs", get: (o) => o.richtprijs_eur || Infinity },
+    { key: "garantie", label: "Garantie", get: (o) => o.garantie_jaar || 0 },
+    { key: "koppel", label: "Koppel-score", get: (o) => koppelScore(o) },
+    { key: "batterij", label: "Batterij", get: (o) => driewaardig(o.batterij).status },
+    { key: "ha", label: "Home Assistant", get: (o) => driewaardig(o.home_assistant).status },
+    { key: "homey", label: "Homey", get: (o) => driewaardig(o.homey).status },
+    { key: "actie", label: "", get: () => "" },
+  ];
+
+  function tabelHtml(lijst) {
+    let rijen = [...lijst];
+    if (state.tabelSortKolom) {
+      const kol = tabelKolommen.find((k) => k.key === state.tabelSortKolom);
+      rijen.sort((a, b) => {
+        const va = kol.get(a), vb = kol.get(b);
+        if (typeof va === "number" && typeof vb === "number") return (va - vb) * state.tabelSortRichting;
+        return String(va).localeCompare(String(vb), "nl") * state.tabelSortRichting;
+      });
+    }
+    const checkCel = (v) => {
+      const d = driewaardig(v);
+      if (d.status === "ja") return '<span class="check-ja">✓</span>';
+      if (d.status === "deels") return `<span class="check-deels" title="${escapeHtml(d.tekst)}">~</span>`;
+      return '<span class="check-nee">✕</span>';
+    };
+    return `
+    <table class="vergelijk-tabel">
+      <thead><tr>${tabelKolommen.map((k) => `<th data-kolom="${k.key}">${k.label}${k.key !== "actie" ? ' <span class="sorteer-pijl">⇅</span>' : ""}</th>`).join("")}</tr></thead>
+      <tbody>
+        ${rijen.map((o) => `<tr>
+            <td><b>${escapeHtml(o.merk)}</b><br>${escapeHtml(o.model)}</td>
+            <td>${escapeHtml(TYPE_LABEL[o.type] || o.type)}</td>
+            <td>${escapeHtml(o.vermogen_bereik || "?")}</td>
+            <td class="tabel-prijs" title="${escapeHtml(o.prijs_toelichting || "")}">${o.richtprijs_eur ? eurFmt.format(o.richtprijs_eur) : "n.b."}</td>
+            <td>${o.garantie_jaar ? o.garantie_jaar + " jr" : "?"}</td>
+            <td title="Punten voor batterij-klaar, slim uitlezen en schaduwaanpak"><b>${koppelScore(o)}/6</b></td>
+            <td>${checkCel(o.batterij)}</td>
+            <td>${checkCel(o.home_assistant)}</td>
+            <td>${checkCel(o.homey)}</td>
+            <td>${o.product_url ? `<a class="knop" style="padding:7px 12px;font-size:0.85rem;" href="${escapeHtml(o.product_url)}" target="_blank" rel="noopener">Bekijk →</a>` : ""}</td>
+          </tr>`).join("")}
+      </tbody>
+    </table>`;
+  }
+
+  /* ------------------------------------------------------------------
+     Rendering: vergelijk-modal (max. 3 omvormers zij aan zij)
+     ------------------------------------------------------------------ */
+
+  function vergelijkModalHtml(items) {
+    const rij = (label, fn) => `<tr><th style="text-align:left;padding:8px 10px;background:var(--kleur-achtergrond);white-space:nowrap;position:sticky;left:0;z-index:1;box-shadow:2px 0 0 var(--kleur-rand);">${label}</th>${items.map((o) => `<td style="padding:8px 10px;border-bottom:1px solid var(--kleur-rand);">${fn(o)}</td>`).join("")}</tr>`;
+    const d3 = (v) => { const d = driewaardig(v); return d.status === "nee" ? `✕ ${escapeHtml(d.tekst === "Nee" ? "Nee" : d.tekst)}` : d.status === "deels" ? `~ ${escapeHtml(d.tekst)}` : `✓ ${escapeHtml(d.tekst)}`; };
+    return `
+      <h2>Vergelijking</h2>
+      <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:0.93rem;min-width:${220 * items.length + 160}px;">
+        ${rij("Model", (o) => `<b>${escapeHtml(o.merk)} ${escapeHtml(o.model)}</b>`)}
+        ${rij("Type", (o) => escapeHtml(TYPE_LABEL[o.type] || o.type))}
+        ${rij("Vermogen", (o) => escapeHtml(o.vermogen_bereik || "?"))}
+        ${rij("Aansluiting", (o) => escapeHtml(o.fase || "?"))}
+        ${rij("Richtprijs", (o) => `${o.richtprijs_eur ? `<b>${eurFmt.format(o.richtprijs_eur)}</b>` : "n.b."}<br><small>${escapeHtml(o.prijs_toelichting || "")}</small>`)}
+        ${rij("Koppel-score", (o) => `<b>${koppelScore(o)}/6</b>`)}
+        ${rij("Thuisbatterij", (o) => d3(o.batterij))}
+        ${rij("Home Assistant", (o) => d3(o.home_assistant))}
+        ${rij("Homey", (o) => d3(o.homey))}
+        ${rij("Schaduwaanpak", (o) => d3(o.schaduw))}
+        ${rij("App", (o) => escapeHtml(o.app || "?"))}
+        ${rij("Garantie", (o) => (o.garantie_jaar ? o.garantie_jaar + " jaar" : "?"))}
+        ${rij("", (o) => o.product_url ? `<a class="knop" href="${escapeHtml(o.product_url)}" target="_blank" rel="noopener">Naar fabrikant →</a>` : "")}
+      </table>
+      </div>`;
+  }
+
+  /* ------------------------------------------------------------------
+     Hoofd-render
+     ------------------------------------------------------------------ */
 
   // Zelfde zoekterm ook door de panelen-vergelijker halen
   function kruisHint() {
@@ -152,13 +286,36 @@
   }
 
   function render() {
+    syncUrl();
     kruisHint();
     const lijst = gesorteerd(gefilterd());
     el("resultatenTelling").textContent = `${lijst.length} van ${state.omvormers.length} omvormersystemen`;
-    el("resultaten").innerHTML = lijst.length
-      ? `<div class="kaarten-grid">${lijst.map(kaartHtml).join("")}</div>`
-      : '<div class="leeg-melding">Geen omvormers gevonden met deze filters. Probeer een filter uit te zetten.</div>';
+
+    const doel = el("resultaten");
+    if (!lijst.length) {
+      doel.innerHTML = '<div class="leeg-melding">Geen omvormers gevonden met deze filters. Probeer een filter uit te zetten.</div>';
+    } else if (state.weergave === "kaarten") {
+      doel.innerHTML = `<div class="kaarten-grid">${lijst.map(kaartHtml).join("")}</div>`;
+    } else {
+      doel.innerHTML = `<div class="tabel-wrap">${tabelHtml(lijst)}</div>`;
+    }
+
+    const balk = el("vergelijkBalk");
+    if (balk) {
+      if (state.vergelijkSelectie.length >= 2) {
+        balk.classList.add("zichtbaar");
+        document.body.classList.add("vergelijkbalk-actief");
+        el("vergelijkBalkTekst").textContent = `${state.vergelijkSelectie.length} omvormers geselecteerd`;
+      } else {
+        balk.classList.remove("zichtbaar");
+        document.body.classList.remove("vergelijkbalk-actief");
+      }
+    }
   }
+
+  /* ------------------------------------------------------------------
+     Events (zelfde patroon als app.js)
+     ------------------------------------------------------------------ */
 
   function koppelEvents() {
     [["filterType", "type"], ["filterFase", "fase"], ["filterMerk", "merk"]].forEach(([id, key]) => {
@@ -172,8 +329,20 @@
     const zoekVeld = el("zoekVeld");
     if (zoekVeld) zoekVeld.addEventListener("input", (e) => { state.filters.zoek = e.target.value; render(); });
 
-    // Details en badge-tik: zelfde gedrag als de panelenvergelijker
+    const reset = el("resetFilters");
+    if (reset) reset.addEventListener("click", () => {
+      state.filters = { zoek: "", type: "alle", fase: "alle", merk: "alle", batterij: false, officieelHa: false };
+      ["filterType", "filterFase", "filterMerk"].forEach((id) => { el(id).value = "alle"; });
+      ["checkBatterij", "checkHa"].forEach((id) => { el(id).checked = false; });
+      if (zoekVeld) zoekVeld.value = "";
+      render();
+    });
+
+    el("knopKaarten").addEventListener("click", () => { state.weergave = "kaarten"; el("knopKaarten").classList.add("actief"); el("knopTabel").classList.remove("actief"); render(); });
+    el("knopTabel").addEventListener("click", () => { state.weergave = "tabel"; el("knopTabel").classList.add("actief"); el("knopKaarten").classList.remove("actief"); render(); });
+
     el("resultaten").addEventListener("click", (e) => {
+      // Tik op een info-badge: opent de details en licht de uitleg op
       const badge = e.target.closest(".kaart-badges .badge");
       if (badge) {
         const kaart = badge.closest(".paneel-kaart");
@@ -199,9 +368,59 @@
           details.hidden = !details.hidden;
           toggle.textContent = details.hidden ? "Meer details" : "Verberg details";
         }
+        return;
+      }
+      const th = e.target.closest("th[data-kolom]");
+      if (th && th.dataset.kolom !== "actie") {
+        if (state.tabelSortKolom === th.dataset.kolom) state.tabelSortRichting *= -1;
+        else { state.tabelSortKolom = th.dataset.kolom; state.tabelSortRichting = 1; }
+        render();
       }
     });
+
+    el("resultaten").addEventListener("change", (e) => {
+      const check = e.target.closest(".vergelijk-check");
+      if (!check) return;
+      const id = check.dataset.id;
+      if (check.checked) {
+        if (state.vergelijkSelectie.length >= 3) {
+          check.checked = false;
+          const tekst = el("vergelijkBalkTekst");
+          const oud = tekst.textContent;
+          tekst.textContent = "Maximaal 3 omvormers tegelijk; haal er eerst één weg.";
+          setTimeout(() => { tekst.textContent = oud; }, 2500);
+          return;
+        }
+        state.vergelijkSelectie.push(id);
+      } else {
+        state.vergelijkSelectie = state.vergelijkSelectie.filter((x) => x !== id);
+      }
+      render();
+    });
+
+    el("openVergelijk").addEventListener("click", () => {
+      const items = state.omvormers.filter((o) => state.vergelijkSelectie.includes(o.id));
+      el("vergelijkModalInhoud").innerHTML = vergelijkModalHtml(items);
+      el("vergelijkModal").classList.add("open");
+    });
+    el("wisVergelijk").addEventListener("click", () => { state.vergelijkSelectie = []; render(); });
+    el("sluitModal").addEventListener("click", () => el("vergelijkModal").classList.remove("open"));
+    el("vergelijkModal").addEventListener("click", (e) => { if (e.target === el("vergelijkModal")) el("vergelijkModal").classList.remove("open"); });
+
+    // Mobiel: filters in- en uitklappen
+    const filterToggle = el("filterToggle");
+    if (filterToggle) {
+      filterToggle.addEventListener("click", () => {
+        const balk = el("filterbalk");
+        const ingeklapt = balk.classList.toggle("ingeklapt");
+        filterToggle.textContent = ingeklapt ? "🔍 Filteren en sorteren ▾" : "🔍 Filteren en sorteren ▴";
+      });
+    }
   }
+
+  /* ------------------------------------------------------------------
+     Init
+     ------------------------------------------------------------------ */
 
   async function init() {
     try {
@@ -219,10 +438,6 @@
         if (doel) doel.textContent = datumFmt.format(d);
       }
 
-      // Zoekterm uit de URL (bijv. via de kruisverwijzing op de panelenpagina)
-      const gevraagd = new URLSearchParams(location.search).get("zoek");
-      if (gevraagd) { state.filters.zoek = gevraagd; const zv = el("zoekVeld"); if (zv) zv.value = gevraagd; }
-
       // Panelen meladen voor de gezamenlijke zoekfunctie (best effort)
       try {
         const resP = await fetch("data/panelen.json", { cache: "no-cache" });
@@ -233,6 +448,7 @@
       el("filterMerk").innerHTML = '<option value="alle">Alle merken</option>' + merken.map((m) => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join("");
 
       koppelEvents();
+      leesUrl(); // na het vullen van het merkenfilter, zodat ?merk=... aankomt
       render();
     } catch (err) {
       el("resultaten").innerHTML = '<div class="leeg-melding">De omvormergegevens konden niet worden geladen. Vernieuw de pagina of probeer het later opnieuw.</div>';

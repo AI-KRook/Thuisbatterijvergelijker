@@ -37,7 +37,7 @@
     ]
   }
   </script>
-  <link rel="stylesheet" href="assets/style.css?v=20260721c">
+  <link rel="stylesheet" href="assets/style.css?v=20260721e">
   <script src="assets/omvormers.js?v=20260721c" defer></script>
   <script src="assets/nav.js?v=20260721c" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
@@ -56,7 +56,7 @@
       <a href="omvormers.html" class="actief">Omvormers</a>
       <a href="uitleg.html">Uitleg</a>
       <a href="advies.html">Keuzehulp</a>
-      <a href="rekenmodule.html">Opbrengst</a>
+      <a href="rekenmodule.html">Terugverdientijd</a>
       <details class="nav-meer">
         <summary>Meer ▾</summary>
         <div class="nav-meer-paneel">
@@ -86,7 +86,7 @@
 
 <main class="container">
 
-  <button class="filter-toggle" id="filterToggle" onclick="document.getElementById('filterbalk').classList.toggle('ingeklapt')">🔍 Filteren en sorteren ▾</button>
+  <button class="filter-toggle" id="filterToggle">🔍 Filteren en sorteren ▾</button>
 
   <div class="filterbalk ingeklapt" id="filterbalk">
     <div class="filter-rij">
@@ -134,6 +134,7 @@
           <label title="Officiële Home Assistant-integratie of open lokale API"><input type="checkbox" id="checkHa"> 🏠 Officiële slimme koppeling</label>
         </div>
       </div>
+      <button class="filter-reset" id="resetFilters">Alle filters wissen</button>
     </div>
   </div>
 
@@ -144,6 +145,7 @@
       <div class="legenda-rij"><span class="badge ja">✓</span><span>Direct of officieel ondersteund</span></div>
       <div class="legenda-rij"><span class="badge deels">~</span><span>Werkt via een omweg: community-integratie, extra module of meerdere MPPT's. Tik op de badge voor de uitleg.</span></div>
       <div class="legenda-rij"><span class="badge nee">✕</span><span>Niet ondersteund</span></div>
+      <div class="legenda-rij"><span>▦/☰</span><span>Wissel tussen kaarten en tabel; vink "vergelijk" aan op maximaal 3 kaarten om ze zij aan zij te zien.</span></div>
     </div>
   </details>
 
@@ -151,6 +153,10 @@
 
   <div class="resultaten-balk">
     <span class="resultaten-telling" id="resultatenTelling">Laden…</span>
+    <div class="weergave-knoppen">
+      <button id="knopKaarten" class="actief">▦ Kaarten</button>
+      <button id="knopTabel">☰ Tabel</button>
+    </div>
   </div>
 
   <h2 class="visueel-verborgen">Alle omvormers vergeleken</h2>
@@ -180,11 +186,24 @@
 
 </main>
 
+<div class="vergelijk-balk" id="vergelijkBalk">
+  <span id="vergelijkBalkTekst"></span>
+  <button class="knop" id="openVergelijk">Vergelijk nu</button>
+  <button class="knop knop-secundair" id="wisVergelijk" style="background:transparent;color:#fff;border-color:#fff;">Wissen</button>
+</div>
+
+<div class="modal-achtergrond" id="vergelijkModal">
+  <div class="modal">
+    <button class="sluit" id="sluitModal" aria-label="Sluiten">×</button>
+    <div id="vergelijkModalInhoud"></div>
+  </div>
+</div>
+
 <footer class="site-footer">
   <div class="container">
     <b>☀️ Zonnepaneelmaatje</b>
     <p>Onafhankelijke vergelijking van zonnepanelen voor Nederlandse huishoudens.</p>
-    <p><a href="index.html">Vergelijken</a> · <a href="omvormers.html">Omvormers</a> · <a href="uitleg.html">Uitleg</a> · <a href="advies.html">Keuzehulp</a> · <a href="rekenmodule.html">Opbrengst &amp; terugverdientijd</a> · <a href="waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="over-ons.html">Over ons</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="index.html">Vergelijken</a> · <a href="omvormers.html">Omvormers</a> · <a href="uitleg.html">Uitleg</a> · <a href="advies.html">Keuzehulp</a> · <a href="rekenmodule.html">Terugverdientijd</a> · <a href="waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="over-ons.html">Over ons</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen, specificaties en integraties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. Controleer voor aankoop de actuele datasheet en de compatibiliteit met jouw situatie.</p>
   </div>
 </footer>

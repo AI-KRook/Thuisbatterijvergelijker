@@ -275,7 +275,7 @@
           <h3><a href="paneel/${encodeURIComponent(p.id)}.html">${escapeHtml(naamVan(p))}</a></h3>
           <div class="reden">${redenVoor(p, s, dakTeKlein)}</div>
           <p style="margin:8px 0 0;font-size:0.95rem;">${p.vermogen_wp} Wp · richtprijs <b>${eurFmt.format(p.richtprijs_eur || 0)}</b> per paneel · ${aantalGeadviseerd} stuks: circa <b>${eurFmt.format((p.richtprijs_eur || 0) * aantalGeadviseerd)}</b> (excl. montage en omvormer)</p>
-          <p style="margin:8px 0 0;"><a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}">Bereken opbrengst en terugverdientijd →</a></p>
+          <p style="margin:8px 0 0;"><a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="rekenmodule.html?paneel=${encodeURIComponent(p.id)}">Bereken terugverdientijd →</a></p>
         </div>
       `).join("")}
       ${!top3.length ? '<p class="hint">Geen panelen gevonden met deze wensen; zet bijvoorbeeld het full black-filter uit.</p>' : ""}
