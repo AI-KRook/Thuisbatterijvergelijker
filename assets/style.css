@@ -924,3 +924,21 @@ body.vergelijkbalk-actief { padding-bottom: 150px; }
   opacity: 0.92;
 }
 .naar-boven:hover { opacity: 1; }
+
+/* --------------------------------------------------------------------------
+   Printen: advies of vergelijking op papier meenemen naar een installateur
+   -------------------------------------------------------------------------- */
+
+@media print {
+  .site-header nav, .filter-toggle, .filterbalk, .legenda, .weergave-knoppen,
+  .vergelijk-balk, .vergelijk-checkbox-wrap, .details-toggle, .kaart-acties,
+  .naar-boven, .site-footer p:not(:first-of-type) { display: none !important; }
+  body { background: #fff; }
+  .hero { background: none; color: #000; padding: 0; }
+  .hero h1, .hero p { color: #000; }
+  .hero .update-info, .hero .knop { display: none; }
+  .paneel-kaart, .advies-kaart, .route-kaart { box-shadow: none; break-inside: avoid; }
+  .kaart-details { display: block !important; }
+  .kaart-details[hidden] { display: none !important; }
+  a { color: #000; text-decoration: none; }
+}

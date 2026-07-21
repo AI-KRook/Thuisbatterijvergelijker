@@ -219,9 +219,9 @@
           <p style="margin:8px 0 0;font-size:0.95rem;">richtprijs <b>${eurFmt.format(o.richtprijs_eur || 0)}</b> (${escapeHtml(o.prijs_toelichting || "indicatie")})</p>
         </div>
       `).join("")}
-      <p class="hint" style="margin-top:10px;">Alle 12 omvormersystemen vergelijken op batterij, Home Assistant en schaduw? <a href="omvormers.html">Naar de omvormer-vergelijker →</a></p>` : ""}
+      <p class="hint" style="margin-top:10px;">Alle ${omvormers.length} omvormersystemen vergelijken op batterij, Home Assistant en schaduw? <a href="omvormers.html">Naar de omvormer-vergelijker →</a></p>` : ""}
 
-      <p class="hint" style="margin-top:14px;">Alle 14 panelen zelf vergelijken? <a href="index.html">Naar de vergelijker →</a></p>
+      <p class="hint" style="margin-top:14px;">Alle ${panelen.length} panelen zelf vergelijken? <a href="index.html">Naar de vergelijker →</a></p>
     `;
   }
 

@@ -207,6 +207,9 @@
       const data = await res.json();
       state.omvormers = data.omvormers || [];
 
+      const teller = el("tellerOmvormers");
+      if (teller) teller.textContent = state.omvormers.length;
+
       if (data.laatst_bijgewerkt) {
         const d = new Date(data.laatst_bijgewerkt + "T12:00:00");
         const doel = el("updateDatum");

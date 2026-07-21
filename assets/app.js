@@ -579,6 +579,9 @@
       state.panelen = data.panelen || [];
       state.meta = data;
 
+      const teller = el("tellerPanelen");
+      if (teller) teller.textContent = state.panelen.length;
+
       if (data.laatst_bijgewerkt) {
         const d = new Date(data.laatst_bijgewerkt + "T12:00:00");
         el("updateDatum").textContent = datumFmt.format(d);

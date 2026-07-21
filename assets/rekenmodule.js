@@ -119,7 +119,7 @@
       <div class="resultaat-rij"><span>Jaaropbrengst (jaar 1)</span><b>${kwhFmt.format(opwek)} kWh</b></div>
       <div class="resultaat-rij"><span>Dekking van je verbruik</span><b>${dekking}%</b></div>
       <div class="resultaat-rij"><span>Besparing per jaar t/m 2026 <small>(met saldering)</small></span><b>${eurFmt.format(metSaldering)}</b></div>
-      <div class="resultaat-rij"><span>Besparing per jaar vanaf 2027</span><b>${eurFmt.format(zonderSaldering)}</b></div>
+      <div class="resultaat-rij"><span>Besparing per jaar vanaf 2027</span><b>${eurFmt.format(zonderSaldering)} <small style="font-weight:400;color:var(--kleur-tekst-licht);">(≈ ${eurFmt.format(zonderSaldering / 12)} per maand)</small></b></div>
       <div class="resultaat-rij"><span>Investering ${s.kostenGeschat ? "<small>(schatting incl. montage en omvormer)</small>" : ""}</span><b>${eurFmt.format(s.kosten)}</b></div>
       <div class="resultaat-rij"><span>Totale besparing over 25 jaar</span><b>${eurFmt.format(besparing25)}</b></div>
       <div class="resultaat-rij"><span>Netto voordeel over 25 jaar</span><b>${eurFmt.format(besparing25 - s.kosten)}</b></div>
