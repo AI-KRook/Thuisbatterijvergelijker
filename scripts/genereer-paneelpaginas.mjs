@@ -279,7 +279,7 @@ function pagina(p) {
   <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
     <div style="flex:1;min-width:250px;">
       <h1>${merkLogoHtml(p.merk)}${esc(volledigeNaam(p))}</h1>
-      <p class="intro">${esc(celtypeLabel(p))} zonnepaneel van ${p.vermogen_wp} Wp, ${esc(p.uitvoering)}${p.full_black ? ", full black" : ""}${p.bifaciaal ? ", bifaciaal" : ""}. Richtprijs laatst gecontroleerd op ${esc(datumNL(p.prijs_datum || data.laatst_bijgewerkt))}.</p>
+      <p class="intro">${esc(celtypeLabel(p))} zonnepaneel van ${p.vermogen_wp} Wp, ${esc(p.uitvoering)}${p.full_black ? ", full black" : ""}${p.bifaciaal ? ", bifaciaal" : ""}. Prijzen laatst gecontroleerd op ${esc(datumNL(p.prijs_datum || data.laatst_bijgewerkt))}.</p>
     </div>
     ${typeIllustratie(p.celtype)}
   </div>
