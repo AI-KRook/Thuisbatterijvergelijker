@@ -25,6 +25,12 @@ beide sporen uit:
      na recente wijzigingen niet meer bij elkaar passen (bijv. "richtprijs"
      waar een winkelprijs staat, of beloften op over-ons die de site niet
      waarmaakt).
+   - **Tekstgrootte-check (WCAG 1.4.4)**: alle paginatypen met Playwright
+     doormeten op 150% en 200% tekstgrootte (root font-size 24px en 32px),
+     op desktop (1280px) en telefoon (390px): geen horizontale overloop,
+     niets buiten beeld. Zie scratchpad-script test-tekstgrootte.mjs als
+     voorbeeld. Basis blijft 1rem (nooit vaste px op body); grids krimpbaar
+     houden met minmax(0, 1fr) en flex-rijen laten omklappen.
 
 Voer gevonden verbeterpunten direct door (na testen) en rapporteer per
 persona/heuristiek wat goed stond, wat is aangepast en wat bewust is
