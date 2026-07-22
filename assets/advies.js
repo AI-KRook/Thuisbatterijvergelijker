@@ -282,7 +282,7 @@
       <div class="advies-samenvatting">
         <div class="groot">${aantalGeadviseerd} panelen (circa ${numFmt.format(wpGeadviseerd)} Wp)</div>
         <p style="margin:6px 0 0;">Verwachte opbrengst: <b>${numFmt.format(opbrengst)} kWh per jaar</b>, circa ${dekking}% van je ${extras.length ? "verwachte " : ""}verbruik van ${numFmt.format(doelVerbruik)} kWh.</p>
-        ${extras.length ? `<p class="hint" style="margin:6px 0 0;">Meegerekend: ${extras.join(", ")}.</p>` : ""}
+        ${extras.length ? `<p class="hint" style="margin:6px 0 0;">Meegerekend: ${extras.join(", ")}.${s.warmtepomp ? ' Nog geen warmtepomp? Vergelijk ze op onze zustersite <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje</a>.' : ""}</p>` : ""}
         ${s.batterijPlan !== "nee" ? '<p class="hint" style="margin:6px 0 0;">Omdat je een thuisbatterij (verwacht) hebt, adviseren wij iets ruimer: het overschot gebruik je dan zelf.</p>' : ""}
         ${s.factor <= 0.65 ? '<p class="hint" style="margin:6px 0 0;">Let op: een noorddak levert circa een derde minder op dan een zuiddak. Vraag een installateur of het bij jouw dak uit kan; vaak is een oost-westdak of een kleiner systeem verstandiger.</p>' : ""}
         ${dakTeKlein ? `<p style="margin:8px 0 0;background:var(--kleur-accent-licht);border-radius:8px;padding:8px 12px;font-size:0.92rem;">⚠️ Voor je volledige verbruik zouden circa ${aantal} panelen nodig zijn, meer dan er op je dak passen. Kies daarom een paneel met een hoog rendement; die wegen hieronder automatisch zwaarder.</p>` : ""}

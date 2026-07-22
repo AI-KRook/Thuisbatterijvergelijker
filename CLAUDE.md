@@ -5,7 +5,9 @@ Batterijmaatje.nl). Geen buildstap: HTML + vanilla JS die JSON laadt uit
 `data/`. Ontwikkeling gebeurt op deze repo/branch; productie staat in de
 repo `AI-KRook/Zonnemaatje` (branch `main`, live via GitHub Pages op
 https://ai-krook.github.io/Zonnemaatje/, met `gh-pages` als fallback zonder
-CNAME).
+CNAME). De map `warmtepompmaatje/` bevat de derde zustersite; die deployt
+naar de repo `AI-KRook/Warmtepompmaatje` (main, GitHub Pages) en mag NIET
+mee naar de Zonnemaatje-repo.
 
 ## Vaste werkwijze bij analyses
 
@@ -49,8 +51,8 @@ gelaten.
   (chromium op `/opt/pw-browsers/chromium`, server: `python3 -m http.server`).
 - **Cache**: bij wijziging van een JS/CSS-bestand de `?v=`-versie in de
   betreffende HTML ophogen.
-- **Deploy**: dev-branch pushen, daarna de werkboom (excl. `.git`, `.claude`
-  en dit bestand) via tar syncen naar de Zonnemaatje-kloon, committen en
+- **Deploy**: dev-branch pushen, daarna de werkboom (excl. `.git`, `.claude`,
+  `warmtepompmaatje/` en dit bestand) via tar syncen naar de Zonnemaatje-kloon, committen en
   pushen naar `main` (deploy start automatisch) en `gh-pages` (zonder
   CNAME). Dit bestand (CLAUDE.md) NIET meesyncen naar de productie-repo.
 - **Schrijfstijl**: geen gedachtestreepjes in Nederlandse teksten;
