@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Warmtepompen vergelijken op subsidie, geluid én slimme koppeling | Warmtepompmaatje.nl</title>
+  <meta name="description" content="Onafhankelijke warmtepomp-vergelijker: hybride en all-electric warmtepompen naast elkaar op prijs, ISDE-subsidie, geluid, rendement en koppelbaarheid met Home Assistant en Homey (Koppel-score).">
+  <link rel="canonical" href="https://warmtepompmaatje.nl/">
+  <meta property="og:title" content="Warmtepompen vergelijken op subsidie, geluid én slimme koppeling">
+  <meta property="og:description" content="Hybride en all-electric warmtepompen naast elkaar: prijs, ISDE-subsidie, geluid en de Koppel-score voor Home Assistant en Homey.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://warmtepompmaatje.nl/">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:site_name" content="Warmtepompmaatje.nl">
+  <link rel="stylesheet" href="assets/style.css?v=20260722a">
+  <script src="assets/app.js?v=20260722a" defer></script>
+  <script src="assets/nav.js?v=20260722a" defer></script>
+  <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="index.html">
+      <span class="logo-icoon">🔥</span>
+      <span>Warmtepomp<b>maatje</b></span>
+    </a>
+    <nav class="hoofdnav">
+      <a href="index.html" class="actief">Warmtepompen</a>
+      <a href="advies.html">Keuzehulp</a>
+      <a href="uitleg.html">Uitleg</a>
+      <a href="subsidie.html">Subsidie</a>
+      <details class="nav-meer">
+        <summary>Meer ▾</summary>
+        <div class="nav-meer-paneel">
+          <a href="over-ons.html">Over ons</a>
+          <a href="contact.html">Contact</a>
+          <a href="privacy.html">Privacy &amp; disclaimer</a>
+        </div>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <h1>Warmtepompen vergelijken op wat écht telt</h1>
+    <p>De meeste vergelijkers sturen je meteen naar een offerteformulier. Wij vergelijken de <b>warmtepompen zelf</b>: prijs en ISDE-subsidie, geluid van de buitenunit, rendement, en of hij slim te koppelen is met Home Assistant of Homey (de <b>Koppel-score</b>). Onafhankelijk en in gewone taal, voor hybride én all-electric.</p>
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="update-info">🔥 <b id="tellerPompen">14</b> warmtepompen</span>
+      <span class="update-info">🔄 Bijgewerkt: <b id="updateDatum">…</b></span>
+      <span class="update-info">⚖️ 100% onafhankelijk</span>
+    </div>
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      <a class="knop" href="advies.html" style="background:var(--kleur-accent);color:#422006;">🧭 Begin met de keuzehulp (2 minuten)</a>
+      <a class="knop" href="#resultaten" style="background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.55);">⬇️ Direct warmtepompen vergelijken</a>
+      <a class="knop" href="uitleg.html" style="background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.55);">📖 Nieuw? Zo werkt een warmtepomp</a>
+    </div>
+  </div>
+</section>
+
+<main class="container">
+
+  <section aria-label="Zo gebruik je deze site" style="margin:22px 0 6px;">
+    <div class="icoon-kaarten" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+      <a class="icoon-kaart" href="advies.html" style="text-decoration:none;color:inherit;">
+        <span class="icoon">1️⃣</span>
+        <b>Begin met de keuzehulp</b>
+        <span style="font-size:0.9rem;color:var(--kleur-tekst-licht);">Twee minuten invullen en je weet of hybride of all-electric bij je huis past, welke pompen het best passen en wat de subsidie oplevert.</span>
+      </a>
+      <a class="icoon-kaart" href="#resultaten" style="text-decoration:none;color:inherit;">
+        <span class="icoon">2️⃣</span>
+        <b>Vergelijk of check je offerte</b>
+        <span style="font-size:0.9rem;color:var(--kleur-tekst-licht);">Hieronder op deze pagina: zoek de warmtepomp uit je offerte op en zie of prijs, geluid en subsidie kloppen.</span>
+      </a>
+      <a class="icoon-kaart" href="subsidie.html" style="text-decoration:none;color:inherit;">
+        <span class="icoon">3️⃣</span>
+        <b>Check de subsidie</b>
+        <span style="font-size:0.9rem;color:var(--kleur-tekst-licht);">De ISDE-subsidie loopt van circa € 2.000 tot € 3.600 per warmtepomp; zo vraag je hem aan.</span>
+      </a>
+    </div>
+  </section>
+
+  <div class="regel-banner">
+    <span class="icoon">💡</span>
+    <p><b>Heb je zonnepanelen of een thuisbatterij (of plannen)?</b> Een warmtepomp draait het voordeligst op eigen zonnestroom. Vergelijk panelen op onze zustersite <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a> en batterijen op <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>.</p>
+  </div>
+
+  <button class="filter-toggle" id="filterToggle">🔍 Filteren en sorteren ▾</button>
+
+  <div class="filterbalk ingeklapt" id="filterbalk">
+    <div class="filter-rij">
+      <div class="filter-groep" style="flex:1;min-width:200px;">
+        <label class="filter-label" for="zoekVeld">Zoeken</label>
+        <input type="search" id="zoekVeld" placeholder="Zoek op merk of model, bijv. Elga of Vaillant" style="width:100%;padding:10px 12px;border:1px solid var(--kleur-rand);border-radius:10px;font-size:0.95rem;">
+      </div>
+      <div class="filter-groep">
+        <label class="filter-label" for="filterType">Type</label>
+        <select id="filterType">
+          <option value="alle">Hybride en all-electric</option>
+          <option value="hybride">Hybride (naast de cv-ketel)</option>
+          <option value="all-electric">All-electric (van het gas af)</option>
+        </select>
+      </div>
+      <div class="filter-groep">
+        <label class="filter-label" for="filterMerk">Merk</label>
+        <select id="filterMerk"><option value="alle">Alle merken</option></select>
+      </div>
+      <div class="filter-groep">
+        <label class="filter-label" for="sorteer">Sorteren op</label>
+        <select id="sorteer">
+          <option value="koppel-score" selected>Koppel-score (best koppelbaar eerst)</option>
+          <option value="prijs-oplopend">Prijs (laag naar hoog)</option>
+          <option value="subsidie">Subsidie (hoogste eerst)</option>
+          <option value="geluid">Geluid (stilste eerst)</option>
+          <option value="rendement">Rendement (hoogste eerst)</option>
+        </select>
+      </div>
+    </div>
+    <div class="filter-rij">
+      <span class="filter-label">Toon alleen</span>
+      <div class="checkbox-groep">
+        <label><input type="checkbox" id="checkR290"> 🌿 Natuurlijk koudemiddel (R290)</label>
+        <label><input type="checkbox" id="checkStil"> 🤫 Stil (55 dB(A) of minder)</label>
+        <label><input type="checkbox" id="checkHa"> 🏠 Officiële slimme koppeling</label>
+      </div>
+      <button class="knop knop-secundair" id="resetFilters" style="margin-left:auto;padding:8px 14px;font-size:0.88rem;">Alle filters wissen</button>
+    </div>
+  </div>
+
+  <details class="legenda">
+    <summary>ℹ️ Wat betekenen de symbolen?</summary>
+    <div class="legenda-lijst">
+      <div class="legenda-rij"><span>🔗 Koppel-score</span><span>Punten (0 tot 6) voor slimme aansturing, Home Assistant en Homey. Uitleg staat onderaan deze pagina.</span></div>
+      <div class="legenda-rij"><span>✓</span><span>Direct of officieel ondersteund</span></div>
+      <div class="legenda-rij"><span>~</span><span>Werkt via een omweg: community-integratie, extra module of de thermostaat. Tik op de badge voor de uitleg.</span></div>
+      <div class="legenda-rij"><span>✕</span><span>Niet ondersteund</span></div>
+      <div class="legenda-rij"><span>▦/☰</span><span>Wissel tussen kaarten en tabel; vink "vergelijk" aan op maximaal 3 kaarten om ze zij aan zij te zien.</span></div>
+    </div>
+  </details>
+
+  <div class="resultaten-balk" id="resultaten-anker">
+    <span class="resultaten-telling" id="resultatenTelling">Laden…</span>
+    <div class="weergave-knoppen">
+      <button id="knopKaarten" class="actief">▦ Kaarten</button>
+      <button id="knopTabel">☰ Tabel</button>
+    </div>
+  </div>
+
+  <h2 class="visueel-verborgen">Alle warmtepompen vergeleken</h2>
+  <div id="resultaten"><div class="leeg-melding">Warmtepompen laden…</div></div>
+
+  <section class="content-pagina" style="padding-left:0;padding-right:0;">
+    <h2>Zo kies je een warmtepomp</h2>
+    <ol>
+      <li><b>Hybride of all-electric?</b> Een <b>hybride</b> warmtepomp hangt naast je cv-ketel en bespaart 50 tot 70% gas; ideaal voor woningen die (nog) niet perfect geïsoleerd zijn. <b>All-electric</b> vervangt de ketel volledig; dat vraagt om goede isolatie of lage-temperatuurverwarming, of een pomp met hoge aanvoertemperatuur (65 tot 75 °C).</li>
+      <li><b>Geluid telt, ook voor je buren.</b> Op de erfgrens geldt 's nachts een wettelijke eis van 40 dB. Kies bij dicht op elkaar staande woningen een stille buitenunit (filter hierboven) en bespreek de plek met je installateur.</li>
+      <li><b>Reken de subsidie mee.</b> De ISDE-subsidie dekt vaak 20 tot 30% van de investering; zie onze <a href="subsidie.html">subsidiepagina</a>.</li>
+      <li><b>Denk aan je zonnepanelen en batterij.</b> Een warmtepomp die slim te sturen is (SG-ready, Modbus, Home Assistant) kan extra draaien wanneer je panelen stroom over hebben. Zie de Koppel-score, en onze zustersites <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a> en <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>.</li>
+    </ol>
+
+    <h2 id="koppel-score">De Koppel-score uitgelegd</h2>
+    <p>Dezelfde transparante rekensom als op onze zustersites, van 0 tot 6 punten:</p>
+    <ul>
+      <li><b>Slimme aansturing</b>: rijke open koppeling (Modbus, EEBUS, eBUS of gedocumenteerde API) = 2 punten, alleen een SG-ready-contact of aansturing via de thermostaat = 1 punt, geen = 0 punten.</li>
+      <li><b>Home Assistant</b>: officiële integratie = 2 punten, community-integratie of lokale hardware-route = 1 punt, geen = 0 punten.</li>
+      <li><b>Homey</b>: eigen app in de Homey App Store = 2 punten, community-app of omweg = 1 punt, geen = 0 punten.</li>
+    </ul>
+    <p>De score zegt niets over de verwarmingsprestaties; een degelijke pomp zonder slimme koppeling kan voor jouw situatie de beste keus zijn. Integraties veranderen per firmware- en appversie; controleer de actuele status vóór aankoop.</p>
+    <div class="waarschuwing-kader">Prijzen zijn richtprijzen voor het losse toestel; een complete installatie (montage, boiler, leidingwerk, afgifteset) kost fors meer. ISDE-bedragen zijn indicaties; het bedrag per meldcode op de <a href="https://www.rvo.nl/subsidies-financiering/isde/woningeigenaren/warmtepomp" target="_blank" rel="noopener">apparatenlijst van RVO</a> is leidend. Vraag altijd meerdere offertes aan.</div>
+  </section>
+
+</main>
+
+<div class="vergelijk-balk" id="vergelijkBalk">
+  <span id="vergelijkBalkTekst"></span>
+  <button class="knop" id="openVergelijk">Vergelijk nu</button>
+  <button class="knop knop-secundair" id="wisVergelijk">Wissen</button>
+</div>
+
+<div class="vergelijk-modal" id="vergelijkModal">
+  <div class="vergelijk-modal-inhoud">
+    <button class="modal-sluit" id="sluitModal" aria-label="Sluiten">×</button>
+    <div id="vergelijkModalInhoud"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <b>🔥 Warmtepompmaatje</b>
+    <p>Onafhankelijke vergelijking van warmtepompen voor Nederlandse huishoudens. Zustersite van <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a> (zonnepanelen en omvormers) en <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a> (thuisbatterijen).</p>
+    <p><a href="index.html">Warmtepompen</a> · <a href="advies.html">Keuzehulp</a> · <a href="uitleg.html">Uitleg</a> · <a href="subsidie.html">Subsidie</a> · <a href="over-ons.html">Over ons</a> · <a href="contact.html">Contact</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
+    <p class="disclaimer">Disclaimer: prijzen, subsidies en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. Controleer voor aankoop de actuele datasheet, de RVO-apparatenlijst en de voorwaarden bij de aanbieder.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+/* ==========================================================================
+   Warmtepompmaatje - keuzehulp
+   Adviseert hybride of all-electric op basis van woning en gasverbruik, en
+   kiest de best passende warmtepompen uit data/warmtepompen.json.
+   Aannames staan uitgelegd op de pagina onder "Hoe komt dit advies tot stand?".
+   ========================================================================== */
+
+(function () {
+  "use strict";
+
+  const el = (id) => document.getElementById(id);
+  const eurFmt = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+  const numFmt = new Intl.NumberFormat("nl-NL", { maximumFractionDigits: 0 });
+
+  let pompen = [];
+
+  function escapeHtml(str) {
+    return String(str == null ? "" : str)
+      .replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+  }
+
+  function driewaardig(v) {
+    if (v && typeof v === "object") return { status: v.status || "deels", tekst: v.tekst || "" };
+    return { status: "nee", tekst: "Nee" };
+  }
+
+  const punt = (v) => { const s = driewaardig(v).status; return s === "ja" ? 2 : s === "deels" ? 1 : 0; };
+  const koppelScore = (w) => punt(w.sturing) + punt(w.home_assistant) + punt(w.homey);
+
+  function bestePrijs(w) {
+    const aanbiedingen = (w.aanbiedingen || []).filter((a) => a && a.prijs_eur);
+    if (aanbiedingen.length) {
+      return aanbiedingen.reduce((min, a) => (a.prijs_eur < min.prijs_eur || (a.prijs_eur === min.prijs_eur && a.datum && !min.datum) ? a : min));
+    }
+    if (w.richtprijs_eur) return { winkel: null, prijs_eur: w.richtprijs_eur, url: w.product_url };
+    return null;
+  }
+
+  function invoer() {
+    return {
+      gas: Math.max(300, Number(el("gasverbruik").value) || 1200),
+      isolatie: el("isolatie").value,           // goed | redelijk | matig
+      afgifte: el("afgifte").value,             // vloer | mix | radiatoren
+      buren: el("buren").value,                 // vrij | dichtbij
+      smartHome: el("smartHome").value,         // geen | home_assistant | homey
+      zon: el("checkZon").checked,
+      gasprijs: 1.45,
+      stroomprijs: 0.30,
+    };
+  }
+
+  /* ------------------------------------------------------------------
+     Advies: hybride of all-electric
+     ------------------------------------------------------------------ */
+
+  function typeAdvies(s) {
+    // All-electric vraagt om een laag warmteverlies of hoge aanvoertemperatuur;
+    // bij matige isolatie is hybride de veilige route (zie uitleg op de pagina)
+    if (s.isolatie === "goed") {
+      return { type: "all-electric", reden: "Je woning is goed geïsoleerd: all-electric kan de cv-ketel volledig vervangen en levert de grootste besparing en de hoogste subsidie op." };
+    }
+    if (s.isolatie === "redelijk" && s.afgifte !== "radiatoren") {
+      return { type: "all-electric", reden: "Met redelijke isolatie en (deels) vloerverwarming kan all-electric, mits de installateur het warmteverlies doorrekent. Kies een pomp met hoge aanvoertemperatuur als reserve." };
+    }
+    if (s.isolatie === "redelijk") {
+      return { type: "hybride", reden: "Redelijke isolatie met alleen radiatoren: een hybride pakt nu al 50 tot 70% gasbesparing, zonder risico op een koud huis. All-electric kan later, na (na)isolatie of met hoge-temperatuurradiatoren." };
+    }
+    return { type: "hybride", reden: "Bij een ouder, matig geïsoleerd huis is hybride de verstandige eerste stap: grote gasbesparing, terwijl de ketel de piekkou opvangt. Isoleer eerst verder voordat je all-electric overweegt." };
+  }
+
+  /* ------------------------------------------------------------------
+     Besparingsindicatie (vuistregels, uitgelegd op de pagina)
+     ------------------------------------------------------------------ */
+
+  function besparing(s, type) {
+    // 1 m3 gas levert circa 8,8 kWh nuttige warmte via een moderne cv-ketel
+    const warmteKwh = s.gas * 8.8;
+    const dekking = type === "hybride" ? 0.6 : 1.0;      // aandeel dat de pomp overneemt
+    const scop = type === "hybride" ? 4.5 : 4.0;          // hybride draait vooral op gunstige momenten
+    const stroomKwh = (warmteKwh * dekking) / scop;
+    const gasBespaard = s.gas * dekking;
+    const nettoPerJaar = gasBespaard * s.gasprijs - stroomKwh * s.stroomprijs;
+    return { gasBespaard: Math.round(gasBespaard), stroomKwh: Math.round(stroomKwh), nettoPerJaar: Math.round(nettoPerJaar) };
+  }
+
+  /* ------------------------------------------------------------------
+     Pompen scoren binnen het geadviseerde type
+     ------------------------------------------------------------------ */
+
+  function scorePompen(s, type) {
+    const kandidaten = pompen.filter((w) => w.type === type);
+    const prijzen = kandidaten.map((w) => { const b = bestePrijs(w); return b ? b.prijs_eur - (w.isde_indicatie_eur || 0) : null; }).filter((n) => n != null);
+    const minP = Math.min(...prijzen), maxP = Math.max(...prijzen);
+
+    return kandidaten.map((w) => {
+      let score = 0;
+      // Nettoprijs (prijs minus subsidie-indicatie): goedkoper = beter
+      const b = bestePrijs(w);
+      const netto = b ? b.prijs_eur - (w.isde_indicatie_eur || 0) : maxP;
+      score += 2.5 * (maxP - netto) / (maxP - minP || 1);
+      // Geluid weegt zwaar bij buren dichtbij
+      const stil = Math.max(0, 60 - (w.geluid_db || 60)) / 10; // 0 (60 dB) tot ~1 (50 dB)
+      score += stil * (s.buren === "dichtbij" ? 3 : 1);
+      // Smart home-platform
+      if (s.smartHome === "home_assistant") score += punt(w.home_assistant) * 1.5;
+      else if (s.smartHome === "homey") score += punt(w.homey) * 1.5;
+      else score += punt(w.sturing) * 0.5;
+      // Zonnepanelen: slimme aansturing laat de pomp op zonnestroom draaien
+      if (s.zon) score += punt(w.sturing) * 1.2;
+      // Bestaande radiatoren: hoge aanvoertemperatuur is dan waardevol
+      if (s.afgifte === "radiatoren" && type === "all-electric") score += (w.max_aanvoer_c || 55) >= 70 ? 1.5 : 0;
+      // Rendement
+      if (w.scop) score += (w.scop - 4) * 1.2;
+      return { w, score, netto };
+    }).sort((a, b) => b.score - a.score).slice(0, 3);
+  }
+
+  function redenVoor(w, s) {
+    const redenen = [];
+    if ((w.geluid_db || 99) <= 55) redenen.push(`stil (${w.geluid_db} dB(A))`);
+    if (s.smartHome === "home_assistant" && driewaardig(w.home_assistant).status === "ja") redenen.push("officiële Home Assistant-integratie");
+    if (s.smartHome === "home_assistant" && driewaardig(w.home_assistant).status === "deels") redenen.push("Home Assistant via community-route");
+    if (s.smartHome === "homey" && driewaardig(w.homey).status !== "nee") redenen.push(driewaardig(w.homey).status === "ja" ? "Homey-app beschikbaar" : "Homey via community-app");
+    if (/R290/i.test(w.koudemiddel || "")) redenen.push("natuurlijk koudemiddel (R290)");
+    if ((w.max_aanvoer_c || 0) >= 70 && s.afgifte === "radiatoren") redenen.push(`hoge aanvoertemperatuur (${w.max_aanvoer_c} °C) voor bestaande radiatoren`);
+    redenen.push(`Koppel-score ${koppelScore(w)}/6`);
+    return redenen.slice(0, 4).join(" · ");
+  }
+
+  /* ------------------------------------------------------------------
+     Renderen
+     ------------------------------------------------------------------ */
+
+  function adviseer() {
+    const s = invoer();
+    const advies = typeAdvies(s);
+    const b = besparing(s, advies.type);
+    const top = scorePompen(s, advies.type);
+    const plekken = ["🥇 Beste match", "🥈 Tweede keus", "🥉 Derde keus"];
+
+    const smartRegel = (() => {
+      if (!top.length) return "";
+      const w = top[0].w;
+      if (s.smartHome === "home_assistant") {
+        const d = driewaardig(w.home_assistant);
+        return `Home Assistant: ${d.status === "ja" ? "✓ officiële integratie" : d.status === "deels" ? "~ via community-integratie" : "✕ geen bekende integratie"}`;
+      }
+      if (s.smartHome === "homey") {
+        const d = driewaardig(w.homey);
+        return `Homey: ${d.status === "ja" ? "✓ app beschikbaar" : d.status === "deels" ? "~ via community-app" : "✕ geen app; verbruik wel zichtbaar via de Homey Energy Dongle (P1)"}`;
+      }
+      return "";
+    })();
+
+    el("adviesInhoud").innerHTML = `
+      <div class="advies-samenvatting">
+        <div class="groot">${advies.type === "hybride" ? "Hybride warmtepomp" : "All-electric warmtepomp"}</div>
+        <p style="margin:6px 0 0;">${advies.reden}</p>
+        <p style="margin:8px 0 0;">Indicatie: circa <b>${numFmt.format(b.gasBespaard)} m³ gas minder</b> per jaar, tegen circa ${numFmt.format(b.stroomKwh)} kWh extra stroom. Netto besparing: <b>circa ${eurFmt.format(b.nettoPerJaar)} per jaar</b> (≈ ${eurFmt.format(b.nettoPerJaar / 12)} per maand).</p>
+        ${s.zon ? '<p class="hint" style="margin:6px 0 0;">☀️ Met zonnepanelen wordt het voordeliger: een slim aangestuurde pomp draait extra wanneer je panelen stroom over hebben. Daarom wegen wij slimme aansturing zwaarder mee.</p>' : ""}
+        ${s.buren === "dichtbij" ? '<p class="hint" style="margin:6px 0 0;">🤫 Omdat je buren dichtbij wonen, wegen wij het geluid van de buitenunit zwaar mee. Op de erfgrens geldt in de nacht een eis van 40 dB.</p>' : ""}
+      </div>
+
+      <h2 style="margin-top:20px;">De drie best passende warmtepompen</h2>
+      ${top.map(({ w, netto }, i) => {
+        const beste = bestePrijs(w);
+        return `
+        <div class="advies-kaart">
+          <span class="plek">${plekken[i]}</span>
+          <h3>${escapeHtml(w.merk)} ${escapeHtml(w.model)}</h3>
+          <div class="reden">${redenVoor(w, s)}</div>
+          <p style="margin:8px 0 0;font-size:0.95rem;">richtprijs <b>${beste ? eurFmt.format(beste.prijs_eur) : "?"}</b> · ISDE-subsidie circa <b>${w.isde_indicatie_eur ? eurFmt.format(w.isde_indicatie_eur) : "?"}</b> · netto circa <b>${eurFmt.format(netto)}</b> voor het toestel (excl. installatie)</p>
+          ${w.product_url ? `<p style="margin:8px 0 0;"><a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="index.html?zoek=${encodeURIComponent(w.merk)}">Bekijk in de vergelijker →</a></p>` : ""}
+        </div>`;
+      }).join("")}
+      ${smartRegel ? `<p style="margin:12px 0 0;font-size:0.92rem;">🏠 ${smartRegel}</p>` : ""}
+
+      <div class="advies-kaart" style="margin-top:18px;">
+        <span class="plek">🔗 Maak het compleet</span>
+        <p style="margin:8px 0 0;font-size:0.95rem;">Een warmtepomp draait het voordeligst op eigen zonnestroom. Vergelijk zonnepanelen en omvormers op <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a>, en thuisbatterijen op <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>. Check daarna de <a href="subsidie.html">ISDE-subsidie</a>: die geldt per apparaat.</p>
+      </div>
+      <p class="hint" style="margin-top:12px;">Dit advies is een startpunt, geen offerte of warmteverliesberekening. Laat een installateur altijd het vermogen bepalen; een te grote pomp pendelt en een te kleine wordt duur. <a href="javascript:window.print()">🖨️ Advies afdrukken</a></p>
+    `;
+  }
+
+  async function init() {
+    try {
+      const res = await fetch("data/warmtepompen.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      pompen = (await res.json()).warmtepompen || [];
+      ["gasverbruik", "isolatie", "afgifte", "buren", "smartHome"].forEach((id) => {
+        el(id).addEventListener("input", adviseer);
+        el(id).addEventListener("change", adviseer);
+      });
+      el("checkZon").addEventListener("change", adviseer);
+      adviseer();
+    } catch (err) {
+      el("adviesInhoud").innerHTML = '<p class="hint">De gegevens konden niet worden geladen. Vernieuw de pagina of probeer het later opnieuw.</p>';
+      console.error("Fout bij laden warmtepompen.json:", err);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
