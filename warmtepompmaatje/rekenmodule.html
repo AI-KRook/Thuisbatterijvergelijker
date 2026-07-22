@@ -143,6 +143,28 @@
   <section class="content-pagina" style="padding-top:0;">
     <h2>Hoe rekenen wij?</h2>
     <p>De berekening is bewust eenvoudig en controleerbaar, en gebruikt dezelfde vuistregels als onze <a href="advies.html">keuzehulp</a>. Dit zijn de stappen en aannames:</p>
+
+    <figure style="margin:18px 0 26px;padding:18px 16px 12px;background:var(--kleur-wit);border:1px solid var(--kleur-rand);border-radius:var(--radius);">
+      <svg viewBox="0 0 560 204" role="img" aria-label="Staafdiagram: van het gasverbruik gaat 75% naar verwarming en 25% naar warm water en koken. Een hybride neemt 60% van het totaal over, all-electric alles." style="display:block;width:100%;max-width:560px;height:auto;margin:0 auto;">
+        <!-- balk: jouw gasverbruik -->
+        <text x="10" y="22" font-size="13" font-weight="700" fill="var(--kleur-tekst)">Jouw gasverbruik nu</text>
+        <rect x="10" y="30" width="405" height="26" rx="6" fill="var(--kleur-primair)"/>
+        <rect x="415" y="30" width="135" height="26" rx="6" fill="var(--kleur-primair-licht)" stroke="var(--kleur-primair)" stroke-width="1.5"/>
+        <text x="212" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">verwarming (± 75%)</text>
+        <text x="483" y="48" text-anchor="middle" font-size="12" fill="var(--kleur-primair-donker)">warm water (± 25%)</text>
+        <!-- balk: hybride -->
+        <text x="10" y="92" font-size="13" font-weight="700" fill="var(--kleur-tekst)">Hybride bespaart</text>
+        <rect x="10" y="100" width="324" height="26" rx="6" fill="var(--kleur-primair-donker)"/>
+        <rect x="334" y="100" width="216" height="26" rx="6" fill="#e7e5e4" stroke="var(--kleur-rand)" stroke-width="1.5"/>
+        <text x="172" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">pomp neemt over (± 60%)</text>
+        <text x="442" y="118" text-anchor="middle" font-size="12" fill="var(--kleur-tekst-licht)">blijft gas: piekkou + warm water</text>
+        <!-- balk: all-electric -->
+        <text x="10" y="162" font-size="13" font-weight="700" fill="var(--kleur-tekst)">All-electric bespaart</text>
+        <rect x="10" y="170" width="540" height="26" rx="6" fill="var(--kleur-primair-donker)"/>
+        <text x="280" y="188" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">pomp neemt alles over (100%, gas kan eraf)</text>
+      </svg>
+      <figcaption style="margin-top:10px;font-size:0.88rem;color:var(--kleur-tekst-licht);text-align:center;">Wat de pomp overneemt van je gasverbruik: circa 60% bij hybride, alles bij all-electric.</figcaption>
+    </figure>
     <ul>
       <li><b>Verdeling van je gasverbruik.</b> Circa 75% van het gas gaat naar verwarming en circa 25% naar warm water en koken (bron: Milieu Centraal). Die verdeling gebruiken wij bij all-electric om het warme water apart door te rekenen.</li>
       <li><b>Hybride.</b> Een hybride warmtepomp neemt circa 60% van je totale warmtevraag over (circa 80% van de verwarming; warm water en piekkou blijven bij de cv-ketel), dezelfde vuistregel als in de keuzehulp. De pomp draait vooral op gunstige momenten, daarom rekenen wij met een seizoensrendement (SCOP) van 4,5.</li>
