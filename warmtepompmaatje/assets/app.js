@@ -200,6 +200,7 @@
       </div>
       <div class="kaart-acties">
         ${beste && beste.url ? `<a class="knop" href="${escapeHtml(koopUrl(beste))}" target="_blank" rel="noopener" aria-label="Bekijk de ${escapeHtml(w.merk)} ${escapeHtml(w.model)}">${uitWinkel ? "Bekijk aanbieding →" : "Naar fabrikant →"}</a>` : ""}
+        <a class="knop knop-secundair" href="rekenmodule.html?pomp=${encodeURIComponent(w.id)}" title="Bereken de besparing en terugverdientijd van de ${escapeHtml(w.merk)} ${escapeHtml(w.model)}">Terugverdientijd</a>
         <a class="knop knop-secundair" href="advies.html" title="Welke warmtepomp past bij jouw huis? Doe de keuzehulp">Keuzehulp</a>
       </div>
     </article>`;

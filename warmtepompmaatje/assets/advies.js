@@ -92,12 +92,17 @@
      ------------------------------------------------------------------ */
 
   function besparing(s, type) {
-    // 1 m3 gas levert circa 8,8 kWh nuttige warmte via een moderne cv-ketel
-    const warmteKwh = s.gas * 8.8;
-    const dekking = type === "hybride" ? 0.6 : 1.0;      // aandeel dat de pomp overneemt
-    const scop = type === "hybride" ? 4.5 : 4.0;          // hybride draait vooral op gunstige momenten
-    const stroomKwh = (warmteKwh * dekking) / scop;
-    const gasBespaard = s.gas * dekking;
+    // 1 m3 gas levert circa 8,8 kWh nuttige warmte via een moderne cv-ketel.
+    // Dezelfde vuistregels als de rekenmodule (terugverdientijd).
+    let gasBespaard, stroomKwh;
+    if (type === "hybride") {
+      gasBespaard = s.gas * 0.6;                          // circa 60% van de totale warmtevraag
+      stroomKwh = (gasBespaard * 8.8) / 4.5;              // hybride draait vooral op gunstige momenten
+    } else {
+      gasBespaard = s.gas;                                // all-electric vervangt alles
+      const verwarmingGas = s.gas * 0.75;                 // circa 75% verwarming (Milieu Centraal)
+      stroomKwh = (verwarmingGas * 8.8) / 4.0 + ((s.gas - verwarmingGas) * 8.8) / 2.5; // warm water via boilervat
+    }
     const nettoPerJaar = gasBespaard * s.gasprijs - stroomKwh * s.stroomprijs;
     return { gasBespaard: Math.round(gasBespaard), stroomKwh: Math.round(stroomKwh), nettoPerJaar: Math.round(nettoPerJaar) };
   }
@@ -193,7 +198,7 @@
           <h3>${escapeHtml(w.merk)} ${escapeHtml(w.model)}</h3>
           <div class="reden">${redenVoor(w, s)}</div>
           <p style="margin:8px 0 0;font-size:0.95rem;">${beste && beste.winkel ? `laagste prijs <b>${eurFmt.format(beste.prijs_eur)}</b>, goedkoopst bij <a href="${escapeHtml(beste.url || "")}" target="_blank" rel="noopener">${escapeHtml(beste.winkel)}</a>` : `richtprijs <b>${beste ? eurFmt.format(beste.prijs_eur) : "?"}</b>`} · ISDE-subsidie circa <b>${w.isde_indicatie_eur ? eurFmt.format(w.isde_indicatie_eur) : "?"}</b> · netto circa <b>${eurFmt.format(netto)}</b> voor het toestel (excl. installatie)</p>
-          <p style="margin:8px 0 0;">${beste && beste.winkel && beste.url ? `<a class="knop" style="padding:8px 14px;font-size:0.88rem;" href="${escapeHtml(beste.url)}" target="_blank" rel="noopener">Bekijk aanbieding →</a> ` : ""}<a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="index.html?zoek=${encodeURIComponent(w.merk)}">Bekijk in de vergelijker →</a></p>
+          <p style="margin:8px 0 0;">${beste && beste.winkel && beste.url ? `<a class="knop" style="padding:8px 14px;font-size:0.88rem;" href="${escapeHtml(beste.url)}" target="_blank" rel="noopener">Bekijk aanbieding →</a> ` : ""}<a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="rekenmodule.html?pomp=${encodeURIComponent(w.id)}&gas=${s.gas}">Terugverdientijd →</a> <a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="index.html?zoek=${encodeURIComponent(w.merk)}">Bekijk in de vergelijker →</a></p>
         </div>`;
       }).join("")}
       ${smartRegel ? `<p style="margin:12px 0 0;font-size:0.92rem;">🏠 ${smartRegel}</p>` : ""}
