@@ -40,11 +40,13 @@
   function invoer() {
     return {
       gas: Math.max(300, Number(el("gasverbruik").value) || 1200),
+      cvKetel: el("cvKetel").value,             // recent | oud | geen
       isolatie: el("isolatie").value,           // goed | redelijk | matig
       afgifte: el("afgifte").value,             // vloer | mix | radiatoren
       buren: el("buren").value,                 // vrij | dichtbij
       smartHome: el("smartHome").value,         // geen | home_assistant | homey
       zon: el("checkZon").checked,
+      batterij: el("checkBatterij").checked,
       gasprijs: 1.45,
       stroomprijs: 0.30,
     };
@@ -55,18 +57,34 @@
      ------------------------------------------------------------------ */
 
   function typeAdvies(s) {
+    // Zonder cv-ketel is hybride technisch niet mogelijk: die pompt naast een ketel
+    if (s.cvKetel === "geen") {
+      if (s.isolatie === "matig") {
+        return { type: "all-electric", reden: "Zonder cv-ketel is hybride niet mogelijk, dus wordt het all-electric. Let op: bij matige isolatie is eerst (na)isoleren sterk aan te raden, en kies een pomp met hoge aanvoertemperatuur. Laat de installateur het warmteverlies doorrekenen." };
+      }
+      return { type: "all-electric", reden: "Zonder cv-ketel is hybride niet mogelijk: een hybride warmtepomp werkt altijd naast een ketel. All-electric is dan de logische keuze en levert bovendien de hoogste subsidie op." };
+    }
     // All-electric vraagt om een laag warmteverlies of hoge aanvoertemperatuur;
     // bij matige isolatie is hybride de veilige route (zie uitleg op de pagina)
     if (s.isolatie === "goed") {
-      return { type: "all-electric", reden: "Je woning is goed geïsoleerd: all-electric kan de cv-ketel volledig vervangen en levert de grootste besparing en de hoogste subsidie op." };
+      const ketelZin = s.cvKetel === "oud"
+        ? " Je ketel is toch aan vervanging toe: een mooi moment om hem er meteen uit te doen."
+        : " Je huidige ketel kan dan weg; wil je hem toch laten hangen, dan is hybride een goedkoper alternatief.";
+      return { type: "all-electric", reden: "Je woning is goed geïsoleerd: all-electric kan de cv-ketel volledig vervangen en levert de grootste besparing en de hoogste subsidie op." + ketelZin };
     }
     if (s.isolatie === "redelijk" && s.afgifte !== "radiatoren") {
-      return { type: "all-electric", reden: "Met redelijke isolatie en (deels) vloerverwarming kan all-electric, mits de installateur het warmteverlies doorrekent. Kies een pomp met hoge aanvoertemperatuur als reserve." };
+      return { type: "all-electric", reden: "Met redelijke isolatie en (deels) vloerverwarming kan all-electric, mits de installateur het warmteverlies doorrekent. Kies een pomp met hoge aanvoertemperatuur als reserve." + (s.cvKetel === "oud" ? " Je ketel is toch aan vervanging toe, dus dit is een natuurlijk moment." : "") };
     }
     if (s.isolatie === "redelijk") {
-      return { type: "hybride", reden: "Redelijke isolatie met alleen radiatoren: een hybride pakt nu al 50 tot 70% gasbesparing, zonder risico op een koud huis. All-electric kan later, na (na)isolatie of met hoge-temperatuurradiatoren." };
+      const ketelZin = s.cvKetel === "oud"
+        ? " Let op: een hybride heeft een goed werkende ketel naast zich nodig. Is jouw ketel echt op, reken dan ook een nieuwe ketel mee of overweeg toch all-electric na (na)isolatie."
+        : " Jouw ketel kan gewoon blijven hangen en vangt de piekkou op.";
+      return { type: "hybride", reden: "Redelijke isolatie met alleen radiatoren: een hybride pakt nu al 50 tot 70% gasbesparing, zonder risico op een koud huis. All-electric kan later, na (na)isolatie of met hoge-temperatuurradiatoren." + ketelZin };
     }
-    return { type: "hybride", reden: "Bij een ouder, matig geïsoleerd huis is hybride de verstandige eerste stap: grote gasbesparing, terwijl de ketel de piekkou opvangt. Isoleer eerst verder voordat je all-electric overweegt." };
+    const ketelZin = s.cvKetel === "oud"
+      ? " Omdat je ketel aan vervanging toe is: reken een nieuwe (of goed nagekeken) ketel mee, want de hybride leunt op hem tijdens piekkou."
+      : " Jouw ketel blijft gewoon hangen en vangt de piekkou op.";
+    return { type: "hybride", reden: "Bij een ouder, matig geïsoleerd huis is hybride de verstandige eerste stap: grote gasbesparing, terwijl de ketel de piekkou opvangt. Isoleer eerst verder voordat je all-electric overweegt." + ketelZin };
   }
 
   /* ------------------------------------------------------------------
@@ -108,6 +126,8 @@
       else score += punt(w.sturing) * 0.5;
       // Zonnepanelen: slimme aansturing laat de pomp op zonnestroom draaien
       if (s.zon) score += punt(w.sturing) * 1.2;
+      // Thuisbatterij: slimme aansturing laat de pomp op goedkope of eigen stroom draaien
+      if (s.batterij) score += punt(w.sturing) * 1.2;
       // Bestaande radiatoren: hoge aanvoertemperatuur is dan waardevol
       if (s.afgifte === "radiatoren" && type === "all-electric") score += (w.max_aanvoer_c || 55) >= 70 ? 1.5 : 0;
       // Rendement
@@ -122,6 +142,7 @@
     if (s.smartHome === "home_assistant" && driewaardig(w.home_assistant).status === "ja") redenen.push("officiële Home Assistant-integratie");
     if (s.smartHome === "home_assistant" && driewaardig(w.home_assistant).status === "deels") redenen.push("Home Assistant via community-route");
     if (s.smartHome === "homey" && driewaardig(w.homey).status !== "nee") redenen.push(driewaardig(w.homey).status === "ja" ? "Homey-app beschikbaar" : "Homey via community-app");
+    if ((s.zon || s.batterij) && driewaardig(w.sturing).status === "ja") redenen.push("slim aan te sturen op eigen of goedkope stroom");
     if (/R290/i.test(w.koudemiddel || "")) redenen.push("natuurlijk koudemiddel (R290)");
     if ((w.max_aanvoer_c || 0) >= 70 && s.afgifte === "radiatoren") redenen.push(`hoge aanvoertemperatuur (${w.max_aanvoer_c} °C) voor bestaande radiatoren`);
     redenen.push(`Koppel-score ${koppelScore(w)}/6`);
@@ -159,6 +180,7 @@
         <p style="margin:6px 0 0;">${advies.reden}</p>
         <p style="margin:8px 0 0;">Indicatie: circa <b>${numFmt.format(b.gasBespaard)} m³ gas minder</b> per jaar, tegen circa ${numFmt.format(b.stroomKwh)} kWh extra stroom. Netto besparing: <b>circa ${eurFmt.format(b.nettoPerJaar)} per jaar</b> (≈ ${eurFmt.format(b.nettoPerJaar / 12)} per maand).</p>
         ${s.zon ? '<p class="hint" style="margin:6px 0 0;">☀️ Met zonnepanelen wordt het voordeliger: een slim aangestuurde pomp draait extra wanneer je panelen stroom over hebben. Daarom wegen wij slimme aansturing zwaarder mee.</p>' : ""}
+        ${s.batterij ? '<p class="hint" style="margin:6px 0 0;">🔋 Met een thuisbatterij loont slimme aansturing dubbel: de pomp verwarmt op momenten dat stroom goedkoop is of de batterij vol zit. Daarom wegen wij slimme aansturing zwaarder mee. Nog geen batterij? Vergelijk ze op <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>.</p>' : ""}
         ${s.buren === "dichtbij" ? '<p class="hint" style="margin:6px 0 0;">🤫 Omdat je buren dichtbij wonen, wegen wij het geluid van de buitenunit zwaar mee. Op de erfgrens geldt in de nacht een eis van 40 dB.</p>' : ""}
       </div>
 
@@ -189,11 +211,12 @@
       const res = await fetch("data/warmtepompen.json", { cache: "no-cache" });
       if (!res.ok) throw new Error("HTTP " + res.status);
       pompen = (await res.json()).warmtepompen || [];
-      ["gasverbruik", "isolatie", "afgifte", "buren", "smartHome"].forEach((id) => {
+      ["gasverbruik", "cvKetel", "isolatie", "afgifte", "buren", "smartHome"].forEach((id) => {
         el(id).addEventListener("input", adviseer);
         el(id).addEventListener("change", adviseer);
       });
       el("checkZon").addEventListener("change", adviseer);
+      el("checkBatterij").addEventListener("change", adviseer);
       adviseer();
     } catch (err) {
       el("adviesInhoud").innerHTML = '<p class="hint">De gegevens konden niet worden geladen. Vernieuw de pagina of probeer het later opnieuw.</p>';

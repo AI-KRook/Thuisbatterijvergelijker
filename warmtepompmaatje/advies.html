@@ -13,7 +13,7 @@
   <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="Warmtepompmaatje.nl">
   <link rel="stylesheet" href="assets/style.css?v=20260722a">
-  <script src="assets/advies.js?v=20260722b" defer></script>
+  <script src="assets/advies.js?v=20260722c" defer></script>
   <script src="assets/nav.js?v=20260722a" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
   <style>
@@ -82,6 +82,16 @@
       </div>
 
       <div class="veld">
+        <label for="cvKetel">Hangt er nu een cv-ketel?</label>
+        <select id="cvKetel">
+          <option value="recent" selected>Ja, minder dan 10 jaar oud</option>
+          <option value="oud">Ja, maar ouder dan 10 jaar (aan vervanging toe)</option>
+          <option value="geen">Nee (stadsverwarming, elektrisch of nieuwbouw)</option>
+        </select>
+        <span class="hint">Een hybride warmtepomp werkt alleen naast een cv-ketel</span>
+      </div>
+
+      <div class="veld">
         <label for="isolatie">Hoe goed is je huis geïsoleerd?</label>
         <select id="isolatie">
           <option value="goed">Goed (bouwjaar na 2000, of volledig nageïsoleerd)</option>
@@ -123,8 +133,9 @@
       <div class="veld">
         <div class="checkbox-groep">
           <label><input type="checkbox" id="checkZon"> ☀️ Ik heb zonnepanelen (of concrete plannen)</label>
+          <label><input type="checkbox" id="checkBatterij"> 🔋 Ik heb een thuisbatterij (of concrete plannen)</label>
         </div>
-        <span class="hint">Een slim aangestuurde pomp draait dan extra op je eigen zonnestroom</span>
+        <span class="hint">Een slim aangestuurde pomp draait dan extra op je eigen zonnestroom of op goedkope uren uit de batterij</span>
       </div>
     </form>
 
@@ -139,6 +150,8 @@
     <h2>Hoe komt dit advies tot stand?</h2>
     <ul>
       <li><b>Hybride of all-electric.</b> All-electric adviseren wij alleen als de isolatie het toelaat (of met vloerverwarming en een doorrekening); anders is hybride de veilige route met 50 tot 70% gasbesparing. Dit volgt de gangbare praktijk van Nederlandse installateurs en Milieu Centraal.</li>
+      <li><b>Cv-ketel.</b> Een hybride warmtepomp werkt altijd naast een cv-ketel. Hangt er geen ketel (stadsverwarming, elektrisch of nieuwbouw), dan adviseren wij automatisch all-electric. Is je ketel ouder dan 10 jaar, dan wijzen wij op het natuurlijke vervangingsmoment.</li>
+      <li><b>Zonnepanelen en thuisbatterij.</b> Heb je zonnepanelen of een thuisbatterij (of plannen daarvoor), dan wegen wij slimme aansturing zwaarder mee: een pomp met een open protocol kan dan verwarmen op momenten dat je eigen stroom hebt of stroom goedkoop is.</li>
       <li><b>Besparing.</b> Vuistregels: 1 m³ gas levert circa 8,8 kWh nuttige warmte via een moderne cv-ketel; een hybride neemt circa 60% van de warmtevraag over met een seizoensrendement (SCOP) rond 4,5, all-electric alles met een SCOP rond 4. Wij rekenen met € 1,45 per m³ gas en € 0,30 per kWh stroom.</li>
       <li><b>Top 3.</b> Binnen het geadviseerde type scoren wij op nettoprijs (richtprijs minus ISDE-indicatie), geluid (zwaarder bij buren dichtbij), rendement en de koppeling met jouw smart home-platform (Koppel-score).</li>
       <li><b>Onafhankelijk.</b> Fabrikanten hebben geen invloed op dit advies; het is een rekensom op openbare specificaties.</li>
