@@ -170,8 +170,8 @@
           <span class="plek">${plekken[i]}</span>
           <h3>${escapeHtml(w.merk)} ${escapeHtml(w.model)}</h3>
           <div class="reden">${redenVoor(w, s)}</div>
-          <p style="margin:8px 0 0;font-size:0.95rem;">richtprijs <b>${beste ? eurFmt.format(beste.prijs_eur) : "?"}</b> · ISDE-subsidie circa <b>${w.isde_indicatie_eur ? eurFmt.format(w.isde_indicatie_eur) : "?"}</b> · netto circa <b>${eurFmt.format(netto)}</b> voor het toestel (excl. installatie)</p>
-          ${w.product_url ? `<p style="margin:8px 0 0;"><a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="index.html?zoek=${encodeURIComponent(w.merk)}">Bekijk in de vergelijker →</a></p>` : ""}
+          <p style="margin:8px 0 0;font-size:0.95rem;">${beste && beste.winkel ? `laagste prijs <b>${eurFmt.format(beste.prijs_eur)}</b>, goedkoopst bij <a href="${escapeHtml(beste.url || "")}" target="_blank" rel="noopener">${escapeHtml(beste.winkel)}</a>` : `richtprijs <b>${beste ? eurFmt.format(beste.prijs_eur) : "?"}</b>`} · ISDE-subsidie circa <b>${w.isde_indicatie_eur ? eurFmt.format(w.isde_indicatie_eur) : "?"}</b> · netto circa <b>${eurFmt.format(netto)}</b> voor het toestel (excl. installatie)</p>
+          <p style="margin:8px 0 0;">${beste && beste.winkel && beste.url ? `<a class="knop" style="padding:8px 14px;font-size:0.88rem;" href="${escapeHtml(beste.url)}" target="_blank" rel="noopener">Bekijk aanbieding →</a> ` : ""}<a class="knop knop-secundair" style="padding:8px 14px;font-size:0.88rem;" href="index.html?zoek=${encodeURIComponent(w.merk)}">Bekijk in de vergelijker →</a></p>
         </div>`;
       }).join("")}
       ${smartRegel ? `<p style="margin:12px 0 0;font-size:0.92rem;">🏠 ${smartRegel}</p>` : ""}

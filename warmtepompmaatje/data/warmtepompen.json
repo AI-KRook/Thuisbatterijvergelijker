@@ -1,6 +1,6 @@
 {
   "laatst_bijgewerkt": "2026-07-22",
-  "toelichting": "Richtprijzen zijn indicatief voor het losse toestel (incl. btw, excl. installatie) van de genoemde variant; complete installaties kosten fors meer. ISDE-bedragen zijn indicaties op basis van de subsidieregels 2026 (basisbedrag plus bedrag per kW plus eventuele labelbonus); het exacte bedrag staat per meldcode op de apparatenlijst van RVO en is altijd leidend. Geluidswaarden zijn het geluidsvermogen van de buitenunit volgens het energielabel of de datasheet; op de erfgrens geldt 's nachts een eis van 40 dB. Koppelingsinformatie (Home Assistant, Homey, aansturing) kan per firmware- en appversie veranderen; controleer vóór aankoop de actuele status.",
+  "toelichting": "Winkelprijzen betreffen het losse toestel (soms alleen de buitenunit) van de genoemde winkel en worden dagelijks automatisch gecontroleerd; de controledatum staat erbij, zonder datum is de prijs een indicatie. Richtprijzen zijn indicatief voor het losse toestel (incl. btw, excl. installatie) van de genoemde variant; complete installaties kosten fors meer. ISDE-bedragen zijn indicaties op basis van de subsidieregels 2026 (basisbedrag plus bedrag per kW plus eventuele labelbonus); het exacte bedrag staat per meldcode op de apparatenlijst van RVO en is altijd leidend. Geluidswaarden zijn het geluidsvermogen van de buitenunit volgens het energielabel of de datasheet; op de erfgrens geldt 's nachts een eis van 40 dB. Koppelingsinformatie (Home Assistant, Homey, aansturing) kan per firmware- en appversie veranderen; controleer vóór aankoop de actuele status.",
   "warmtepompen": [
     {
       "id": "remeha-elga-ace",
@@ -18,13 +18,36 @@
       "richtprijs_eur": 3299,
       "prijs_toelichting": "los toestel (buitenunit + binnenmodule), excl. installatie en cv-ketel",
       "isde_indicatie_eur": 2100,
-      "sturing": { "status": "deels", "tekst": "OpenTherm-aansturing samen met de cv-ketel; geen open lokale API of Modbus voor derden." },
-      "home_assistant": { "status": "deels", "tekst": "Geen officiële integratie; uit te lezen en te sturen via een OpenTherm Gateway of de slimme thermostaat die de installatie aanstuurt." },
-      "homey": { "status": "deels", "tekst": "Geen eigen app; aansturing loopt via de (OpenTherm-)thermostaat, en het verbruik is zichtbaar via de Homey Energy Dongle (P1)." },
+      "sturing": {
+        "status": "deels",
+        "tekst": "OpenTherm-aansturing samen met de cv-ketel; geen open lokale API of Modbus voor derden."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Geen officiële integratie; uit te lezen en te sturen via een OpenTherm Gateway of de slimme thermostaat die de installatie aanstuurt."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Geen eigen app; aansturing loopt via de (OpenTherm-)thermostaat, en het verbruik is zichtbaar via de Homey Energy Dongle (P1)."
+      },
       "app": "eTwist / Remeha Home",
       "garantie_jaar": 5,
       "opmerkingen": "De best verkochte hybride van Nederland: betrouwbaar, stil in de praktijk en bij vrijwel elke installateur verkrijgbaar. Combineert met de meeste cv-ketels via OpenTherm.",
-      "product_url": "https://www.remeha.nl/product/elga-ace"
+      "product_url": "https://www.remeha.nl/product/elga-ace",
+      "aanbiedingen": [
+        {
+          "winkel": "123Klimaatshop",
+          "prijs_eur": 3299,
+          "url": "https://www.123klimaatshop.nl/product/remeha-elga-ace-hybride-warmtepomp-40-kw/",
+          "datum": null
+        },
+        {
+          "winkel": "Technim",
+          "prijs_eur": 3400,
+          "url": "https://www.technim.nl/p/remeha-elga-ace-monoblock-hybride-warmtepomp-4kw/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "daikin-altherma-hybrid",
@@ -42,13 +65,30 @@
       "richtprijs_eur": 3800,
       "prijs_toelichting": "los toestel, excl. installatie en cv-ketel",
       "isde_indicatie_eur": 2300,
-      "sturing": { "status": "deels", "tekst": "Aansturing via de Daikin-regelaar en Onecta-cloud; Madoka-thermostaat, geen open Modbus voor derden." },
-      "home_assistant": { "status": "deels", "tekst": "Veelgebruikte community-integratie (Daikin Onecta via HACS, cloud); lokaal kan het via het P1/P2-busproject voor gevorderden." },
-      "homey": { "status": "deels", "tekst": "Community-app voor Daikin (Onecta-cloud) in de Homey App Store." },
+      "sturing": {
+        "status": "deels",
+        "tekst": "Aansturing via de Daikin-regelaar en Onecta-cloud; Madoka-thermostaat, geen open Modbus voor derden."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Veelgebruikte community-integratie (Daikin Onecta via HACS, cloud); lokaal kan het via het P1/P2-busproject voor gevorderden."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Community-app voor Daikin (Onecta-cloud) in de Homey App Store."
+      },
       "app": "Daikin Onecta",
       "garantie_jaar": 5,
       "opmerkingen": "Wereldmarktleider in warmtepompen. Sterk dealernetwerk; de hybride presteert goed in grotere woningen met een hogere warmtevraag.",
-      "product_url": "https://www.daikin.nl/nl_nl/producten/altherma.html"
+      "product_url": "https://www.daikin.nl/nl_nl/producten/altherma.html",
+      "aanbiedingen": [
+        {
+          "winkel": "Coen+",
+          "prijs_eur": 3600,
+          "url": "https://www.coen-plus.nl/daikin-altherma-hybride-warmtepomp-4kw-monoblock.html",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "quatt-hybrid",
@@ -66,9 +106,18 @@
       "richtprijs_eur": 3500,
       "prijs_toelichting": "indicatie toestel; Quatt verkoopt vooral compleet geïnstalleerd (circa € 4.500 tot € 6.500 incl. montage, vóór subsidie)",
       "isde_indicatie_eur": 2200,
-      "sturing": { "status": "deels", "tekst": "Slimme aansturing via de eigen Quatt CIC (internet vereist); geen open lokale API, wel een lokaal uitleesbare statuspagina." },
-      "home_assistant": { "status": "deels", "tekst": "Populaire community-integratie (HACS) die de Quatt CIC lokaal uitleest; geen officiële integratie." },
-      "homey": { "status": "ja", "tekst": "Quatt-app in de Homey App Store: zie wanneer de warmtepomp draait en gebruik dat in flows." },
+      "sturing": {
+        "status": "deels",
+        "tekst": "Slimme aansturing via de eigen Quatt CIC (internet vereist); geen open lokale API, wel een lokaal uitleesbare statuspagina."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Populaire community-integratie (HACS) die de Quatt CIC lokaal uitleest; geen officiële integratie."
+      },
+      "homey": {
+        "status": "ja",
+        "tekst": "Quatt-app in de Homey App Store: zie wanneer de warmtepomp draait en gebruik dat in flows."
+      },
       "app": "Quatt-app",
       "garantie_jaar": 7,
       "opmerkingen": "Nederlandse uitdager met alles-in-één aanpak: vaste prijs inclusief installatie, monitoring en app. Duo-uitvoering (twee buitenunits) voor grotere woningen.",
@@ -90,13 +139,30 @@
       "richtprijs_eur": 3100,
       "prijs_toelichting": "los toestel, excl. installatie; het voordeligst in combinatie met een Intergas-ketel",
       "isde_indicatie_eur": 2100,
-      "sturing": { "status": "deels", "tekst": "OpenTherm-regeling met de (Intergas-)ketel; geen open lokale API voor derden." },
-      "home_assistant": { "status": "deels", "tekst": "Geen officiële integratie; via een OpenTherm Gateway of de aansturende slimme thermostaat." },
-      "homey": { "status": "deels", "tekst": "Geen eigen app; via de thermostaat of de Homey Energy Dongle (P1) voor het verbruik." },
+      "sturing": {
+        "status": "deels",
+        "tekst": "OpenTherm-regeling met de (Intergas-)ketel; geen open lokale API voor derden."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Geen officiële integratie; via een OpenTherm Gateway of de aansturende slimme thermostaat."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Geen eigen app; via de thermostaat of de Homey Energy Dongle (P1) voor het verbruik."
+      },
       "app": "Comfort Touch / thermostaat-app",
       "garantie_jaar": 5,
       "opmerkingen": "Scherp geprijsde hybride van Nederlandse bodem met goede prijs-kwaliteitverhouding, vooral logisch als er al een Intergas-ketel hangt.",
-      "product_url": "https://www.intergas-verwarming.nl/consument/producten/xtend/"
+      "product_url": "https://www.intergas-verwarming.nl/consument/producten/xtend/",
+      "aanbiedingen": [
+        {
+          "winkel": "Loodgietshop",
+          "prijs_eur": 3200,
+          "url": "https://www.loodgietshop.nl/product/intergas-xtend-hybride-compleet-pakket-incl-toebehoren-excl-ketel/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "vaillant-arotherm-plus",
@@ -115,13 +181,30 @@
       "richtprijs_eur": 7300,
       "prijs_toelichting": "toestel met binnenmodule, excl. boiler en installatie",
       "isde_indicatie_eur": 3000,
-      "sturing": { "status": "ja", "tekst": "SG-ready en via de eBUS volledig lokaal aan te sturen (ebusd); uitgebreide regelaar (sensoCOMFORT)." },
-      "home_assistant": { "status": "deels", "tekst": "Sterke community-routes: myVAILLANT-integratie (cloud, HACS) of volledig lokaal via ebusd; geen officiële integratie." },
-      "homey": { "status": "nee", "tekst": "Geen bekende Homey-app; verbruik zichtbaar via de Homey Energy Dongle (P1)." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "SG-ready en via de eBUS volledig lokaal aan te sturen (ebusd); uitgebreide regelaar (sensoCOMFORT)."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Sterke community-routes: myVAILLANT-integratie (cloud, HACS) of volledig lokaal via ebusd; geen officiële integratie."
+      },
+      "homey": {
+        "status": "nee",
+        "tekst": "Geen bekende Homey-app; verbruik zichtbaar via de Homey Energy Dongle (P1)."
+      },
       "app": "myVAILLANT",
       "garantie_jaar": 10,
       "opmerkingen": "Populairste premium all-electric: hoge aanvoertemperatuur (75 °C) maakt hem ook geschikt voor bestaande radiatoren, natuurlijk koudemiddel R290 en stille werking. 10 jaar garantie via actie/registratie.",
-      "product_url": "https://www.vaillant.nl/consument/producten/arotherm-plus/"
+      "product_url": "https://www.vaillant.nl/consument/producten/arotherm-plus/",
+      "aanbiedingen": [
+        {
+          "winkel": "CV Totaal",
+          "prijs_eur": 4480,
+          "url": "https://www.cvtotaal.nl/vaillant-arotherm-plus-lucht-water-warmtepomp-55-6-5-4kw.html",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "viessmann-vitocal-250a",
@@ -140,13 +223,36 @@
       "richtprijs_eur": 8500,
       "prijs_toelichting": "toestel met binnenunit, excl. boiler en installatie",
       "isde_indicatie_eur": 3200,
-      "sturing": { "status": "ja", "tekst": "SG-ready; uitgebreide regeling via de Vitocal-regelaar en ViCare-platform." },
-      "home_assistant": { "status": "ja", "tekst": "Officiële ViCare-integratie in Home Assistant (cloud-API): temperaturen, bedrijfsmodus en tapwater." },
-      "homey": { "status": "deels", "tekst": "Community-app voor ViCare in de Homey App Store (cloud)." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "SG-ready; uitgebreide regeling via de Vitocal-regelaar en ViCare-platform."
+      },
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële ViCare-integratie in Home Assistant (cloud-API): temperaturen, bedrijfsmodus en tapwater."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Community-app voor ViCare in de Homey App Store (cloud)."
+      },
       "app": "ViCare",
       "garantie_jaar": 5,
       "opmerkingen": "Duitse premiumbouwer met zeer hoog rendement en hoge aanvoertemperatuur (70 °C) voor bestaande bouw. Garantie uit te breiden via de installateur.",
-      "product_url": "https://www.viessmann.nl/nl/producten/warmtepomp/vitocal-250-a.html"
+      "product_url": "https://www.viessmann.nl/nl/producten/warmtepomp/vitocal-250-a.html",
+      "aanbiedingen": [
+        {
+          "winkel": "Gewoon Gasvrij",
+          "prijs_eur": 7900,
+          "url": "https://www.gewoongasvrij.nl/product/viessmann-vitocal-warmtepomp-250a-251-a06-230v-4-8-kw/",
+          "datum": null
+        },
+        {
+          "winkel": "CV Dump",
+          "prijs_eur": 8500,
+          "url": "https://cvdump.nl/product/viessmann-vitocal-250-a-warmtepomp/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "nibe-s2125",
@@ -165,13 +271,30 @@
       "richtprijs_eur": 9500,
       "prijs_toelichting": "buitenunit + binnenunit, excl. installatie",
       "isde_indicatie_eur": 3600,
-      "sturing": { "status": "ja", "tekst": "SG-ready en Modbus; uitgebreide eigen regelaar met weersafhankelijke regeling." },
-      "home_assistant": { "status": "ja", "tekst": "Officiële myUplink-integratie in Home Assistant (cloud-API); lokaal kan via Modbus." },
-      "homey": { "status": "ja", "tekst": "Meerdere NIBE/myUplink-apps in de Homey App Store voor uitlezen en flows." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "SG-ready en Modbus; uitgebreide eigen regelaar met weersafhankelijke regeling."
+      },
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële myUplink-integratie in Home Assistant (cloud-API); lokaal kan via Modbus."
+      },
+      "homey": {
+        "status": "ja",
+        "tekst": "Meerdere NIBE/myUplink-apps in de Homey App Store voor uitlezen en flows."
+      },
       "app": "myUplink",
       "garantie_jaar": 5,
       "opmerkingen": "Zweedse specialist, gebouwd op koude winters; zeer stil en met hoge aanvoertemperatuur. Vaak iets duurder, maar degelijk en goed koppelbaar.",
-      "product_url": "https://www.nibenl.eu/nl-nl/producten/warmtepompen/lucht-water-warmtepompen/nibe-s2125"
+      "product_url": "https://www.nibenl.eu/nl-nl/producten/warmtepompen/lucht-water-warmtepompen/nibe-s2125",
+      "aanbiedingen": [
+        {
+          "winkel": "123Klimaatshop",
+          "prijs_eur": 6500,
+          "url": "https://www.123klimaatshop.nl/product/nibe-s2125-8-lucht-water-monoblock-warmtepomp-67-kw-exclusief-binnen-unit-1x230v/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "mitsubishi-ecodan",
@@ -190,9 +313,18 @@
       "richtprijs_eur": 8000,
       "prijs_toelichting": "buitenunit + hydrobox, excl. installatie",
       "isde_indicatie_eur": 3200,
-      "sturing": { "status": "ja", "tekst": "SG-ready en Modbus via interface; MELCloud-regeling standaard." },
-      "home_assistant": { "status": "ja", "tekst": "MELCloud-integratie in Home Assistant (cloud); ook lokale routes via de CN105-aansluiting bekend uit de community." },
-      "homey": { "status": "ja", "tekst": "MELCloud-app in de Homey App Store, plus een MELCloud Optimizer die op dynamische stroomprijzen stuurt." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "SG-ready en Modbus via interface; MELCloud-regeling standaard."
+      },
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "MELCloud-integratie in Home Assistant (cloud); ook lokale routes via de CN105-aansluiting bekend uit de community."
+      },
+      "homey": {
+        "status": "ja",
+        "tekst": "MELCloud-app in de Homey App Store, plus een MELCloud Optimizer die op dynamische stroomprijzen stuurt."
+      },
       "app": "MELCloud",
       "garantie_jaar": 5,
       "opmerkingen": "Japanse degelijkheid, bekend om stille werking en betrouwbaarheid. Breed netwerk van installateurs in Nederland.",
@@ -215,9 +347,18 @@
       "richtprijs_eur": 7000,
       "prijs_toelichting": "buitenunit + binnenunit, excl. boiler en installatie",
       "isde_indicatie_eur": 3000,
-      "sturing": { "status": "deels", "tekst": "SG-ready contact; verdere regeling via de Daikin-regelaar en Onecta-cloud." },
-      "home_assistant": { "status": "deels", "tekst": "Community-integratie Daikin Onecta (HACS, cloud); lokaal via het P1/P2-busproject voor gevorderden." },
-      "homey": { "status": "deels", "tekst": "Community-app voor Daikin (Onecta-cloud) in de Homey App Store." },
+      "sturing": {
+        "status": "deels",
+        "tekst": "SG-ready contact; verdere regeling via de Daikin-regelaar en Onecta-cloud."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Community-integratie Daikin Onecta (HACS, cloud); lokaal via het P1/P2-busproject voor gevorderden."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Community-app voor Daikin (Onecta-cloud) in de Homey App Store."
+      },
       "app": "Daikin Onecta",
       "garantie_jaar": 5,
       "opmerkingen": "Het meest geïnstalleerde all-electric platform van Nederland: overal onderdelen en monteurs. Nieuwere Altherma 4-generatie (R290) komt beschikbaar.",
@@ -240,13 +381,36 @@
       "richtprijs_eur": 7800,
       "prijs_toelichting": "buitenunit + binnenunit, excl. boiler en installatie",
       "isde_indicatie_eur": 3000,
-      "sturing": { "status": "ja", "tekst": "SG-ready en EEBUS; energiemanagers van derden kunnen hem aansturen." },
-      "home_assistant": { "status": "deels", "tekst": "Via de community: EMS-ESP leest de Bosch/Nefit EMS-bus volledig lokaal uit; officiële integratie ontbreekt (wel HomeCom-cloud)." },
-      "homey": { "status": "nee", "tekst": "Geen bekende Homey-app; verbruik zichtbaar via de Homey Energy Dongle (P1)." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "SG-ready en EEBUS; energiemanagers van derden kunnen hem aansturen."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Via de community: EMS-ESP leest de Bosch/Nefit EMS-bus volledig lokaal uit; officiële integratie ontbreekt (wel HomeCom-cloud)."
+      },
+      "homey": {
+        "status": "nee",
+        "tekst": "Geen bekende Homey-app; verbruik zichtbaar via de Homey Energy Dongle (P1)."
+      },
       "app": "Bosch HomeCom Easy",
       "garantie_jaar": 5,
       "opmerkingen": "Nieuwste Bosch-generatie, in tests geroemd als (bijna) de stilste van de markt; interessant bij dicht op elkaar staande woningen. In Nederland ook via Nefit-kanalen.",
-      "product_url": "https://www.nefit-bosch.nl/producten/warmtepompen/compress-5800i-aw/"
+      "product_url": "https://www.nefit-bosch.nl/producten/warmtepompen/compress-5800i-aw/",
+      "aanbiedingen": [
+        {
+          "winkel": "Woon op Stroom",
+          "prijs_eur": 3500,
+          "url": "https://woonopstroom.nl/products/nefit-bosch-compress-5800i-aw-4-kw-buitenunit",
+          "datum": null
+        },
+        {
+          "winkel": "Woonwijzerwinkel",
+          "prijs_eur": 7500,
+          "url": "https://www.woonwijzerwinkel.nl/product/nefit-bosch-monoblock-compress-5800i-aw/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "panasonic-aquarea-l",
@@ -265,9 +429,18 @@
       "richtprijs_eur": 7200,
       "prijs_toelichting": "buitenunit + binnenunit, excl. boiler en installatie",
       "isde_indicatie_eur": 3000,
-      "sturing": { "status": "ja", "tekst": "SG-ready; via de CZ-TAW1-module op de Aquarea-cloud, of volledig lokaal via HeishaMon." },
-      "home_assistant": { "status": "deels", "tekst": "Grote community: HeishaMon (volledig lokaal, zeer uitgebreid) of de Aquarea Smart Cloud-integratie; geen officiële integratie." },
-      "homey": { "status": "deels", "tekst": "Community-app voor Aquarea Smart Cloud in de Homey App Store." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "SG-ready; via de CZ-TAW1-module op de Aquarea-cloud, of volledig lokaal via HeishaMon."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Grote community: HeishaMon (volledig lokaal, zeer uitgebreid) of de Aquarea Smart Cloud-integratie; geen officiële integratie."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Community-app voor Aquarea Smart Cloud in de Homey App Store."
+      },
       "app": "Aquarea Smart Cloud",
       "garantie_jaar": 5,
       "opmerkingen": "Favoriet bij zelfbouwers en Home Assistant-gebruikers dankzij HeishaMon (lokaal, gratis, open source). Degelijke Japanse techniek met R290.",
@@ -278,8 +451,8 @@
       "merk": "LG",
       "model": "Therma V (R290)",
       "type": "all-electric",
-      "voorbeeld_variant": "Therma V R290 5,5 kW (monoblock)",
-      "vermogen_kw": 5.5,
+      "voorbeeld_variant": "Therma V R290 Monobloc 7 kW (1-fase)",
+      "vermogen_kw": 7.0,
       "scop": 4.7,
       "scop_toelichting": "A+++; scherp geprijsd voor de specificaties",
       "geluid_db": 56,
@@ -289,14 +462,31 @@
       "max_aanvoer_c": 75,
       "richtprijs_eur": 6500,
       "prijs_toelichting": "buitenunit + binnenunit, excl. boiler en installatie",
-      "isde_indicatie_eur": 3100,
-      "sturing": { "status": "deels", "tekst": "SG-ready contact; verdere regeling via de LG-regelaar en ThinQ-cloud, Modbus via interface." },
-      "home_assistant": { "status": "deels", "tekst": "Via de officiële LG ThinQ-integratie (beperkte warmtepompfuncties) of lokaal via Modbus; community-ervaring wisselend per model." },
-      "homey": { "status": "deels", "tekst": "LG ThinQ-app in de Homey App Store (functies per apparaat verschillend)." },
+      "isde_indicatie_eur": 2800,
+      "sturing": {
+        "status": "deels",
+        "tekst": "SG-ready contact; verdere regeling via de LG-regelaar en ThinQ-cloud, Modbus via interface."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Via de officiële LG ThinQ-integratie (beperkte warmtepompfuncties) of lokaal via Modbus; community-ervaring wisselend per model."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "LG ThinQ-app in de Homey App Store (functies per apparaat verschillend)."
+      },
       "app": "LG ThinQ",
       "garantie_jaar": 5,
       "opmerkingen": "Veel waar voor je geld: R290, hoge aanvoertemperatuur en A+++ voor een relatief lage prijs. Servicenetwerk in Nederland is kleiner dan bij Daikin of Remeha.",
-      "product_url": "https://www.lg.com/nl/business/therma-v/"
+      "product_url": "https://www.lg.com/nl/business/therma-v/",
+      "aanbiedingen": [
+        {
+          "winkel": "Aircoshop Nederland",
+          "prijs_eur": 5200,
+          "url": "https://aircoshopnl.nl/warmtepomp/monoblock-warmtepomp/lg-therma-v-monobloc-warmtepomp-r290-1-fase-70-kw/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "samsung-ehs-mono-ht",
@@ -315,13 +505,36 @@
       "richtprijs_eur": 6800,
       "prijs_toelichting": "buitenunit + regelset, excl. boiler en installatie",
       "isde_indicatie_eur": 3300,
-      "sturing": { "status": "ja", "tekst": "SG-ready en Modbus (MIM-modules); daardoor goed in energiemanagementsystemen op te nemen." },
-      "home_assistant": { "status": "deels", "tekst": "Geen officiële integratie; sterke community-routes via Modbus en het EHS-Sentinel-project (lokaal)." },
-      "homey": { "status": "nee", "tekst": "Geen bekende Homey-app voor de EHS-lijn; verbruik zichtbaar via de Homey Energy Dongle (P1)." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "SG-ready en Modbus (MIM-modules); daardoor goed in energiemanagementsystemen op te nemen."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Geen officiële integratie; sterke community-routes via Modbus en het EHS-Sentinel-project (lokaal)."
+      },
+      "homey": {
+        "status": "nee",
+        "tekst": "Geen bekende Homey-app voor de EHS-lijn; verbruik zichtbaar via de Homey Energy Dongle (P1)."
+      },
       "app": "SmartThings",
       "garantie_jaar": 5,
       "opmerkingen": "Sterke prijs-prestatieverhouding en hoge aanvoertemperatuur; de Quiet-uitvoering mikt op rijtjeshuizen met buren dichtbij.",
-      "product_url": "https://www.samsung.com/nl/climate/"
+      "product_url": "https://www.samsung.com/nl/climate/",
+      "aanbiedingen": [
+        {
+          "winkel": "Verwarmtmij",
+          "prijs_eur": 4780,
+          "url": "https://verwarmtmij.com/produit/samsung-ehs-mono-ht-quiet-warmtepomp-8kw-1f/",
+          "datum": null
+        },
+        {
+          "winkel": "Verqelijken.nl",
+          "prijs_eur": 4800,
+          "url": "https://www.verqelijken.nl/product/samsung-ehs-mono-ht-quiet-warmtepomp-8kw-3f/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "weheat-blackbird",
@@ -340,9 +553,18 @@
       "richtprijs_eur": 7000,
       "prijs_toelichting": "toestel, excl. boiler en installatie",
       "isde_indicatie_eur": 3000,
-      "sturing": { "status": "ja", "tekst": "Open instelling: SG-ready en een gedocumenteerde koppeling voor energiemanagement." },
-      "home_assistant": { "status": "ja", "tekst": "Officiële Weheat-integratie in Home Assistant (sinds eind 2024): temperaturen, vermogen en COP direct zichtbaar." },
-      "homey": { "status": "nee", "tekst": "Geen eigen Homey-app; community vraagt erom, verbruik zichtbaar via de Homey Energy Dongle (P1)." },
+      "sturing": {
+        "status": "ja",
+        "tekst": "Open instelling: SG-ready en een gedocumenteerde koppeling voor energiemanagement."
+      },
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële Weheat-integratie in Home Assistant (sinds eind 2024): temperaturen, vermogen en COP direct zichtbaar."
+      },
+      "homey": {
+        "status": "nee",
+        "tekst": "Geen eigen Homey-app; community vraagt erom, verbruik zichtbaar via de Homey Energy Dongle (P1)."
+      },
       "app": "Weheat-app",
       "garantie_jaar": 7,
       "opmerkingen": "Nederlandse fabrikant (Delft) met focus op design, rendement en openheid richting slimme huizen; officiële Home Assistant-ondersteuning is zeldzaam in deze markt.",

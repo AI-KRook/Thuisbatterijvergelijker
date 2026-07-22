@@ -1,0 +1,57 @@
+name: Dagelijkse prijsupdate
+
+on:
+  schedule:
+    # Elke dag om 05:45 UTC (07:45 Nederlandse zomertijd)
+    - cron: "45 5 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  # Nodig om na een prijswijziging de publicatie-workflow te mogen starten
+  actions: write
+
+jobs:
+  update-prijzen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+
+      - name: Node.js instellen
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Prijzen bijwerken
+        env:
+          # Bol.com Marketing API (partner): repository secrets; zonder deze
+          # secrets worden bol-prijzen overgeslagen en blijft de oude staan
+          BOL_CLIENT_ID: ${{ secrets.BOL_CLIENT_ID }}
+          BOL_CLIENT_SECRET: ${{ secrets.BOL_CLIENT_SECRET }}
+        run: node scripts/update-prices.mjs
+
+      - name: Wijzigingen committen en pushen
+        id: commit
+        run: |
+          git config user.name "prijsupdate-bot"
+          git config user.email "actions@github.com"
+          git add data/warmtepompen.json
+          if git diff --cached --quiet; then
+            echo "Geen prijswijzigingen vandaag."
+            echo "gewijzigd=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Dagelijkse prijsupdate $(date -u +%F)"
+            git push
+            echo "gewijzigd=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Een push met het standaard GITHUB_TOKEN start uit zichzelf geen andere
+      # workflows (beveiliging tegen kettingreacties). Daarom starten we de
+      # publicatie naar de website hier expliciet; workflow_dispatch is daarvan
+      # uitgezonderd.
+      - name: Publicatie naar de website starten
+        if: steps.commit.outputs.gewijzigd == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy-pages.yml --ref "${{ github.ref_name }}"
