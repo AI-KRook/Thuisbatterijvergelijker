@@ -579,6 +579,8 @@
         const d = new Date(data.laatst_bijgewerkt + "T12:00:00");
         el("updateDatum").textContent = datumFmt.format(d);
       }
+      const teller = el("tellerBatterijen");
+      if (teller) teller.textContent = state.batterijen.length;
 
       // Merkenfilter vullen
       const merken = [...new Set(state.batterijen.map((b) => b.merk))].sort((a, b) => a.localeCompare(b, "nl"));
