@@ -104,14 +104,15 @@
     // Staafdiagram voor en na: energiekosten voor verwarming, warm water en koken.
     // "Voor" is de huidige situatie met cv-ketel; "na" met de gekozen warmtepomp.
     // Voor − na is precies de besparing per jaar hierboven.
+    // Kleuren met betekenis: gas is terracotta (vlam), stroom is blauw, vaste kosten grijs
     const voorDelen = [
       { label: "gas", kleur: "var(--kleur-primair)", bedrag: s.gas * s.gasprijs },
-      { label: "vaste gaskosten", kleur: "#d6d3d1", bedrag: s.vastrecht },
+      { label: "vaste gaskosten", kleur: "#a8a29e", bedrag: s.vastrecht },
     ];
     const naDelen = [
       { label: "gas", kleur: "var(--kleur-primair)", bedrag: gasOver * s.gasprijs },
-      { label: "vaste gaskosten", kleur: "#d6d3d1", bedrag: s.gasAf ? 0 : s.vastrecht },
-      { label: "stroom warmtepomp", kleur: "var(--kleur-accent-donker, #b45309)", bedrag: stroomKwh * s.stroomprijs },
+      { label: "vaste gaskosten", kleur: "#a8a29e", bedrag: s.gasAf ? 0 : s.vastrecht },
+      { label: "stroom warmtepomp", kleur: "var(--kleur-blauw, #2563eb)", bedrag: stroomKwh * s.stroomprijs },
     ];
     const totaalVoor = voorDelen.reduce((t, d) => t + d.bedrag, 0);
     const totaalNa = naDelen.reduce((t, d) => t + d.bedrag, 0);

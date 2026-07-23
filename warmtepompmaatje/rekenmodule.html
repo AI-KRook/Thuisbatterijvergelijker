@@ -13,7 +13,7 @@
   <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="Warmtepompmaatje.nl">
   <link rel="stylesheet" href="assets/style.css?v=20260722a">
-  <script src="assets/rekenmodule.js?v=20260723a" defer></script>
+  <script src="assets/rekenmodule.js?v=20260723b" defer></script>
   <script src="assets/nav.js?v=20260722a" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
   <style>
@@ -38,11 +38,11 @@
     .resultaat-groot { font-size: 2rem; font-weight: 800; color: var(--kleur-primair-donker); letter-spacing: -0.02em; }
     .resultaat-rij { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px dotted var(--kleur-rand); font-size: 0.95rem; flex-wrap: wrap; }
     .resultaat-rij b { text-align: right; }
-    .vgl-blok { margin-top: 16px; padding: 12px 14px; background: var(--kleur-primair-licht); border-radius: 10px; }
+    .vgl-blok { margin-top: 16px; padding: 12px 14px; background: var(--kleur-wit); border: 1px solid var(--kleur-rand); border-radius: 10px; }
     .vgl-titel { margin: 0 0 8px; font-size: 0.92rem; font-weight: 700; color: var(--kleur-primair-donker); }
     .vgl-rij { display: grid; grid-template-columns: minmax(86px, auto) 1fr auto; gap: 8px; align-items: center; margin-top: 6px; min-width: 0; }
     .vgl-label { font-size: 0.85rem; color: var(--kleur-tekst); }
-    .vgl-balk { display: flex; height: 20px; border-radius: 6px; overflow: hidden; background: rgba(255,255,255,0.6); min-width: 0; }
+    .vgl-balk { display: flex; height: 20px; border-radius: 6px; overflow: hidden; background: #f5f5f4; min-width: 0; }
     .vgl-balk span { display: block; height: 100%; min-width: 2px; }
     .vgl-bedrag { font-size: 0.9rem; white-space: nowrap; }
     .vgl-legenda { margin: 10px 0 0; font-size: 0.8rem; color: var(--kleur-tekst-licht); display: flex; flex-wrap: wrap; gap: 4px 14px; }
@@ -163,18 +163,18 @@
         <rect x="415" y="30" width="135" height="26" rx="6" fill="var(--kleur-primair-licht)" stroke="var(--kleur-primair)" stroke-width="1.5"/>
         <text x="212" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">verwarming (± 75%)</text>
         <text x="483" y="48" text-anchor="middle" font-size="12" fill="var(--kleur-primair-donker)">warm water (± 25%)</text>
-        <!-- balk: hybride -->
+        <!-- balk: hybride (blauw = wordt elektrisch, terracotta = blijft gas) -->
         <text x="10" y="92" font-size="13" font-weight="700" fill="var(--kleur-tekst)">Hybride bespaart</text>
-        <rect x="10" y="100" width="324" height="26" rx="6" fill="var(--kleur-primair-donker)"/>
-        <rect x="334" y="100" width="216" height="26" rx="6" fill="#e7e5e4" stroke="var(--kleur-rand)" stroke-width="1.5"/>
+        <rect x="10" y="100" width="324" height="26" rx="6" fill="var(--kleur-blauw, #2563eb)"/>
+        <rect x="334" y="100" width="216" height="26" rx="6" fill="var(--kleur-primair-licht)" stroke="var(--kleur-primair)" stroke-width="1.5"/>
         <text x="172" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">pomp neemt over (± 60%)</text>
-        <text x="442" y="118" text-anchor="middle" font-size="12" fill="var(--kleur-tekst-licht)">blijft gas: piekkou + warm water</text>
+        <text x="442" y="118" text-anchor="middle" font-size="12" fill="var(--kleur-primair-donker)">blijft gas: piekkou + warm water</text>
         <!-- balk: all-electric -->
         <text x="10" y="162" font-size="13" font-weight="700" fill="var(--kleur-tekst)">All-electric bespaart</text>
-        <rect x="10" y="170" width="540" height="26" rx="6" fill="var(--kleur-primair-donker)"/>
+        <rect x="10" y="170" width="540" height="26" rx="6" fill="var(--kleur-blauw, #2563eb)"/>
         <text x="280" y="188" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">pomp neemt alles over (100%, gas kan eraf)</text>
       </svg>
-      <figcaption style="margin-top:10px;font-size:0.88rem;color:var(--kleur-tekst-licht);text-align:center;">Wat de pomp overneemt van je gasverbruik: circa 60% bij hybride, alles bij all-electric.</figcaption>
+      <figcaption style="margin-top:10px;font-size:0.88rem;color:var(--kleur-tekst-licht);text-align:center;">Blauw = wordt elektrisch (de pomp), terracotta = gas. Hybride neemt circa 60% over, all-electric alles.</figcaption>
     </figure>
     <ul>
       <li><b>Verdeling van je gasverbruik.</b> Circa 75% van het gas gaat naar verwarming en circa 25% naar warm water en koken (bron: Milieu Centraal). Die verdeling gebruiken wij bij all-electric om het warme water apart door te rekenen.</li>
