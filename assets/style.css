@@ -863,6 +863,8 @@ details.faq-item summary {
   list-style: none;
   display: flex;
   justify-content: space-between;
+  overflow-wrap: anywhere;
+  min-width: 0;
   align-items: center;
   gap: 10px;
 }

@@ -347,7 +347,7 @@
         <p style="margin:8px 0 0;font-size:0.95rem;">Verstandig: na 2027 (einde saldering) wordt een batterij interessanter. ${batterij.hybride
           ? `De geadviseerde ${escapeHtml(batterij.topOmvormer.merk)}-omvormer is al hybride, dus een batterij is later zó bijgeplaatst.`
           : `Een AC-gekoppelde of plug-in batterij is later altijd toe te voegen via de slimme meter (P1), ongeacht je omvormerkeuze.`} Grootte bepaal je dan op basis van je werkelijke overschot.</p>`}
-        <p style="margin:8px 0 0;font-size:0.95rem;">Batterijen vergelijken op prijs per kWh, noodstroom en slimme aansturing doe je op onze zustersite: <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl →</a></p>
+        <p style="margin:8px 0 0;font-size:0.95rem;">Batterijen vergelijken op prijs per kWh, noodstroom en slimme aansturing doe je op onze zustersite: <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl →</a> Verwarm je (straks) met een warmtepomp, dan benut die je zonnestroom extra goed; vergelijk warmtepompen op <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje →</a></p>
       </div>` : ""}
 
       <p class="hint" style="margin-top:14px;">Alle ${panelen.length} panelen zelf vergelijken? <a href="index.html">Naar de vergelijker →</a></p>
