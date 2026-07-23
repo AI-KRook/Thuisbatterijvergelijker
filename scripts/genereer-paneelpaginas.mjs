@@ -18,7 +18,7 @@ const SITE = "https://zonnestroommaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
-const ASSET_VERSIE = "20260723a";
+const ASSET_VERSIE = "20260723b";
 
 const data = JSON.parse(readFileSync(resolve(ROOT, "data/panelen.json"), "utf8"));
 mkdirSync(resolve(ROOT, "paneel"), { recursive: true });
@@ -172,6 +172,18 @@ function productLd(p) {
   return JSON.stringify(ld, null, 2);
 }
 
+// BreadcrumbList voor de productpagina (Zonnepanelen › <paneel>)
+function breadcrumbLd(p) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Zonnepanelen", "item": `${SITE}/` },
+      { "@type": "ListItem", "position": 2, "name": volledigeNaam(p), "item": `${SITE}/paneel/${p.id}.html` },
+    ],
+  }, null, 2);
+}
+
 const NAV = `
 <header class="site-header">
   <div class="container">
@@ -212,6 +224,9 @@ const FOOTER = `
   </div>
 </footer>`;
 
+// Wikkelt een of meer JSON-LD-strings elk in een eigen <script>-blok
+const wrapLd = (...jsons) => jsons.filter(Boolean).map((j) => `<script type="application/ld+json">\n${j}\n  </script>`).join("\n  ");
+
 function kop(titel, metaDesc, canoniek, ld = "") {
   return `<!DOCTYPE html>
 <html lang="nl">
@@ -231,7 +246,7 @@ function kop(titel, metaDesc, canoniek, ld = "") {
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="Zonnestroommaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
-  ${ld ? `<script type="application/ld+json">\n${ld}\n  </script>` : ""}
+  ${ld}
   <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
   <link rel="icon" href="/assets/favicon.svg?v=1" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=1">
@@ -271,7 +286,7 @@ function pagina(p) {
     `${volledigeNaam(p)}: prijs, specificaties en garantie`,
     metaDesc,
     `${SITE}/paneel/${esc(p.id)}.html`,
-    productLd(p)
+    wrapLd(productLd(p), breadcrumbLd(p))
   )}
 
 <main class="content-pagina">
@@ -416,7 +431,7 @@ function overzichtsPagina(cfg) {
     })),
   }, null, 2);
 
-  return `${kop(cfg.titel, cfg.metaDesc, `${SITE}/${cfg.bestand}`, itemList)}
+  return `${kop(cfg.titel, cfg.metaDesc, `${SITE}/${cfg.bestand}`, wrapLd(itemList))}
 
 <main class="container" style="max-width:900px;">
   <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle zonnepanelen vergelijken</a></p>
@@ -489,7 +504,7 @@ function vergelijkingsPagina(v) {
     })),
   }, null, 2);
 
-  return `${kop(`${titel} (2026)`, metaDesc, `${SITE}/vergelijk/${esc(v.slug)}.html`, itemList)}
+  return `${kop(`${titel} (2026)`, metaDesc, `${SITE}/vergelijk/${esc(v.slug)}.html`, wrapLd(itemList))}
 
 <main class="container" style="max-width:900px;">
   <p class="datum-stempel" style="margin-top:22px;"><a href="/index.html">← Alle zonnepanelen vergelijken</a></p>

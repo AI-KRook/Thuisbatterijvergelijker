@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://warmtepompmaatje.nl";
-const ASSET_VERSIE = "20260723a";
+const ASSET_VERSIE = "20260723b";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 
 const data = JSON.parse(readFileSync(join(ROOT, "data", "warmtepompen.json"), "utf8"));
@@ -39,6 +39,39 @@ function bestePrijs(w) {
   }
   if (w.richtprijs_eur) return { winkel: null, prijs_eur: w.richtprijs_eur, url: w.product_url };
   return null;
+}
+
+// JSON-LD: Product (met prijs/aanbieding) + BreadcrumbList, gelijk aan de zustersites
+function productLd(w) {
+  const naam = `${w.merk} ${w.model}`;
+  const beste = bestePrijs(w);
+  const aanbiedingen = (w.aanbiedingen || []).filter((a) => a && a.prijs_eur);
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": naam,
+    "brand": { "@type": "Brand", "name": w.merk },
+    "category": w.type === "hybride" ? "Hybride warmtepomp" : "All-electric warmtepomp",
+    "description": `${naam}: ${w.type === "hybride" ? "hybride" : "all-electric"} warmtepomp${w.vermogen_kw ? ` van ${String(w.vermogen_kw).replace(".", ",")} kW` : ""}${w.scop ? `, SCOP ${String(w.scop).replace(".", ",")}` : ""}. Koppel-score ${koppelScore(w)}/6.`.slice(0, 300),
+    "url": `${SITE}/pomp/${w.id}.html`,
+  };
+  if (aanbiedingen.length === 1) {
+    ld.offers = { "@type": "Offer", "price": aanbiedingen[0].prijs_eur, "priceCurrency": "EUR", "url": aanbiedingen[0].affiliate_url || aanbiedingen[0].url, "availability": "https://schema.org/InStock" };
+  } else if (aanbiedingen.length > 1) {
+    const prijzen = aanbiedingen.map((a) => a.prijs_eur);
+    ld.offers = { "@type": "AggregateOffer", "lowPrice": Math.min(...prijzen), "highPrice": Math.max(...prijzen), "priceCurrency": "EUR", "offerCount": aanbiedingen.length };
+  } else if (beste) {
+    ld.offers = { "@type": "Offer", "price": beste.prijs_eur, "priceCurrency": "EUR", "url": beste.url, "availability": "https://schema.org/InStock" };
+  }
+  const kruimel = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Warmtepompen", "item": `${SITE}/` },
+      { "@type": "ListItem", "position": 2, "name": naam, "item": `${SITE}/pomp/${w.id}.html` },
+    ],
+  };
+  return `<script type="application/ld+json">\n${JSON.stringify(ld, null, 2)}\n  </script>\n  <script type="application/ld+json">\n${JSON.stringify(kruimel, null, 2)}\n  </script>`;
 }
 
 function kop(actief, diepte) {
@@ -102,6 +135,9 @@ function pompPagina(w) {
   <meta property="og:url" content="${SITE}/pomp/${esc(w.id)}.html">
   <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="Warmtepompmaatje.nl">
+  <meta property="og:image" content="${SITE}/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  ${productLd(w)}
   <link rel="stylesheet" href="../assets/style.css?v=${ASSET_VERSIE}">
   <script src="../assets/nav.js?v=${ASSET_VERSIE}" defer></script>
   <link rel="icon" href="../assets/favicon.svg?v=1" type="image/svg+xml">
