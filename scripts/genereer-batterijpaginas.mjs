@@ -173,6 +173,17 @@ function productLd(b) {
   return JSON.stringify(ld, null, 2);
 }
 
+function breadcrumbLd(b) {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Thuisbatterijen", "item": `${SITE}/index.html` },
+      { "@type": "ListItem", "position": 2, "name": volledigeNaam(b), "item": `${SITE}/batterij/${b.id}.html` },
+    ],
+  }, null, 2);
+}
+
 function pagina(b) {
   const beste = bestePrijs(b);
   const totaal = totaalprijsTekst(b);
@@ -214,6 +225,9 @@ function pagina(b) {
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
 ${productLd(b)}
+  </script>
+  <script type="application/ld+json">
+${breadcrumbLd(b)}
   </script>
   <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
   <link rel="icon" href="/assets/favicon.svg?v=2" type="image/svg+xml">
