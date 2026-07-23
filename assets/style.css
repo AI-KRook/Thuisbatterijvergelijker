@@ -570,11 +570,11 @@ details.lees-meer[open] summary::after { content: " ▴"; }
 .legenda .legenda-rij > span:first-child { flex-shrink: 0; }
 .legenda .legenda-rij > span:last-child { color: var(--kleur-tekst-licht); }
 
-/* Slim-score: eigen Batterijmaatje-score voor slim aansturen (0-6 punten) */
-.badge.slim-score { font-weight: 700; }
-.badge.slim-hoog { background: #ccfbf1; border-color: #99f6e4; color: #0f766e; }
-.badge.slim-midden { background: var(--kleur-accent-licht); border-color: #fde68a; color: #92400e; }
-.badge.slim-laag { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
+/* Koppel-score: eigen Batterijmaatje-score voor slim aansturen (0-6 punten) */
+.badge.koppel-score { font-weight: 700; }
+.badge.koppel-hoog { background: #ccfbf1; border-color: #99f6e4; color: #0f766e; }
+.badge.koppel-midden { background: var(--kleur-accent-licht); border-color: #fde68a; color: #92400e; }
+.badge.koppel-laag { background: #f1f5f9; border-color: #e2e8f0; color: #64748b; }
 .badge.nee { background: var(--kleur-achtergrond); color: var(--kleur-tekst-licht); text-decoration: line-through; opacity: 0.7; }
 .badge.onbekend { background: var(--kleur-achtergrond); border-style: dashed; color: var(--kleur-tekst-licht); }
 

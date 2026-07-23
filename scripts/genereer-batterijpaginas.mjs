@@ -75,17 +75,17 @@ function sterren(score) {
   return "★".repeat(s) + "☆".repeat(5 - s);
 }
 
-// Slim-score: zelfde formule als assets/app.js en uitleg.html#slim-score.
+// Koppel-score: zelfde formule als assets/app.js en uitleg.html#koppel-score.
 // Homey, Home Assistant en dynamisch contract tellen elk: ja = 2, deels = 1, nee = 0.
-function slimScore(b) {
+function koppelScore(b) {
   const punt = (v) => { const s = driewaardig(v).status; return s === "ja" ? 2 : s === "deels" ? 1 : 0; };
   return punt(b.homey) + punt(b.home_assistant) + punt(b.dynamisch_contract);
 }
 
-function slimScoreBadge(b) {
-  const score = slimScore(b);
-  const klasse = score >= 5 ? "slim-hoog" : score >= 3 ? "slim-midden" : "slim-laag";
-  return `<span class="badge slim-score ${klasse}" title="Punten voor Homey, Home Assistant en dynamisch contract">\u{1F3E0} Slim-score ${score}/6</span>`;
+function koppelScoreBadge(b) {
+  const score = koppelScore(b);
+  const klasse = score >= 5 ? "koppel-hoog" : score >= 3 ? "koppel-midden" : "koppel-laag";
+  return `<span class="badge koppel-score ${klasse}" title="Punten voor Homey, Home Assistant en dynamisch contract">\u{1F3E0} Koppel-score ${score}/6</span>`;
 }
 
 // Merklogo: officiële logo's uit assets/logos/, geregistreerd in data (merk_logos)
@@ -228,7 +228,7 @@ ${productLd(b)}
       <span>Batterij<b>maatje</b></span>
     </a>
     <nav class="hoofdnav">
-      <a href="/index.html">Vergelijken</a>
+      <a href="/index.html">Thuisbatterijen</a>
       <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
@@ -288,8 +288,8 @@ ${productLd(b)}
   <p>${esc(b.zonnepanelen_koppeling || "")}</p>
 
   <h2>Smart home en slim aansturen</h2>
-  <p style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">${slimScoreBadge(b)} ${badge("Homey", homey)} ${badge("Home Assistant", ha)} ${badge("Dynamisch contract", dyn)}</p>
-  <p class="datum-stempel">De <a href="/uitleg.html#slim-score">Slim-score</a> telt de ondersteuning voor Homey, Home Assistant en een dynamisch contract op: 2 punten per volledige, 1 per gedeeltelijke ondersteuning.</p>
+  <p style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">${koppelScoreBadge(b)} ${badge("Homey", homey)} ${badge("Home Assistant", ha)} ${badge("Dynamisch contract", dyn)}</p>
+  <p class="datum-stempel">De <a href="/uitleg.html#koppel-score">Koppel-score</a> telt de ondersteuning voor Homey, Home Assistant en een dynamisch contract op: 2 punten per volledige, 1 per gedeeltelijke ondersteuning.</p>
   <ul>
     <li><b>Homey:</b> ${esc(homey.tekst)}</li>
     <li><b>Home Assistant:</b> ${esc(ha.tekst)}</li>
@@ -326,7 +326,7 @@ ${productLd(b)}
   <div class="container">
     <b>\u{1F50B} Batterijmaatje</b>
     <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
-    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Thuisbatterijen</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>
@@ -377,7 +377,7 @@ function overzichtTabel(lijst, veld) {
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Capaciteit</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Beste prijs</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Per kWh</th>
-      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Slim-score</th>
+      <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Koppel-score</th>
       <th style="text-align:left;padding:10px 14px;background:var(--kleur-achtergrond);">Hoe werkt de koppeling?</th>
     </tr></thead>
     <tbody>${rijen.map(({ b, beste, perKwh }) => {
@@ -388,7 +388,7 @@ function overzichtTabel(lijst, veld) {
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${nl(b.capaciteit_kwh)} kWh</td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${beste ? `<b>${eur(beste.prijs_eur)}</b><br><small>bij ${esc(beste.winkel)}</small>` : "op aanvraag"}</td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;">${perKwh ? eur(perKwh) : "n.b."}</td>
-        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;"><b>${slimScore(b)}/6</b></td>
+        <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);white-space:nowrap;"><b>${koppelScore(b)}/6</b></td>
         <td style="padding:10px 14px;border-top:1px solid var(--kleur-rand);">${d.tekst && d.tekst !== "Ja" ? esc(d.tekst) : "Officiële ondersteuning"}</td>
       </tr>`;
     }).join("")}</tbody>
@@ -401,7 +401,7 @@ function overzichtsPagina(cfg) {
   const deels = data.batterijen.filter((b) => driewaardig(b[cfg.veld]).status === "deels");
   const nee = data.batterijen.filter((b) => driewaardig(b[cfg.veld]).status === "nee");
   const titel = `Beste thuisbatterij voor ${cfg.naam} (2026): ${ja.length + deels.length} modellen vergeleken`;
-  const metaDesc = `Welke thuisbatterij werkt met ${cfg.naam}? Overzicht van ${ja.length} batterijen met volledige en ${deels.length} met gedeeltelijke ondersteuning, met actuele prijzen, prijs per kWh en Slim-score. Dagelijks bijgewerkt.`;
+  const metaDesc = `Welke thuisbatterij werkt met ${cfg.naam}? Overzicht van ${ja.length} batterijen met volledige en ${deels.length} met gedeeltelijke ondersteuning, met actuele prijzen, prijs per kWh en Koppel-score. Dagelijks bijgewerkt.`;
   const alleGetoond = [...ja, ...deels];
 
   const itemList = JSON.stringify({
@@ -450,7 +450,7 @@ ${itemList}
       <span>Batterij<b>maatje</b></span>
     </a>
     <nav class="hoofdnav">
-      <a href="/index.html">Vergelijken</a>
+      <a href="/index.html">Thuisbatterijen</a>
       <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
@@ -473,7 +473,7 @@ ${itemList}
   <h1>Beste thuisbatterij voor ${esc(cfg.naam)} (2026)</h1>
   <p class="datum-stempel">Dagelijks automatisch bijgewerkt · laatst gecontroleerd op ${datumNL(data.laatst_bijgewerkt || VANDAAG)}</p>
   <p>${esc(cfg.intro)}</p>
-  <p>Hieronder zie je alle ${data.batterijen.length} thuisbatterijen uit onze vergelijker, ingedeeld naar ${esc(cfg.naam)}-ondersteuning. De prijzen worden dagelijks automatisch gecontroleerd bij de winkels. De <a href="/uitleg.html#slim-score">Slim-score</a> (0 tot 6 punten) telt daarnaast ook de ondersteuning voor ${cfg.veld === "homey" ? "Home Assistant" : "Homey"} en een dynamisch energiecontract mee.</p>
+  <p>Hieronder zie je alle ${data.batterijen.length} thuisbatterijen uit onze vergelijker, ingedeeld naar ${esc(cfg.naam)}-ondersteuning. De prijzen worden dagelijks automatisch gecontroleerd bij de winkels. De <a href="/uitleg.html#koppel-score">Koppel-score</a> (0 tot 6 punten) telt daarnaast ook de ondersteuning voor ${cfg.veld === "homey" ? "Home Assistant" : "Homey"} en een dynamisch energiecontract mee.</p>
 
   <h2>✓ Volledige ${esc(cfg.naam)}-ondersteuning (${ja.length})</h2>
   <p>Deze batterijen hebben een officiële ${esc(cfg.naam)}-koppeling van de fabrikant. Installeren, koppelen en klaar.</p>
@@ -508,7 +508,7 @@ ${itemList}
   <div class="container">
     <b>\u{1F50B} Batterijmaatje</b>
     <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
-    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Thuisbatterijen</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>
@@ -547,7 +547,7 @@ function pluspunten(x, y) {
   const p = [];
   const px = perKwhVan(x), py = perKwhVan(y);
   if (px && py && px < py) p.push(`is per kWh opslag goedkoper (${eur(px)} tegenover ${eur(py)} per kWh)`);
-  if (slimScore(x) > slimScore(y)) p.push(`is beter slim aan te sturen (Slim-score ${slimScore(x)}/6 tegenover ${slimScore(y)}/6)`);
+  if (koppelScore(x) > koppelScore(y)) p.push(`is beter slim aan te sturen (Koppel-score ${koppelScore(x)}/6 tegenover ${koppelScore(y)}/6)`);
   if (vierwaardig(x.noodstroom).status === "ja" && vierwaardig(y.noodstroom).status !== "ja") p.push("heeft noodstroom bij een stroomstoring");
   if (x.installatie === "zelf" && y.installatie !== "zelf") p.push("sluit je zelf aan op een stopcontact, zonder installateur");
   if (buitenGeschikt(x) && !buitenGeschikt(y)) p.push(`kan ook buiten worden geplaatst (${esc(x.ip_klasse)})`);
@@ -623,7 +623,7 @@ ${itemList}
       <span>Batterij<b>maatje</b></span>
     </a>
     <nav class="hoofdnav">
-      <a href="/index.html">Vergelijken</a>
+      <a href="/index.html">Thuisbatterijen</a>
       <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
@@ -661,7 +661,7 @@ ${itemList}
       ${rij("Capaciteit", `${nl(A.capaciteit_kwh)} kWh${A.uitbreidbaar_tot_kwh ? ` <small>(tot ${nl(A.uitbreidbaar_tot_kwh)})</small>` : ""}`, `${nl(B.capaciteit_kwh)} kWh${B.uitbreidbaar_tot_kwh ? ` <small>(tot ${nl(B.uitbreidbaar_tot_kwh)})</small>` : ""}`)}
       ${rij("Vermogen", A.vermogen_kw ? `${nl(A.vermogen_kw)} kW` : "n.b.", B.vermogen_kw ? `${nl(B.vermogen_kw)} kW` : "n.b.", hoogWint(A.vermogen_kw, B.vermogen_kw))}
       ${rij("Type en installatie", `${esc(typeLabelVan(A))}<br><small>${A.installatie === "zelf" ? "zelf aan te sluiten" : "door installateur"}</small>`, `${esc(typeLabelVan(B))}<br><small>${B.installatie === "zelf" ? "zelf aan te sluiten" : "door installateur"}</small>`)}
-      ${rij("Slim-score", `${slimScore(A)}/6`, `${slimScore(B)}/6`, hoogWint(slimScore(A), slimScore(B)))}
+      ${rij("Koppel-score", `${koppelScore(A)}/6`, `${koppelScore(B)}/6`, hoogWint(koppelScore(A), koppelScore(B)))}
       ${rij("Homey", d3kort(A.homey), d3kort(B.homey))}
       ${rij("Home Assistant", d3kort(A.home_assistant), d3kort(B.home_assistant))}
       ${rij("Dynamisch contract", d3kort(A.dynamisch_contract), d3kort(B.dynamisch_contract))}
@@ -696,7 +696,7 @@ ${itemList}
   <div class="container">
     <b>\u{1F50B} Batterijmaatje</b>
     <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
-    <p><a href="/index.html">Vergelijken</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Thuisbatterijen</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-thuisbatterij-home-assistant.html">Beste voor Home Assistant</a> · <a href="/beste-thuisbatterij-homey.html">Beste voor Homey</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. De prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>
