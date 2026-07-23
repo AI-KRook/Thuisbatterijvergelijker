@@ -171,7 +171,7 @@
         advies: `Je betaalt dan de uurprijs van de stroombeurs in plaats van één ${s.contract === "vast" ? "vaste" : "variabele"} prijs. Zonder flexibiliteit is dat een gok, maar na dit plan heb je die flexibiliteit juist wél: ${flex}. Slimme sturing verschuift je verbruik automatisch naar goedkope uren; de winst daarvan zit nog níet in de bedragen hierboven, het is dus een bonus. Vergelijk wel de opslag per kWh en de vaste kosten per leverancier.`,
         bedragen: null,
         knoppen: [
-          { tekst: "Uitleg dynamisch contract →", url: "https://batterijmaatje.nl/uitleg.html#dynamisch-contract", extern: true },
+          { tekst: "Uitleg met grafiek en rekenvoorbeeld →", url: "https://batterijmaatje.nl/uitleg.html#vast-of-dynamisch", extern: true },
           { tekst: "Onafhankelijke uitleg (Milieu Centraal) →", url: "https://www.milieucentraal.nl/energie-besparen/inzicht-in-je-energierekening/dynamisch-energiecontract/", extern: true },
         ],
       });
