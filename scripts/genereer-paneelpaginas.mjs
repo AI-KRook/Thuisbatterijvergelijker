@@ -188,6 +188,7 @@ const NAV = `
       <details class="nav-meer">
         <summary>Meer ▾</summary>
         <div class="nav-meer-paneel">
+          <a href="/energieplan.html">Jouw energieplan</a>
           <a href="/uitleg.html">Uitleg</a>
           <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a>
           <a href="/regelgeving.html">Regels &amp; subsidies</a>
@@ -206,7 +207,7 @@ const FOOTER = `
   <div class="container">
     <b>☀️ Zonnestroommaatje</b>
     <p>Onafhankelijke vergelijking van zonnepanelen voor Nederlandse huishoudens. Zustersite van <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a> (thuisbatterijen) en <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje</a> (warmtepompen).</p>
-    <p><a href="/index.html">Zonnepanelen</a> · <a href="/omvormers.html">Omvormers</a> · <a href="/systeem.html">Samenstellen</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="/beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
+    <p><a href="/index.html">Zonnepanelen</a> · <a href="/omvormers.html">Omvormers</a> · <a href="/systeem.html">Samenstellen</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/energieplan.html">Jouw energieplan</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="/beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. Prijzen zijn indicatief; de prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
   </div>
 </footer>`;
@@ -574,6 +575,7 @@ const vast = [
   { loc: `${SITE}/advies.html`, freq: "weekly", prio: "0.9" },
   { loc: `${SITE}/systeem.html`, freq: "weekly", prio: "0.9" },
   { loc: `${SITE}/rekenmodule.html`, freq: "weekly", prio: "0.8" },
+  { loc: `${SITE}/energieplan.html`, freq: "weekly", prio: "0.8" },
   { loc: `${SITE}/regelgeving.html`, freq: "monthly", prio: "0.8" },
   { loc: `${SITE}/waar-zonnepanelen-kopen.html`, freq: "monthly", prio: "0.8" },
   { loc: `${SITE}/beste-zonnepanelen-klein-dak.html`, freq: "weekly", prio: "0.8" },
