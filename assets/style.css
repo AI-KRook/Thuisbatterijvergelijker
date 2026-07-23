@@ -144,7 +144,8 @@ a { color: var(--kleur-primair); }
 .hoofdnav a.actief { background: var(--kleur-primair-licht); color: var(--kleur-primair-donker); }
 
 /* Uitklapmenu "Meer" in de hoofdnavigatie (werkt zonder JavaScript, ook op touch) */
-.hoofdnav details.nav-meer { position: relative; }
+.hoofdnav { position: relative; }
+.hoofdnav details.nav-meer { position: static; }
 .hoofdnav details.nav-meer summary {
   cursor: pointer;
   list-style: none;
@@ -170,6 +171,7 @@ a { color: var(--kleur-primair); }
   display: flex;
   flex-direction: column;
   min-width: 240px;
+  max-width: calc(100vw - 24px);
   z-index: 60;
 }
 .hoofdnav details.nav-meer .nav-meer-paneel a { padding: 9px 12px; }
