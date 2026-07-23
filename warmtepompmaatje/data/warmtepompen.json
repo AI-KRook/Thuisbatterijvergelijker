@@ -536,6 +536,165 @@
       "garantie_jaar": 7,
       "opmerkingen": "Nederlandse fabrikant (Delft) met focus op design, rendement en openheid richting slimme huizen; officiële Home Assistant-ondersteuning is zeldzaam in deze markt.",
       "product_url": "https://www.weheat.nl/"
+    },
+    {
+      "id": "stiebel-wpl-a07",
+      "merk": "Stiebel Eltron",
+      "model": "WPL-A 07 HK Premium",
+      "type": "all-electric",
+      "voorbeeld_variant": "WPL-A 07.2 Plus HK 230 (monoblock, 7 kW)",
+      "vermogen_kw": 7,
+      "scop": 4.6,
+      "scop_toelichting": "labelwaarde bij 35 °C aanvoer",
+      "geluid_db": 54,
+      "geluid_toelichting": "geluidsvermogen buitenunit; met stille nachtmodus",
+      "koudemiddel": "R290 (propaan)",
+      "tapwater": "via geïntegreerde hydromodule met aparte boiler",
+      "max_aanvoer_c": 75,
+      "richtprijs_eur": 8500,
+      "prijs_toelichting": "richtprijs monoblock met hydraulische module, excl. installatie en boiler",
+      "isde_indicatie_eur": 3100,
+      "product_url": "https://www.stiebel-eltron.nl/",
+      "sturing": {
+        "status": "ja",
+        "tekst": "Modbus via de ISG-gateway; SG-ready."
+      },
+      "home_assistant": {
+        "status": "ja",
+        "tekst": "Officiële Home Assistant-integratie (stiebel_eltron) via de ISG-gateway met Modbus."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Geen officiële app; community-oplossingen via de ISG-gateway en Modbus."
+      },
+      "aanbiedingen": []
+    },
+    {
+      "id": "wolf-cha-07",
+      "merk": "Wolf",
+      "model": "CHA-07 Monoblock",
+      "type": "all-electric",
+      "voorbeeld_variant": "CHA-Monoblock 07 (7 kW)",
+      "vermogen_kw": 7,
+      "scop": 4.7,
+      "scop_toelichting": "labelwaarde bij 35 °C aanvoer",
+      "geluid_db": 55,
+      "geluid_toelichting": "geluidsvermogen buitenunit; fluisterstand beschikbaar",
+      "koudemiddel": "R290 (propaan)",
+      "tapwater": "aparte boiler of CHC-module nodig",
+      "max_aanvoer_c": 70,
+      "richtprijs_eur": 6900,
+      "prijs_toelichting": "richtprijs losse buitenunit met regelmodule, excl. installatie en boiler",
+      "isde_indicatie_eur": 3000,
+      "product_url": "https://www.wolf.eu/monobloc-cha",
+      "sturing": {
+        "status": "deels",
+        "tekst": "eBUS; Modbus via de optionele ISM8i-interfacemodule."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Community-route via ebusd (eBUS) of de ISM8i-module; geen officiële integratie."
+      },
+      "homey": {
+        "status": "nee",
+        "tekst": "Geen app bekend."
+      },
+      "aanbiedingen": []
+    },
+    {
+      "id": "itho-amber-95",
+      "merk": "Itho Daalderop",
+      "model": "Amber 95",
+      "type": "all-electric",
+      "voorbeeld_variant": "Amber 95 monoblock (9,5 kW)",
+      "vermogen_kw": 9.5,
+      "scop": 4.5,
+      "scop_toelichting": "labelwaarde bij 35 °C aanvoer",
+      "geluid_db": 52,
+      "geluid_toelichting": "geluidsvermogen buitenunit; ontworpen op stille werking",
+      "koudemiddel": "R32",
+      "tapwater": "aparte boiler nodig",
+      "max_aanvoer_c": 65,
+      "richtprijs_eur": 5450,
+      "prijs_toelichting": "richtprijs losse buitenunit, excl. installatie en boiler",
+      "isde_indicatie_eur": 2575,
+      "product_url": "https://www.ithodaalderop.nl/amber",
+      "sturing": {
+        "status": "deels",
+        "tekst": "Aansturing via de Itho Spider-thermostaat; geen open lokale API."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Community-integratie via de Spider-thermostaat; geen officiële integratie."
+      },
+      "homey": {
+        "status": "deels",
+        "tekst": "Community-app voor de Spider-thermostaat; geen officiële app."
+      },
+      "aanbiedingen": []
+    },
+    {
+      "id": "inventum-ecolution-combi",
+      "merk": "Inventum",
+      "model": "Ecolution Combi 50",
+      "type": "hybride",
+      "voorbeeld_variant": "Ecolution Combi 50 (ventilatielucht, met 50 liter boilervat)",
+      "vermogen_kw": 1.6,
+      "scop_toelichting": "ventilatielucht-warmtepomp: gebruikt de warmte uit je afzuiglucht; rendement afhankelijk van het ventilatiedebiet",
+      "geluid_db": 48,
+      "geluid_toelichting": "binnenopstelling; geen buitenunit, dus geen erfgrens-eis",
+      "koudemiddel": "R134a",
+      "tapwater": "ja, via het ingebouwde 50 liter-voorraadvat",
+      "max_aanvoer_c": 55,
+      "richtprijs_eur": 2900,
+      "prijs_toelichting": "richtprijs toestel, excl. installatie; werkt samen met de cv-ketel",
+      "isde_indicatie_eur": 1300,
+      "product_url": "https://www.inventum.com/ecolution-combi-50/62010050",
+      "sturing": {
+        "status": "deels",
+        "tekst": "OpenTherm-samenwerking met de cv-ketel; geen open lokale API."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Community-route via Modbus (RS485); geen officiële integratie."
+      },
+      "homey": {
+        "status": "nee",
+        "tekst": "Geen app bekend."
+      },
+      "aanbiedingen": []
+    },
+    {
+      "id": "gree-versati-iv-10",
+      "merk": "Gree",
+      "model": "Versati IV 10 kW",
+      "type": "all-electric",
+      "voorbeeld_variant": "Versati IV monoblock 10 kW (ook als Tosot verkocht)",
+      "vermogen_kw": 10,
+      "scop": 4.5,
+      "scop_toelichting": "labelwaarde bij 35 °C aanvoer",
+      "geluid_db": 56,
+      "geluid_toelichting": "geluidsvermogen buitenunit",
+      "koudemiddel": "R32",
+      "tapwater": "aparte boiler nodig (All-in-One-variant heeft ingebouwd vat)",
+      "max_aanvoer_c": 60,
+      "richtprijs_eur": 3500,
+      "prijs_toelichting": "richtprijs losse monoblock; het budgetsegment onder de A-merken",
+      "isde_indicatie_eur": 3200,
+      "product_url": "https://www.gree.nl/gree-versati-warmtepompen",
+      "sturing": {
+        "status": "deels",
+        "tekst": "Wifi-app en Modbus-aansluiting; geen gedocumenteerde open API."
+      },
+      "home_assistant": {
+        "status": "deels",
+        "tekst": "Community-integratie via Modbus (gree-versati); geen officiële integratie."
+      },
+      "homey": {
+        "status": "nee",
+        "tekst": "Geen app bekend."
+      },
+      "aanbiedingen": []
     }
   ]
 }

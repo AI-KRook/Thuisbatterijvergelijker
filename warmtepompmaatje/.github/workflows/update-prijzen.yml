@@ -31,12 +31,15 @@ jobs:
           BOL_CLIENT_SECRET: ${{ secrets.BOL_CLIENT_SECRET }}
         run: node scripts/update-prices.mjs
 
+      - name: Productpagina's regenereren (prijzen staan ook op de pomp-pagina's)
+        run: node scripts/genereer-warmtepomppaginas.mjs
+
       - name: Wijzigingen committen en pushen
         id: commit
         run: |
           git config user.name "prijsupdate-bot"
           git config user.email "actions@github.com"
-          git add data/warmtepompen.json
+          git add data/warmtepompen.json pomp/ sitemap.xml
           if git diff --cached --quiet; then
             echo "Geen prijswijzigingen vandaag."
             echo "gewijzigd=false" >> "$GITHUB_OUTPUT"
