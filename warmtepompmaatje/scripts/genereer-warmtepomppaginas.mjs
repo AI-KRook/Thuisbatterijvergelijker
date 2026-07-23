@@ -180,6 +180,18 @@ ${kop("index", true)}
         ${specRij("ISDE-subsidie (indicatie)", w.isde_indicatie_eur ? `${eur(w.isde_indicatie_eur)} <small>(check de meldcode bij <a href="https://www.rvo.nl/subsidies-financiering/isde/woningeigenaren/warmtepomp" target="_blank" rel="noopener">RVO</a>)</small>` : null)}
       </table>
 
+      <div class="info-kader" style="margin-top:14px;">
+        <b>Wat je nodig hebt voor je ISDE-aanvraag</b>
+        <p style="margin:6px 0 0;">De ISDE-subsidie loopt per goedgekeurd apparaat, elk met een eigen meldcode. Wij vermelden die meldcode bewust niet: RVO werkt de lijst regelmatig bij en één model heeft vaak meerdere codes per vermogensvariant. Zoek de juiste meldcode op met deze gegevens van deze warmtepomp:</p>
+        <ul style="margin:8px 0 0;">
+          <li><b>Merk:</b> ${esc(w.merk)}</li>
+          <li><b>Model:</b> ${esc(w.model)}</li>
+          <li><b>Uitvoering:</b> ${w.type === "hybride" ? "hybride" : "all-electric"}</li>
+          ${w.vermogen_kw ? `<li><b>Vermogen:</b> ${String(w.vermogen_kw).replace(".", ",")} kW${w.voorbeeld_variant ? ` <small>(variant: ${esc(w.voorbeeld_variant)})</small>` : ""}</li>` : ""}
+        </ul>
+        <p style="margin:8px 0 0;">Zoek dit apparaat op de <a href="https://www.rvo.nl/subsidies-financiering/isde/woningeigenaren/warmtepomp" target="_blank" rel="noopener">apparatenlijst bij RVO</a>. De meldcode en het exacte subsidiebedrag daar zijn leidend.</p>
+      </div>
+
       <h2>Slim koppelen (Koppel-score ${score}/6)</h2>
       <dl class="koppel-blok" style="margin:0;">
         <dt>${driewaardig(w.sturing).status === "ja" ? "✓" : driewaardig(w.sturing).status === "deels" ? "~" : "✕"} Slimme aansturing</dt><dd>${esc(driewaardig(w.sturing).tekst)}</dd>
