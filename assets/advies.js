@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zonnepaneelmaatje - keuzehulp
+   Zonnestroommaatje - keuzehulp
    Adviseert op basis van verbruik, dak en wensen het aantal wattpiek en de
    drie best passende panelen uit data/panelen.json.
    ========================================================================== */

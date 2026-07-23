@@ -1,6 +1,6 @@
 # Warmtepompmaatje.nl
 
-Onafhankelijke vergelijkingssite voor warmtepompen (hybride en all-electric) op de Nederlandse markt. Zustersite van Zonnepaneelmaatje en Batterijmaatje.nl.
+Onafhankelijke vergelijkingssite voor warmtepompen (hybride en all-electric) op de Nederlandse markt. Zustersite van Zonnestroommaatje en Batterijmaatje.nl.
 
 Statische site zonder buildstap: HTML + vanilla JavaScript dat `data/warmtepompen.json` laadt. Ontwikkeld in de map `warmtepompmaatje/` van de dev-repo; productie draait via GitHub Pages.
 

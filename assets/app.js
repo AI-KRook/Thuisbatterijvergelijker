@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zonnepaneelmaatje - vergelijkingslogica
+   Zonnestroommaatje - vergelijkingslogica
    Laadt data/panelen.json en rendert kaarten, tabel en vergelijk-modal.
    ========================================================================== */
 
@@ -111,7 +111,7 @@
      Zeker-score en sterren
      ------------------------------------------------------------------ */
 
-  // Zeker-score: unieke Zonnepaneelmaatje-score voor degelijkheid (0 tot 6).
+  // Zeker-score: unieke Zonnestroommaatje-score voor degelijkheid (0 tot 6).
   // Drie zaken tellen mee, elk 0-2 punten:
   //  - productgarantie: 25+ jaar = 2, 20-24 jaar = 1, korter = 0
   //  - vermogensbehoud na 25 jaar: 90%+ = 2, 88,5%+ = 1, minder = 0

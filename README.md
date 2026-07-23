@@ -1,4 +1,4 @@
-# ☀️ Zonnepaneelmaatje.nl
+# ☀️ Zonnestroommaatje.nl
 
 Een gebruiksvriendelijke, statische vergelijkingssite voor zonnepanelen op de Nederlandse markt. Gebouwd voor GitHub Pages: geen build-stap, geen server nodig. De zustersite van [Batterijmaatje.nl](https://batterijmaatje.nl/) (thuisbatterijen), met dezelfde opzet en huisstijl.
 
@@ -41,7 +41,7 @@ scripts/update-prices.mjs       Prijsupdate-script (Node.js), voor gekoppelde wi
 
 Deze site draait in de repository [AI-KRook/Zonnemaatje](https://github.com/AI-KRook/Zonnemaatje) op GitHub Pages (bron: GitHub Actions, workflow `deploy-pages.yml`, branch `main`). Zonder gekoppeld domein staat hij op `https://ai-krook.github.io/Zonnemaatje/`; alle interne links zijn relatief, dus de site werkt zowel in die submap als op een eigen domein.
 
-Het domein `zonnepaneelmaatje.nl` koppelen: vul het in bij **Settings → Pages → Custom domain** en verwijs bij je domeinregistrar de DNS naar GitHub Pages (CNAME `www` → `ai-krook.github.io`, en voor het apex-domein de A-records van GitHub Pages). Het `CNAME`-bestand staat al in de repository.
+Het domein `zonnestroommaatje.nl` koppelen: vul het in bij **Settings → Pages → Custom domain** en verwijs bij je domeinregistrar de DNS naar GitHub Pages (CNAME `www` → `ai-krook.github.io`, en voor het apex-domein de A-records van GitHub Pages). Het `CNAME`-bestand staat al in de repository.
 
 De site is ontwikkeld op de branch `claude/zonnepaneelmaatje-website-cl6974` van de Thuisbatterijvergelijker-repository; de deploy-workflow staat bewust alleen op `main` + handmatig starten, zodat er vanaf die branch nooit per ongeluk over batterijmaatje.nl heen wordt gepubliceerd.
 

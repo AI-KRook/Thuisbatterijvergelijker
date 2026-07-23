@@ -35,7 +35,7 @@ const BESTANDEN = [
 const VANDAAG = new Date().toISOString().slice(0, 10);
 const TIMEOUT_MS = 20000;
 const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 Zonnepaneelmaatje-prijscheck/1.0";
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 Zonnestroommaatje-prijscheck/1.0";
 
 /* ------------------------------------------------------------------
    Bol.com Marketing Catalog API (officiële partnerroute).

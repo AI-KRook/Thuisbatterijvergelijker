@@ -1,7 +1,7 @@
 /* ==========================================================================
    Warmtepompmaatje - vergelijkingslogica
    Laadt data/warmtepompen.json en rendert kaarten, tabel en vergelijk-modal,
-   met dezelfde opzet als de zustersites (Batterijmaatje, Zonnepaneelmaatje).
+   met dezelfde opzet als de zustersites (Batterijmaatje, Zonnestroommaatje).
    ========================================================================== */
 
 (function () {

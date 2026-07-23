@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zonnepaneelmaatje - omvormer-vergelijker
+   Zonnestroommaatje - omvormer-vergelijker
    Laadt data/omvormers.json en rendert kaarten, tabel en vergelijk-modal,
    met dezelfde logica als de panelen-vergelijker (assets/app.js).
    ========================================================================== */
@@ -66,7 +66,7 @@
     return null;
   }
 
-  // Koppel-score: unieke Zonnepaneelmaatje-score (0 tot 6) voor hoe goed een
+  // Koppel-score: unieke Zonnestroommaatje-score (0 tot 6) voor hoe goed een
   // omvormer te koppelen is. Drie zaken tellen mee, elk 0-2 punten:
   //  - thuisbatterij: direct aan te sluiten (hybride/eigen lijn) = 2, via omweg = 1
   //  - slim uitlezen/aansturen: officiële integratie of open lokale API = 2,

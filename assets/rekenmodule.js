@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zonnepaneelmaatje - rekenmodule opbrengst en terugverdientijd
+   Zonnestroommaatje - rekenmodule opbrengst en terugverdientijd
    Rekent per paneel en per situatie de jaaropbrengst, de besparing per
    jaar (met en zonder saldering) en de terugverdientijd uit.
    ========================================================================== */

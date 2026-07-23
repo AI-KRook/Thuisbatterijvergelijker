@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Zonnepaneelmaatje - systeem-samensteller
+   Zonnestroommaatje - systeem-samensteller
    Combineert een zonnepaneel (met aantal) en een omvormer, checkt of de
    combinatie technisch klopt en rekent de systeemprijs uit met per onderdeel
    de goedkoopst gevonden winkel. De compatibiliteitsregels staan onderbouwd

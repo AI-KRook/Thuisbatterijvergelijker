@@ -14,7 +14,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const SITE = "https://zonnepaneelmaatje.nl";
+const SITE = "https://zonnestroommaatje.nl";
 const VANDAAG = new Date().toISOString().slice(0, 10);
 // Versienummer achter css/js-links: dwingt browsers om na een wijziging
 // het nieuwe bestand op te halen in plaats van een oude kopie uit de cache.
@@ -26,8 +26,8 @@ mkdirSync(resolve(ROOT, "paneel"), { recursive: true });
 /* ------------------------------------------------------------------ */
 
 // Interne links worden relatief gemaakt aan de hand van de map-diepte van de
-// pagina. Zo werkt de site zowel op een eigen domein (zonnepaneelmaatje.nl)
-// als in een submap zoals gebruiker.github.io/Zonnepaneelmaatje/.
+// pagina. Zo werkt de site zowel op een eigen domein (zonnestroommaatje.nl)
+// als in een submap zoals gebruiker.github.io/Zonnestroommaatje/.
 const relativeer = (html, diepte) => {
   const prefix = diepte > 0 ? "../".repeat(diepte) : "";
   return html.replaceAll('href="/', `href="${prefix}`).replaceAll('src="/', `src="${prefix}`);
@@ -177,7 +177,7 @@ const NAV = `
   <div class="container">
     <a class="logo" href="/index.html">
       <span class="logo-icoon">☀️</span>
-      <span>Zonnepaneel<b>maatje</b></span>
+      <span>Zonnestroom<b>maatje</b></span>
     </a>
     <nav class="hoofdnav">
       <a href="/index.html">Zonnepanelen</a>
@@ -204,7 +204,7 @@ const NAV = `
 const FOOTER = `
 <footer class="site-footer">
   <div class="container">
-    <b>☀️ Zonnepaneelmaatje</b>
+    <b>☀️ Zonnestroommaatje</b>
     <p>Onafhankelijke vergelijking van zonnepanelen voor Nederlandse huishoudens. Zustersite van <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a> (thuisbatterijen) en <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje</a> (warmtepompen).</p>
     <p><a href="/index.html">Zonnepanelen</a> · <a href="/omvormers.html">Omvormers</a> · <a href="/systeem.html">Samenstellen</a> · <a href="/advies.html">Keuzehulp</a> · <a href="/rekenmodule.html">Terugverdientijd</a> · <a href="/uitleg.html">Uitleg</a> · <a href="/waar-zonnepanelen-kopen.html">Waar koop je panelen?</a> · <a href="/regelgeving.html">Regels &amp; subsidies</a> · <a href="/index.html#veelgestelde-vragen">Veelgestelde vragen</a> · <a href="/beste-zonnepanelen-klein-dak.html">Beste voor een klein dak</a> · <a href="/beste-glas-glas-zonnepanelen.html">Beste glas-glas panelen</a> · <a href="/over-ons.html">Over ons</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: prijzen en specificaties veranderen regelmatig; er kunnen geen rechten aan worden ontleend. Prijzen zijn indicatief; de prijs en voorwaarden op de website van de aanbieder zijn altijd leidend.</p>
@@ -217,7 +217,7 @@ function kop(titel, metaDesc, canoniek, ld = "") {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${esc(titel)} | Zonnepaneelmaatje.nl</title>
+  <title>${esc(titel)} | Zonnestroommaatje.nl</title>
   <meta name="description" content="${esc(metaDesc)}">
   <link rel="canonical" href="${canoniek}">
   <meta property="og:title" content="${esc(titel)}">
@@ -228,7 +228,7 @@ function kop(titel, metaDesc, canoniek, ld = "") {
   <meta property="og:image" content="${SITE}/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:site_name" content="Zonnepaneelmaatje.nl">
+  <meta property="og:site_name" content="Zonnestroommaatje.nl">
   <meta name="twitter:card" content="summary_large_image">
   ${ld ? `<script type="application/ld+json">\n${ld}\n  </script>` : ""}
   <link rel="stylesheet" href="/assets/style.css?v=${ASSET_VERSIE}">
