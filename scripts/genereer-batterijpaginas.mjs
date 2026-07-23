@@ -229,9 +229,9 @@ ${productLd(b)}
     </a>
     <nav class="hoofdnav">
       <a href="/index.html">Thuisbatterijen</a>
-      <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
+      <a href="/uitleg.html">Uitleg</a>
       <details class="nav-meer">
         <summary>Meer ▾</summary>
         <div class="nav-meer-paneel">
@@ -451,9 +451,9 @@ ${itemList}
     </a>
     <nav class="hoofdnav">
       <a href="/index.html">Thuisbatterijen</a>
-      <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
+      <a href="/uitleg.html">Uitleg</a>
       <details class="nav-meer">
         <summary>Meer ▾</summary>
         <div class="nav-meer-paneel">
@@ -624,9 +624,9 @@ ${itemList}
     </a>
     <nav class="hoofdnav">
       <a href="/index.html">Thuisbatterijen</a>
-      <a href="/uitleg.html">Uitleg</a>
       <a href="/advies.html">Keuzehulp</a>
       <a href="/rekenmodule.html">Terugverdientijd</a>
+      <a href="/uitleg.html">Uitleg</a>
       <details class="nav-meer">
         <summary>Meer ▾</summary>
         <div class="nav-meer-paneel">
