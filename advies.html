@@ -17,11 +17,13 @@
     .advies-indeling { display: grid; grid-template-columns: 400px 1fr; gap: 24px; align-items: start; margin: 26px 0 40px; }
     @media (max-width: 900px) { .advies-indeling { grid-template-columns: 1fr; } }
     .advies-paneel { background: var(--kleur-wit); border: 1px solid var(--kleur-rand); border-radius: var(--radius); box-shadow: var(--schaduw); padding: 22px; }
+    .advies-indeling > * { min-width: 0; box-sizing: border-box; }
     .advies-paneel h2 { margin: 0 0 4px; font-size: 1.1rem; color: var(--kleur-primair-donker); }
     .advies-paneel h2:not(:first-child) { margin-top: 22px; }
     .veld { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
     .veld label { font-size: 0.85rem; font-weight: 700; color: var(--kleur-tekst-licht); }
-    .veld input, .veld select { padding: 9px 12px; border: 1px solid var(--kleur-rand); border-radius: 8px; font-size: 0.95rem; }
+    .veld input, .veld select { padding: 9px 12px; border: 1px solid var(--kleur-rand); border-radius: 8px; font-size: 0.95rem; width: 100%; min-width: 0; box-sizing: border-box; }
+    .veld, .veld-rij > * { min-width: 0; }
     .veld .hint { font-size: 0.8rem; color: var(--kleur-tekst-licht); }
     .veld-rij { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 480px) { .veld-rij { grid-template-columns: 1fr; } }
@@ -74,6 +76,7 @@
         <div class="veld">
           <label for="advVerbruik">Jaarverbruik (kWh)</label>
           <input type="number" id="advVerbruik" value="2900" min="0" step="100">
+          <span class="hint">Komt er (ook) een warmtepomp? Tel dan circa 1.400 (hybride) tot 3.000 kWh (all-electric) extra mee; zie <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje</a></span>
         </div>
       </div>
 
@@ -84,6 +87,7 @@
           <option value="ja">Ja</option>
           <option value="nee">Nee</option>
         </select>
+        <span class="hint">Nog geen panelen? Vergelijk ze op onze zustersite <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a></span>
       </div>
       <div id="pvVragen">
         <div class="veld-rij">
@@ -167,7 +171,7 @@
 <footer class="site-footer">
   <div class="container">
     <b>🔋 Batterijmaatje</b>
-    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
+    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens. Zustersite van <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a> (zonnepanelen en omvormers) en <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje</a> (warmtepompen).</p>
     <p><a href="index.html">Vergelijken</a> · <a href="rekenmodule.html">Terugverdientijd</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="over-ons.html">Over ons</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: de keuzehulp geeft een indicatief advies op basis van vuistregels en de door jou ingevulde gegevens. De genoemde gemiddelden voor jaarverbruik zijn indicatief; je eigen jaarnota is leidend.</p>
   </div>

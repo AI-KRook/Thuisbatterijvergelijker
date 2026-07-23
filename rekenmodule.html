@@ -21,7 +21,8 @@
     .reken-paneel h2:not(:first-child) { margin-top: 24px; }
     .veld { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
     .veld label { font-size: 0.85rem; font-weight: 700; color: var(--kleur-tekst-licht); }
-    .veld input, .veld select { padding: 9px 12px; border: 1px solid var(--kleur-rand); border-radius: 8px; font-size: 0.95rem; }
+    .veld input, .veld select { padding: 9px 12px; border: 1px solid var(--kleur-rand); border-radius: 8px; font-size: 0.95rem; width: 100%; min-width: 0; box-sizing: border-box; }
+    .veld, .veld-rij > * { min-width: 0; }
     .veld .hint { font-size: 0.8rem; color: var(--kleur-tekst-licht); }
     .veld-rij { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     @media (max-width: 480px) { .veld-rij { grid-template-columns: 1fr; } }
@@ -86,6 +87,7 @@
             <option value="ja">Ja</option>
             <option value="nee">Nee</option>
           </select>
+          <span class="hint">Nog geen panelen? Vergelijk ze op <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a></span>
         </div>
         <div class="veld">
           <label for="inpContract">Energiecontract</label>
@@ -217,7 +219,7 @@
 <footer class="site-footer">
   <div class="container">
     <b>🔋 Batterijmaatje</b>
-    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens.</p>
+    <p>Onafhankelijke vergelijking van thuisbatterijen voor Nederlandse huishoudens. Zustersite van <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnepaneelmaatje</a> (zonnepanelen en omvormers) en <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje</a> (warmtepompen).</p>
     <p><a href="index.html">Vergelijken</a> · <a href="regelgeving.html">Regels &amp; subsidies</a> · <a href="over-ons.html">Over ons</a> · <a href="privacy.html">Privacy &amp; disclaimer</a></p>
     <p class="disclaimer">Disclaimer: deze rekenmodule geeft een indicatie op basis van de door jou ingevulde aannames en is geen financieel advies. Werkelijke opbrengsten hangen af van je verbruik, het weer, marktprijzen en beleid.</p>
   </div>
