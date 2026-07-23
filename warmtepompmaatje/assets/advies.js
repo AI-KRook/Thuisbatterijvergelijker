@@ -205,7 +205,7 @@
 
       <div class="advies-kaart" style="margin-top:18px;">
         <span class="plek">🔗 Maak het compleet</span>
-        <p style="margin:8px 0 0;font-size:0.95rem;">Een warmtepomp draait het voordeligst op eigen zonnestroom. Vergelijk zonnepanelen en omvormers op <a href="https://ai-krook.github.io/Zonnemaatje/" target="_blank" rel="noopener">Zonnestroommaatje</a>, en thuisbatterijen op <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>. Check daarna de <a href="subsidie.html">ISDE-subsidie</a>: die geldt per apparaat. Of bekijk alles in één keer met <a href="https://ai-krook.github.io/Zonnemaatje/energieplan.html" target="_blank" rel="noopener">het energieplan →</a></p>
+        <p style="margin:8px 0 0;font-size:0.95rem;">Een warmtepomp draait het voordeligst op eigen zonnestroom. Vergelijk zonnepanelen en omvormers op <a href="https://zonnestroommaatje.nl/" target="_blank" rel="noopener">Zonnestroommaatje</a>, en thuisbatterijen op <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>. Check daarna de <a href="subsidie.html">ISDE-subsidie</a>: die geldt per apparaat. Of bekijk alles in één keer met <a href="https://zonnestroommaatje.nl/energieplan.html" target="_blank" rel="noopener">het energieplan →</a></p>
       </div>
       <p class="hint" style="margin-top:12px;">Dit advies is een startpunt, geen offerte of warmteverliesberekening. Laat een installateur altijd het vermogen bepalen; een te grote pomp pendelt en een te kleine wordt duur. <a href="javascript:window.print()">🖨️ Advies afdrukken</a></p>
     `;

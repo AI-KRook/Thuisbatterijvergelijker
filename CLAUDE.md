@@ -6,7 +6,7 @@ de site Zonnestroommaatje (domein zonnestroommaatje.nl, door Kaj gekozen
 omdat zonnepaneelmaatje.nl bezet is). Geen buildstap: HTML + vanilla JS die
 JSON laadt uit `data/`. Ontwikkeling gebeurt op deze repo/branch; productie
 staat in de repo `AI-KRook/Zonnemaatje` (branch `main`, live via GitHub
-Pages op https://ai-krook.github.io/Zonnemaatje/, met `gh-pages` als
+Pages op https://zonnestroommaatje.nl/, met `gh-pages` als
 fallback zonder CNAME). De map `warmtepompmaatje/` bevat de derde
 zustersite; die deployt naar de repo `AI-KRook/Warmtepompmaatje` (main,
 GitHub Pages) en mag NIET mee naar de Zonnemaatje-repo.

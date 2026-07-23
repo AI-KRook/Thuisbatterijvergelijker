@@ -275,7 +275,7 @@
         <a class="knop knop-secundair" href="advies.html">Twijfel je? Doe de keuzehulp</a>
         <a class="knop knop-secundair" href="javascript:window.print()">🖨️ Afdrukken</a>
       </p>
-      ${s.batterij !== "nee" ? `<p class="hint" style="margin:10px 0 0;">🔋 Batterijen vergelijken op prijs per kWh, noodstroom en slimme aansturing doe je op onze zustersite <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl →</a> Verwarm je (straks) met een warmtepomp, dan benut die je zonnestroom extra goed; vergelijk warmtepompen op <a href="https://ai-krook.github.io/Warmtepompmaatje/" target="_blank" rel="noopener">Warmtepompmaatje →</a></p>` : ""}
+      ${s.batterij !== "nee" ? `<p class="hint" style="margin:10px 0 0;">🔋 Batterijen vergelijken op prijs per kWh, noodstroom en slimme aansturing doe je op onze zustersite <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl →</a> Verwarm je (straks) met een warmtepomp, dan benut die je zonnestroom extra goed; vergelijk warmtepompen op <a href="https://warmtepompmaatje.nl/" target="_blank" rel="noopener">Warmtepompmaatje →</a></p>` : ""}
     `;
   }
 

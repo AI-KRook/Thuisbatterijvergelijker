@@ -102,8 +102,8 @@
           : "Bij jouw isolatie is hybride de veilige route: circa 60% gasbesparing, de ketel vangt piekkou en warm water op." + (s.cvKetel === "oud" ? " Let op: je ketel is aan vervanging toe; reken een nieuwe mee of overweeg all-electric na isoleren." : ""),
         bedragen: { investering, subsidie: wp.isde, besparing },
         knoppen: [
-          { tekst: "Doe de warmtepomp-keuzehulp →", url: "https://ai-krook.github.io/Warmtepompmaatje/advies.html", extern: true },
-          { tekst: "Bereken exact →", url: `https://ai-krook.github.io/Warmtepompmaatje/rekenmodule.html?gas=${s.gas}`, extern: true },
+          { tekst: "Doe de warmtepomp-keuzehulp →", url: "https://warmtepompmaatje.nl/advies.html", extern: true },
+          { tekst: "Bereken exact →", url: `https://warmtepompmaatje.nl/rekenmodule.html?gas=${s.gas}`, extern: true },
         ],
       });
     }

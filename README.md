@@ -39,7 +39,7 @@ scripts/update-prices.mjs       Prijsupdate-script (Node.js), voor gekoppelde wi
 
 ## Hosting
 
-Deze site draait in de repository [AI-KRook/Zonnemaatje](https://github.com/AI-KRook/Zonnemaatje) op GitHub Pages (bron: GitHub Actions, workflow `deploy-pages.yml`, branch `main`). Zonder gekoppeld domein staat hij op `https://ai-krook.github.io/Zonnemaatje/`; alle interne links zijn relatief, dus de site werkt zowel in die submap als op een eigen domein.
+Deze site draait in de repository [AI-KRook/Zonnemaatje](https://github.com/AI-KRook/Zonnemaatje) op GitHub Pages (bron: GitHub Actions, workflow `deploy-pages.yml`, branch `main`). Zonder gekoppeld domein staat hij op `https://zonnestroommaatje.nl/`; alle interne links zijn relatief, dus de site werkt zowel in die submap als op een eigen domein.
 
 Het domein `zonnestroommaatje.nl` koppelen: vul het in bij **Settings → Pages → Custom domain** en verwijs bij je domeinregistrar de DNS naar GitHub Pages (CNAME `www` → `ai-krook.github.io`, en voor het apex-domein de A-records van GitHub Pages). Het `CNAME`-bestand staat al in de repository.
 
