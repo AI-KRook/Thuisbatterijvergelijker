@@ -123,8 +123,10 @@
     const voorNaDiagram = `
       <div class="vgl-blok" role="img" aria-label="Energiekosten per jaar: nu ${eurFmt.format(totaalVoor)}, met deze warmtepomp ${eurFmt.format(totaalNa)}.">
         <p class="vgl-titel">Je energiekosten voor warmte, per jaar</p>
-        <div class="vgl-rij"><span class="vgl-label">Nu (cv-ketel)</span>${balk(voorDelen)}<b class="vgl-bedrag">${eurFmt.format(totaalVoor)}</b></div>
-        <div class="vgl-rij"><span class="vgl-label">Met deze pomp</span>${balk(naDelen)}<b class="vgl-bedrag">${eurFmt.format(totaalNa)}</b></div>
+        <div class="vgl-tabel">
+          <div class="vgl-rij"><span class="vgl-label">Nu (cv-ketel)</span>${balk(voorDelen)}<b class="vgl-bedrag">${eurFmt.format(totaalVoor)}</b></div>
+          <div class="vgl-rij"><span class="vgl-label">Met deze pomp</span>${balk(naDelen)}<b class="vgl-bedrag">${eurFmt.format(totaalNa)}</b></div>
+        </div>
         <p class="vgl-legenda">${legendaKleuren.map(([label, kleur]) => `<span><i style="background:${kleur};"></i>${label}</span>`).join(" ")}</p>
         <p class="vgl-verschil">${besparingJaar >= 0 ? `↓ ${eurFmt.format(besparingJaar)} per jaar lager` : `↑ ${eurFmt.format(-besparingJaar)} per jaar hoger`}</p>
       </div>`;
