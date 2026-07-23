@@ -101,6 +101,33 @@
     const co2 = Math.round(gasBespaard * CO2_PER_M3 - stroomKwh * CO2_PER_KWH);
     const gasOver = Math.round(s.gas - gasBespaard);
 
+    // Staafdiagram voor en na: energiekosten voor verwarming, warm water en koken.
+    // "Voor" is de huidige situatie met cv-ketel; "na" met de gekozen warmtepomp.
+    // Voor − na is precies de besparing per jaar hierboven.
+    const voorDelen = [
+      { label: "gas", kleur: "var(--kleur-primair)", bedrag: s.gas * s.gasprijs },
+      { label: "vaste gaskosten", kleur: "#d6d3d1", bedrag: s.vastrecht },
+    ];
+    const naDelen = [
+      { label: "gas", kleur: "var(--kleur-primair)", bedrag: gasOver * s.gasprijs },
+      { label: "vaste gaskosten", kleur: "#d6d3d1", bedrag: s.gasAf ? 0 : s.vastrecht },
+      { label: "stroom warmtepomp", kleur: "var(--kleur-accent-donker, #b45309)", bedrag: stroomKwh * s.stroomprijs },
+    ];
+    const totaalVoor = voorDelen.reduce((t, d) => t + d.bedrag, 0);
+    const totaalNa = naDelen.reduce((t, d) => t + d.bedrag, 0);
+    const maxTotaal = Math.max(totaalVoor, totaalNa) || 1;
+    const balk = (delen) => `<div class="vgl-balk">${delen.filter((d) => d.bedrag > 0.5).map((d) =>
+      `<span title="${d.label}: ${eurFmt.format(d.bedrag)}" style="width:${(d.bedrag / maxTotaal) * 100}%;background:${d.kleur};"></span>`).join("")}</div>`;
+    const legendaKleuren = [...new Map([...voorDelen, ...naDelen].filter((d) => d.bedrag > 0.5).map((d) => [d.label, d.kleur])).entries()];
+    const voorNaDiagram = `
+      <div class="vgl-blok" role="img" aria-label="Energiekosten per jaar: nu ${eurFmt.format(totaalVoor)}, met deze warmtepomp ${eurFmt.format(totaalNa)}.">
+        <p class="vgl-titel">Je energiekosten voor warmte, per jaar</p>
+        <div class="vgl-rij"><span class="vgl-label">Nu (cv-ketel)</span>${balk(voorDelen)}<b class="vgl-bedrag">${eurFmt.format(totaalVoor)}</b></div>
+        <div class="vgl-rij"><span class="vgl-label">Met deze pomp</span>${balk(naDelen)}<b class="vgl-bedrag">${eurFmt.format(totaalNa)}</b></div>
+        <p class="vgl-legenda">${legendaKleuren.map(([label, kleur]) => `<span><i style="background:${kleur};"></i>${label}</span>`).join(" ")}</p>
+        <p class="vgl-verschil">${besparingJaar >= 0 ? `↓ ${eurFmt.format(besparingJaar)} per jaar lager` : `↑ ${eurFmt.format(-besparingJaar)} per jaar hoger`}</p>
+      </div>`;
+
     el("resultaatInhoud").innerHTML = `
       <div class="resultaat-groot">${tvtTekst}</div>
       <p class="hint" style="margin:0 0 14px;">geschatte terugverdientijd${s.installatieGeschat ? " (bij geschatte installatiekosten)" : ""}</p>
@@ -116,6 +143,7 @@
       <div class="resultaat-rij"><span>Besparing over ${LEVENSDUUR_JAAR} jaar <small>(gemiddelde levensduur)</small></span><b>${eurFmt.format(besparingLevensduur)}</b></div>
       <div class="resultaat-rij"><span>Netto voordeel over ${LEVENSDUUR_JAAR} jaar</span><b>${eurFmt.format(besparingLevensduur - netto)}</b></div>
       <div class="resultaat-rij"><span>Vermeden CO₂-uitstoot per jaar <small>(indicatie)</small></span><b>circa ${numFmt.format(co2)} kg</b></div>
+      ${voorNaDiagram}
       ${tvt !== null && tvt > LEVENSDUUR_JAAR ? `<p class="hint" style="margin-top:12px;background:var(--kleur-accent-licht);border-radius:8px;padding:10px 12px;">⚠️ De terugverdientijd is langer dan de gemiddelde levensduur van ${LEVENSDUUR_JAAR} jaar. Financieel is dit dan vooral een duurzame keuze. Check of een goedkopere pomp, een hybride of eerst isoleren beter uitpakt; de <a href="advies.html">keuzehulp</a> helpt daarbij.</p>` : ""}
       ${s.type === "all-electric" && !s.gasAf ? `<p class="hint" style="margin-top:12px;">💡 Laat je de gasaansluiting aan (bijvoorbeeld om op gas te koken), dan blijf je circa ${eurFmt.format(s.vastrecht)} per jaar aan vaste gaskosten betalen. Die zijn hier niet als besparing meegerekend.</p>` : ""}
       <p style="margin-top:14px;"><a href="index.html?zoek=${encodeURIComponent(s.w.merk)}">Alle details van de ${escapeHtml(s.w.merk)} ${escapeHtml(s.w.model)} →</a></p>

@@ -13,7 +13,7 @@
   <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="Warmtepompmaatje.nl">
   <link rel="stylesheet" href="assets/style.css?v=20260722a">
-  <script src="assets/rekenmodule.js?v=20260722c" defer></script>
+  <script src="assets/rekenmodule.js?v=20260723a" defer></script>
   <script src="assets/nav.js?v=20260722a" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
   <style>
@@ -38,6 +38,16 @@
     .resultaat-groot { font-size: 2rem; font-weight: 800; color: var(--kleur-primair-donker); letter-spacing: -0.02em; }
     .resultaat-rij { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px dotted var(--kleur-rand); font-size: 0.95rem; flex-wrap: wrap; }
     .resultaat-rij b { text-align: right; }
+    .vgl-blok { margin-top: 16px; padding: 12px 14px; background: var(--kleur-primair-licht); border-radius: 10px; }
+    .vgl-titel { margin: 0 0 8px; font-size: 0.92rem; font-weight: 700; color: var(--kleur-primair-donker); }
+    .vgl-rij { display: grid; grid-template-columns: minmax(86px, auto) 1fr auto; gap: 8px; align-items: center; margin-top: 6px; min-width: 0; }
+    .vgl-label { font-size: 0.85rem; color: var(--kleur-tekst); }
+    .vgl-balk { display: flex; height: 20px; border-radius: 6px; overflow: hidden; background: rgba(255,255,255,0.6); min-width: 0; }
+    .vgl-balk span { display: block; height: 100%; min-width: 2px; }
+    .vgl-bedrag { font-size: 0.9rem; white-space: nowrap; }
+    .vgl-legenda { margin: 10px 0 0; font-size: 0.8rem; color: var(--kleur-tekst-licht); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+    .vgl-legenda i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; }
+    .vgl-verschil { margin: 8px 0 0; font-size: 0.95rem; font-weight: 800; color: var(--kleur-primair-donker); }
   </style>
 </head>
 <body>
