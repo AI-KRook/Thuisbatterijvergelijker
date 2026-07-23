@@ -13,7 +13,7 @@
   <meta property="og:locale" content="nl_NL">
   <meta property="og:site_name" content="Zonnestroommaatje.nl">
   <link rel="stylesheet" href="assets/style.css?v=20260723a">
-  <script src="assets/energieplan.js?v=20260723b" defer></script>
+  <script src="assets/energieplan.js?v=20260723c" defer></script>
   <script src="assets/nav.js?v=20260721a" defer></script>
   <link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
   <style>
@@ -122,7 +122,7 @@
 
     <form id="planFormulier" class="reken-paneel" onsubmit="return false;">
       <h2>Jouw situatie</h2>
-      <p class="stappen-intro">Zeven vragen en je plan rekent direct mee: op een groot scherm hiernaast, op een telefoon onder het formulier.</p>
+      <p class="stappen-intro">Negen korte vragen en je plan rekent direct mee: op een groot scherm hiernaast, op een telefoon onder het formulier.</p>
 
       <div class="veld-rij">
         <div class="veld">
@@ -151,6 +151,35 @@
           <option value="recent" selected>Ja, minder dan 10 jaar oud</option>
           <option value="oud">Ja, maar ouder dan 10 jaar</option>
           <option value="geen">Nee (stadsverwarming, elektrisch of nieuwbouw)</option>
+        </select>
+      </div>
+
+      <div class="veld">
+        <label for="afgifte">Hoe verwarm je de kamers?</label>
+        <select id="afgifte">
+          <option value="vloer">Vooral vloerverwarming</option>
+          <option value="mix" selected>Mix van vloerverwarming en radiatoren</option>
+          <option value="radiatoren">Alleen radiatoren</option>
+        </select>
+        <span class="hint">Vloerverwarming werkt op lage temperatuur, ideaal voor een warmtepomp</span>
+      </div>
+
+      <div class="veld">
+        <label for="woning">Wat voor huis is het?</label>
+        <select id="woning">
+          <option value="tussen" selected>Rijtjeshuis (tussenwoning)</option>
+          <option value="hoek">Hoekhuis of twee-onder-een-kap</option>
+          <option value="vrijstaand">Vrijstaand</option>
+        </select>
+        <span class="hint">Bepaalt hoe zwaar het geluid van de buitenunit telt (erfgrens-eis)</span>
+      </div>
+
+      <div class="veld">
+        <label for="contract">Wat voor energiecontract heb je?</label>
+        <select id="contract">
+          <option value="vast" selected>Vast (prijs staat vast)</option>
+          <option value="variabel">Variabel (prijs wijzigt per maand of kwartaal)</option>
+          <option value="dynamisch">Dynamisch (uurprijzen)</option>
         </select>
       </div>
 
@@ -186,9 +215,10 @@
     <p>Het plan gebruikt dezelfde vuistregels als de keuzehulpen en rekenmodules van de drie maatje-sites, zodat de bedragen overal kloppen. De kern:</p>
     <ul>
       <li><b>Volgorde.</b> Eerst isoleren, dan duurzaam verwarmen, dan opwekken, dan opslaan: de gangbare volgorde van Milieu Centraal en RVO, omdat elke stap de volgende kleiner maakt. Isolatie vergelijken wij zelf niet; daarvoor verwijzen we naar de <a href="https://www.verbeterjehuis.nl/verbetercheck" target="_blank" rel="noopener">Verbetercheck van Milieu Centraal</a>.</li>
-      <li><b>Warmtepomp.</b> Goede isolatie of geen cv-ketel: all-electric (indicatie € 7.300 toestel + € 4.500 installatie − € 3.000 ISDE, vaste gaskosten vervallen). Anders hybride (€ 3.300 + € 2.500 − € 2.100 ISDE, circa 60% gasbesparing). Zelfde rekenregels als de <a href="https://warmtepompmaatje.nl/rekenmodule.html" target="_blank" rel="noopener">terugverdientijd-berekening van Warmtepompmaatje</a>.</li>
+      <li><b>Warmtepomp.</b> Goede isolatie, geen cv-ketel, of redelijke isolatie mét (deels) vloerverwarming: all-electric (indicatie € 7.300 toestel + € 4.500 installatie − € 3.000 ISDE, vaste gaskosten vervallen). Anders hybride (€ 3.300 + € 2.500 − € 2.100 ISDE, circa 60% gasbesparing). Zelfde regels als de <a href="https://warmtepompmaatje.nl/advies.html" target="_blank" rel="noopener">keuzehulp</a> en <a href="https://warmtepompmaatje.nl/rekenmodule.html" target="_blank" rel="noopener">terugverdientijd-berekening van Warmtepompmaatje</a>. Woon je niet vrijstaand, dan wijzen we op de geluidseis van 40 dB op de erfgrens.</li>
       <li><b>Zonnepanelen.</b> Gedimensioneerd op je stroomverbruik ná de warmtepomp (dus inclusief de extra kWh), begrensd door je dak. Wij rekenen met 440 Wp-panelen, 0,9 kWh per Wp, gemiddelde paneelprijs uit onze vergelijker plus montage, en de regels zonder saldering: 35% direct eigen verbruik (45% met slim aangestuurde warmtepomp), teruglevering € 0,05 minus € 0,02 kosten.</li>
       <li><b>Thuisbatterij.</b> Vuistregel circa 10 kWh bij een warmtepomp, anders 7 kWh, tegen circa € 350 per kWh (bron: <a href="https://batterijmaatje.nl/" target="_blank" rel="noopener">Batterijmaatje.nl</a>). De batterij verhoogt het eigen verbruik van je opwek met circa 25 procentpunt; winst uit dynamische handel rekenen wij bewust niet mee.</li>
+      <li><b>Dynamisch contract.</b> Heb je straks een warmtepomp of batterij, dan adviseren wij een dynamisch contract te overwegen: met slimme sturing verschuift je verbruik naar goedkope uren. Die winst rekenen wij bewust niet mee in de bedragen (het is een bonus, en zonder slimme sturing kan dynamisch ook tegenvallen). Bron: <a href="https://www.milieucentraal.nl/energie-besparen/inzicht-in-je-energierekening/dynamisch-energiecontract/" target="_blank" rel="noopener">Milieu Centraal</a>.</li>
       <li><b>Prijzen.</b> Gas € 1,45 per m³, stroom € 0,30 per kWh, vaste gaskosten € 350 per jaar, prijzen constant gehouden.</li>
       <li><b>Per stap exact.</b> Dit plan is een kompas, geen offerte. Elke stap linkt naar de keuzehulp of rekenmodule die het exact doorrekent met actuele, dagelijks gecontroleerde winkelprijzen.</li>
     </ul>

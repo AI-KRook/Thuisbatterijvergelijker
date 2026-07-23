@@ -44,6 +44,9 @@
       dak: el("dak").value,                     // klein | gemiddeld | groot
       isolatie: el("isolatie").value,           // goed | redelijk | matig
       cvKetel: el("cvKetel").value,             // recent | oud | geen
+      afgifte: el("afgifte").value,             // vloer | mix | radiatoren
+      woning: el("woning").value,               // tussen | hoek | vrijstaand
+      contract: el("contract").value,           // vast | variabel | dynamisch
       heeftPanelen: el("checkHeeftPanelen").checked,
       heeftPomp: el("checkHeeftPomp").checked,
       heeftBatterij: el("checkHeeftBatterij").checked,
@@ -75,10 +78,12 @@
       });
     }
 
-    // Stap 2: warmtepomp
+    // Stap 2: warmtepomp (zelfde typekeuze als de keuzehulp van Warmtepompmaatje:
+    // goed geïsoleerd of geen ketel = all-electric, redelijk mét (deels)
+    // vloerverwarming ook; anders is hybride de veilige route)
     let pompKwh = 0, gasNa = s.gas, vastrechtNa = VASTRECHT_GAS;
     if (!s.heeftPomp && s.gas >= 300) {
-      const allElectric = s.cvKetel === "geen" || s.isolatie === "goed";
+      const allElectric = s.cvKetel === "geen" || s.isolatie === "goed" || (s.isolatie === "redelijk" && s.afgifte !== "radiatoren");
       const wp = allElectric ? WP.allel : WP.hybride;
       let gasBespaard;
       if (allElectric) {
@@ -93,13 +98,16 @@
       }
       const investering = wp.toestel + wp.installatie + (allElectric ? AFSLUITKOSTEN : 0) - wp.isde;
       const besparing = gasBespaard * GASPRIJS + (allElectric ? VASTRECHT_GAS : 0) - pompKwh * STROOMPRIJS;
+      const geluidZin = s.woning !== "vrijstaand" ? " Kies een stille buitenunit: met buren op de erfgrens geldt in de nacht een eis van 40 dB." : "";
       stappen.push({
         icoon: "🔥", titel: `Warmtepomp: ${wp.label}`,
-        advies: allElectric
+        advies: (allElectric
           ? (s.cvKetel === "geen"
             ? "Zonder cv-ketel is hybride niet mogelijk; all-electric is de logische keuze en levert de hoogste subsidie op."
-            : "Je huis is goed geïsoleerd: all-electric kan de ketel volledig vervangen en je kunt helemaal van het gas af.")
-          : "Bij jouw isolatie is hybride de veilige route: circa 60% gasbesparing, de ketel vangt piekkou en warm water op." + (s.cvKetel === "oud" ? " Let op: je ketel is aan vervanging toe; reken een nieuwe mee of overweeg all-electric na isoleren." : ""),
+            : s.isolatie === "goed"
+              ? "Je huis is goed geïsoleerd: all-electric kan de ketel volledig vervangen en je kunt helemaal van het gas af."
+              : "Met redelijke isolatie en (deels) vloerverwarming kan all-electric, mits de installateur het warmteverlies doorrekent.")
+          : `${s.isolatie === "matig" ? "Bij matige isolatie" : "Met alleen radiatoren"} is hybride de veilige route: circa 60% gasbesparing, de ketel vangt piekkou en warm water op.` + (s.cvKetel === "oud" ? " Let op: je ketel is aan vervanging toe; reken een nieuwe mee of overweeg all-electric na isoleren." : "")) + geluidZin,
         bedragen: { investering, subsidie: wp.isde, besparing },
         knoppen: [
           { tekst: "Doe de warmtepomp-keuzehulp →", url: "https://warmtepompmaatje.nl/advies.html", extern: true },
@@ -147,6 +155,25 @@
         advies: `${pompKwh > 0 || s.heeftPomp ? "Met een warmtepomp past een wat grotere batterij om de avond te overbruggen. " : ""}De batterij vangt je middagopwek op voor de avond en kan met een dynamisch contract extra verdienen op goedkope uren (die bonus rekenen wij hier niet mee).`,
         bedragen: { investering, subsidie: 0, besparing },
         knoppen: [{ tekst: "Doe de batterij-keuzehulp →", url: "https://batterijmaatje.nl/advies.html", extern: true }],
+      });
+    }
+
+    // Stap 5: dynamisch energiecontract (gratis stap; alleen zinvol met iets
+    // slims om te sturen: warmtepomp of thuisbatterij, nu of in het plan)
+    const krijgtPomp = pompKwh > 0, krijgtBatterij = stappen.some((st) => st.icoon === "🔋");
+    if (s.contract !== "dynamisch" && (krijgtPomp || krijgtBatterij || s.heeftPomp || s.heeftBatterij)) {
+      const flex = [
+        (krijgtPomp || s.heeftPomp) && "je warmtepomp kan het boilervat opwarmen op de goedkoopste uren",
+        (krijgtBatterij || s.heeftBatterij) && "je batterij laadt goedkoop en dekt de dure avond",
+      ].filter(Boolean).join(" en ");
+      stappen.push({
+        icoon: "⚡", titel: "Sluitstuk: overweeg een dynamisch energiecontract",
+        advies: `Je betaalt dan de uurprijs van de stroombeurs in plaats van één ${s.contract === "vast" ? "vaste" : "variabele"} prijs. Zonder flexibiliteit is dat een gok, maar na dit plan heb je die flexibiliteit juist wél: ${flex}. Slimme sturing verschuift je verbruik automatisch naar goedkope uren; de winst daarvan zit nog níet in de bedragen hierboven, het is dus een bonus. Vergelijk wel de opslag per kWh en de vaste kosten per leverancier.`,
+        bedragen: null,
+        knoppen: [
+          { tekst: "Uitleg dynamisch contract →", url: "https://batterijmaatje.nl/uitleg.html#dynamisch-contract", extern: true },
+          { tekst: "Onafhankelijke uitleg (Milieu Centraal) →", url: "https://www.milieucentraal.nl/energie-besparen/inzicht-in-je-energierekening/dynamisch-energiecontract/", extern: true },
+        ],
       });
     }
 
@@ -213,7 +240,7 @@
       const res = await fetch("data/panelen.json", { cache: "no-cache" });
       if (res.ok) panelen = (await res.json()).panelen || [];
     } catch (err) { console.error("panelen.json niet geladen:", err); }
-    ["gasverbruik", "stroomverbruik", "dak", "isolatie", "cvKetel"].forEach((id) => {
+    ["gasverbruik", "stroomverbruik", "dak", "isolatie", "cvKetel", "afgifte", "woning", "contract"].forEach((id) => {
       el(id).addEventListener("input", bereken);
       el(id).addEventListener("change", bereken);
     });
