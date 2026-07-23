@@ -567,7 +567,26 @@
         "status": "deels",
         "tekst": "Geen officiële app; community-oplossingen via de ISG-gateway en Modbus."
       },
-      "aanbiedingen": []
+      "aanbiedingen": [
+        {
+          "winkel": "Warmtepompen-webshop",
+          "prijs_eur": 7666,
+          "url": "https://www.warmtepompen-webshop.nl/webshop/lucht-water-warmtepomp/stiebel-eltron",
+          "datum": null
+        },
+        {
+          "winkel": "Boilermarkt",
+          "prijs_eur": 7500,
+          "url": "https://www.boilermarkt.nl/Warmtepomp/Lucht-water-warmtepompen/Stiebel-Eltron-WPL-A-07-HK-230-Premium-lucht-water-warmtepomp-6-87-kW/",
+          "datum": null
+        },
+        {
+          "winkel": "Wasco",
+          "prijs_eur": 7500,
+          "url": "https://www.wasco.nl/artikel/stiebel-warmtepomp-wpl-a-07-hk-230-premium/1111594",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "wolf-cha-07",
@@ -599,7 +618,26 @@
         "status": "nee",
         "tekst": "Geen app bekend."
       },
-      "aanbiedingen": []
+      "aanbiedingen": [
+        {
+          "winkel": "Gewoon Gasvrij",
+          "prijs_eur": 6900,
+          "url": "https://www.gewoongasvrij.nl/product/wolf-cha-monoblock-07-lucht-water-propaan-warmtepomp-7-kw/",
+          "datum": null
+        },
+        {
+          "winkel": "Aircozonderstek",
+          "prijs_eur": 6900,
+          "url": "https://www.aircozonderstek.nl/product/wolf-cha-monoblock-07-lucht-water-propaan-warmtepomp-7kw/",
+          "datum": null
+        },
+        {
+          "winkel": "Benem",
+          "prijs_eur": 6900,
+          "url": "https://benem.nl/wolf-cha-monoblock-7.html",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "itho-amber-95",
@@ -631,7 +669,26 @@
         "status": "deels",
         "tekst": "Community-app voor de Spider-thermostaat; geen officiële app."
       },
-      "aanbiedingen": []
+      "aanbiedingen": [
+        {
+          "winkel": "Aircozonderstek",
+          "prijs_eur": 5450,
+          "url": "https://www.aircozonderstek.nl/product/itho-daalderop-amber-lucht-water-propaan-r290-warmtepomp-9-5-kw/",
+          "datum": null
+        },
+        {
+          "winkel": "Hybridegigant",
+          "prijs_eur": 5450,
+          "url": "https://www.hybridegigant.nl/itho-daalderop-amber-95-monoblock-9-5kw-lucht-water-warmtepomp",
+          "datum": null
+        },
+        {
+          "winkel": "Installmat",
+          "prijs_eur": 5450,
+          "url": "https://installmat.nl/product/itho-daalderop-amber-95-monoblock-warmtepomp/",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "inventum-ecolution-combi",
@@ -662,7 +719,20 @@
         "status": "nee",
         "tekst": "Geen app bekend."
       },
-      "aanbiedingen": []
+      "aanbiedingen": [
+        {
+          "winkel": "Warmteservice",
+          "prijs_eur": 2900,
+          "url": "https://www.warmteservice.nl/Duurzaam/Warmteterugwinunit/Ventilatie-WTW/Inventum-Ecolution-ventilatiewarmtepomp-voor-tapwater-en-centrale-verwarming-Combi-50/p/85520050",
+          "datum": null
+        },
+        {
+          "winkel": "JCB Ventilatie",
+          "prijs_eur": 2900,
+          "url": "https://www.jcbventilatiestore.nl/products/inventum-ecolution-combi-50-ventilatiewarmtepomp-50-liter",
+          "datum": null
+        }
+      ]
     },
     {
       "id": "gree-versati-iv-10",
@@ -694,7 +764,26 @@
         "status": "nee",
         "tekst": "Geen app bekend."
       },
-      "aanbiedingen": []
+      "aanbiedingen": [
+        {
+          "winkel": "Aircoshop",
+          "prijs_eur": 4139,
+          "url": "https://aircoshopnl.nl/warmtepomp/tosot-by-gree-versati-iv-10-kw-400v-r32-monoblock-lucht-water-warmtepomp-meldcode-ka22519/",
+          "datum": null
+        },
+        {
+          "winkel": "Solarshop Noord",
+          "prijs_eur": 4399,
+          "url": "https://solarshop-noord.nl/product/tosot-versati-iv-monoblock-warmtepomp-10kw/",
+          "datum": null
+        },
+        {
+          "winkel": "MaxiCool",
+          "prijs_eur": 4399,
+          "url": "https://www.maxicool.nl/nl_NL/p/tosot-by-gree-versati-iv-monobloc-warmtepomp-400v-r32-10-kw/28816/",
+          "datum": null
+        }
+      ]
     }
   ]
 }
